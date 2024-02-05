@@ -1,0 +1,20 @@
+version: '3'
+services:
+  ping:
+    build: .
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    volumes:
+      - /run/nfd:/run/nfd
+  pingserver:
+    build: .
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    volumes:
+      - /run/nfd:/run/nfd
+  nfd:
+    build: ./nfd
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    volumes:
+      - /run/nfd:/run/nfd
