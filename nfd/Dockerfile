@@ -1,3 +1,4 @@
-FROM ndn_working_base
+FROM ghcr.io/named-data/nfd:latest as builder
 
-RUN nfd-start
+ENTRYPOINT [ "/usr/bin/nfd" ]
+CMD [ "--config", "/config/nfd.conf" ]

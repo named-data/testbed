@@ -1,8 +1,12 @@
-FROM ndn_working_base
+FROM ghcr.io/named-data/ndn-cxx:latest as builder
 
-RUN sudo apt install libpcap-dev & \
-    git clone https://github.com/named-data/ndn-tools & \
-    cd ndn-tools & \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libpcap-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY . /ndn-tools
+
+RUN cd ndn-tools & \
     ./waf configure & \
     ./waf & \
     sudo ./waf install
