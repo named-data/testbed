@@ -1,0 +1,2 @@
+Note that to use the Dockerfile in this folder, the ndn-tools repository must
+be contained within the same folder (because of COPY . /ndn-tools).

@@ -6,7 +6,9 @@ RUN apt-get update \
 
 COPY . /ndn-tools
 
-RUN cd ndn-tools & \
-    ./waf configure & \
-    ./waf & \
-    sudo ./waf install
+RUN cd ndn-tools && \
+    ./waf configure && \
+    ./waf && \
+    ./waf install
+
+ENTRYPOINT [ "/usr/local/bin/ndnpingserver" ]
