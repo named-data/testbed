@@ -1,0 +1,2 @@
+Note that to use this Dockerfile, the NLSR repository must be contained within
+the same folder (because of COPY . /nlsr).

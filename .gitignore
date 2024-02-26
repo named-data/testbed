@@ -3,3 +3,4 @@ nlsr/*
 !nlsr/Dockerfile
 !nlsr/nfd.conf
 !nlsr/nlsr.conf
+!nlsr/README
