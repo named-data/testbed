@@ -1,1 +1,5 @@
-nfd/nfd.sock
+nlsr/*
+!nlsr/docker-compose.yml
+!nlsr/Dockerfile
+!nlsr/nfd.conf
+!nlsr/nlsr.conf

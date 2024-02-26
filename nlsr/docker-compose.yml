@@ -1,0 +1,31 @@
+version: '3'
+services:
+  nlsr:
+    build:
+      context: .
+    stdin_open: true
+    # tty: true        # docker run -t
+    volumes:
+      - .:/run/nfd
+      - ./mount:/var/lib/nlsr
+      - ./config:/config
+    depends_on:
+      nfd:
+        condition: service_healthy
+    links:
+      - nfd
+    # entrypoint: /usr/local/bin/nlsr
+    # command: "-f /nlsr/nlsr.conf"
+    environment:
+      - NDN_LOG=nlsr.*=DEBUG
+
+  nfd:
+    image: ghcr.io/named-data/nfd:latest
+    volumes:
+      - .:/run/nfd
+      - .:/config
+    healthcheck:
+      test: ["CMD", "nfdc", "status"]
+      interval: 1s
+      timeout: 10s
+      retries: 5
