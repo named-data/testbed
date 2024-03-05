@@ -4,3 +4,7 @@ nlsr/*
 !nlsr/nfd.conf
 !nlsr/nlsr.conf
 !nlsr/README
+ndncert/*
+!ndncert/docker-compose.yml
+!ndncert/Dockerfile
+!ndncert/nfd.conf
