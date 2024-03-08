@@ -8,3 +8,6 @@ ndncert/*
 !ndncert/docker-compose.yml
 !ndncert/Dockerfile
 !ndncert/nfd.conf
+ping_nfd/ndn-tools/*
+!ping_nfd/ndn-tools/Dockerfile
+!ping_nfd/ndn-tools/README

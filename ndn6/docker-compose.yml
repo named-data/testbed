@@ -1,8 +1,8 @@
 version: '3'
 services:
-  ping:
+  ndn6tools:
     build:
-      context: ./ndn-tools
+      context: .
     tty: true        # docker run -t
     volumes:
       - ./nfd:/run/nfd
@@ -11,21 +11,6 @@ services:
         condition: service_healthy
     links:
       - nfd
-    entrypoint: /usr/bin/ndnping
-    command: "/alice"
-    
-  pingserver:
-    build:
-      context: ./ndn-tools
-    tty: true
-    volumes:
-      - ./nfd:/run/nfd
-    depends_on:
-      nfd:
-        condition: service_healthy
-    links:
-      - nfd
-    command: /alice
 
   nfd:
     image: ghcr.io/named-data/nfd:latest
