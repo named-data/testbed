@@ -5,7 +5,7 @@ services:
       context: .
     tty: true        # docker run -t
     volumes:
-      - ./nfd:/run/nfd
+      - .:/run/nfd
     depends_on:
       nfd:
         condition: service_healthy
@@ -15,8 +15,8 @@ services:
   nfd:
     image: ghcr.io/named-data/nfd:latest
     volumes:
-      - ./nfd:/run/nfd
-      - ./nfd:/config
+      - .:/run/nfd
+      - .:/config
     healthcheck:
       test: ["CMD", "nfdc", "status"]
       interval: 5s
