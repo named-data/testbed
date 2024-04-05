@@ -11,7 +11,6 @@ RUN cd ndn-tools && \
     ./waf && \
     ./waf install \
     # get list of dependencies
-#     # which 
     && mkdir -p /shlibdeps/debian && cd /shlibdeps && touch debian/control \
     && dpkg-shlibdeps --ignore-missing-info /usr/lib/libndn-cxx.so* /usr/local/bin/ndnpingserver /usr/local/bin/ndnping \
     && sed -n '/^shlibs:Depends=/ s|shlibs:Depends=||p' debian/substvars | sed -e 's|,||g' -e 's| ([^)]*)||g' > /deps.txt

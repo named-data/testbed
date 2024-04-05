@@ -11,3 +11,6 @@ ndncert/*
 ping_nfd/ndn-tools/*
 !ping_nfd/ndn-tools/Dockerfile
 !ping_nfd/ndn-tools/README
+ndn6/*
+!ndn6/Dockerfile
+!ndn6/docker-compose.yml
