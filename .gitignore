@@ -14,3 +14,5 @@ ping_nfd/ndn-tools/*
 ndn6/*
 !ndn6/Dockerfile
 !ndn6/docker-compose.yml
+templating/*
+!templating/*.py
