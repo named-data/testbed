@@ -2,6 +2,7 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from os import listdir
 from os.path import isfile, join
 import pathlib
+import sys
 import yaml
 
 # Directory containing templates and value file
@@ -40,8 +41,12 @@ for output_path, template_list in templates.items():
     # Create the output directory if it does not exist
     pathlib.Path(output_path).mkdir(parents=True, exist_ok=True)
     for i in template_list:
+        content = ''
         template = environment.get_template(i)
-        content = template.render(**render_values)
+        try:
+            content = template.render(**render_values)
+        except:
+            sys.exit('Variable in template but not values')
 
         file_name = i.rsplit('/', 1)[-1]
         with open(output_path + '/' + file_name, "w") as fh:
