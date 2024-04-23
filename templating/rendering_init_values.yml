@@ -1,0 +1,15 @@
+# Note that the service name must match what is in the corresponding docker compose
+environment_path: .
+
+host_vars_path: ./host_vars/
+
+services:
+  nfd:
+    template_path: ./nfd/templates/
+    output_template_path: ./nfd/rendered_templates/
+  nlsr:
+    template_path: ./nlsr/templates/
+    output_template_path: ./nlsr/rendered_templates/
+  ndnping:
+    template_path: ./ndnping/templates/
+    output_template_path: ./ndnping/rendered_templates/

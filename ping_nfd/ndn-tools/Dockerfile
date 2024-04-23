@@ -1,4 +1,4 @@
-FROM ghcr.io/named-data/ndn-cxx:latest as builder
+FROM ghcr.io/named-data/ndn-cxx-build:latest as builder
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libpcap-dev \

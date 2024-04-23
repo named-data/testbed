@@ -16,3 +16,4 @@ ndn6/*
 !ndn6/docker-compose.yml
 templating/*
 !templating/*.py
+!templating/rendering_init_values.yml
