@@ -1,7 +1,0 @@
----
-# handlers file for ndnping
-- name: restart ndnping
-  service: name=ndnping state=restarted
-
-- name: restart ndnping2
-  service: name=ndnping2 state=restarted
