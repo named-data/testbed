@@ -1,0 +1,31 @@
+---
+
+# file: host_vars/BYU
+ansible_host: pasta10.cs.byu.edu
+host_ip: 128.187.81.12
+ethernet_device: p128p1
+site: /edu/byu
+default_prefix: /ndn/edu/byu 
+advertised_prefixes: [/ndn/edu/byu]
+routable_prefixes: [/ndn/edu/byu]
+router_name: pasta10 
+# memsize: unknown
+memsize: 2
+neighbors: 
+  REMAP: {link_cost: 9}
+#  CSU: {link_cost: 8}
+  ARIZONA: {link_cost: 30}
+network_regions: [/ndn/edu/byu]
+#hr_radius: 19.353845431776
+#hr_angle: 3.77334112452928
+hr_angle: 3.77334
+hr_radius: 19.3538
+#cert_url: http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fedu%2Fbyu%2Fksk-1457391772989%2FID-CERT%2F%25FD%2500%2500%2501SS%25FE%25C70
+nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
+operator_name: "Jeff Andersen"
+operator_email: andersen@isrl.byu.edu
+site_email_domain: ["byu.edu", "isrl.byu.edu"]
+allowGuests: false
+doNotSendOpRequests: false
+doNotSendOpRequestsForGuests: false
+site_name: "Brigham Young University"

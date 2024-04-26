@@ -1,0 +1,54 @@
+---
+
+# file: host_vars/TNO
+#ansible_host: 134.221.116.42
+ansible_host: tno.testbed.named-data.net
+host_ip: 134.221.116.42
+local_ip: 134.221.116.42
+ethernet_device: eth0
+site: /nl/tno
+default_prefix: /ndn/nl/tno 
+advertised_prefixes: [/ndn/nl/tno]
+routable_prefixes: [/ndn/nl/tno]
+router_name: tno-ndntestbed-bordernode 
+http_access: http
+memsize: 4
+neighbors: 
+  DELFT: {link_cost: 2}
+  MML2: {link_cost: 25}
+  QUB: {link_cost: 15}
+  #GOETTINGEN: {link_cost: 12}
+  #LIP6: {link_cost: 9}
+  #BASEL: {link_cost: 14}
+  #MSU: {link_cost: 120}
+network_regions: [/ndn/nl/tno]
+# AS1103
+# 1103    2.46031061259707        12.0148443703157
+#hr_radius: 12.0148443703157
+#hr_angle: 2.46031061259707
+hr_angle: 2.46031
+hr_radius: 12.0148
+#cert_url: http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fnl%2Ftno%2Fksk-1471450169686%2FID-CERT%2F%25FD%2500%2500%2501V%2599G%25D3X
+supports_guest_certs: True
+nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
+operator_name: "Bastiaan Wissingh"
+operator_email: bastiaan.wissingh@tno.nl
+site_email_domain: ["tno.nl"]
+allowGuests: true
+doNotSendOpRequests: false
+doNotSendOpRequestsForGuests: true
+site_name: "Netherlands Organisation for Applied Scientific Research, Netherlands"
+
+ansible_python_interpreter: /usr/bin/python3
+ansible_user: ndnops
+ansible_ssh_private_key_file: /home/tianyuan/mbp-keys-backup/id_rsa
+ndnNetwork: /ndn
+hyperbolic_state: off
+tcp_port: 6363
+udp_port: 6363
+multicast_port: 56363
+supports_guest_certs: False
+
+inventory_hostname: TNO
+prefix: /alice
+secondary_ping_prefix: /bob

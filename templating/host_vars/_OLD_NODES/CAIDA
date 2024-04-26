@@ -1,0 +1,33 @@
+---
+
+# file: host_vars/CAIDA
+ansible_host: click.caida.org
+host_ip: 192.172.226.248
+ethernet_device: eth0
+site: /org/caida
+default_prefix: /ndn/org/caida 
+advertised_prefixes: [/ndn/org/caida]
+routable_prefixes: [/ndn/org/caida]
+router_name: click 
+#memsize: unknown
+memsize: 2
+neighbors: 
+  UFPA: {link_cost: 155}
+  UCLA: {link_cost: 3}
+  UCI: {link_cost: 3}
+  ARIZONA: {link_cost: 25}
+  TONGJI: {link_cost: 93}
+network_regions: [/ndn/org/caida]
+#hr_radius: 17.6030443241278
+#hr_angle: 2.94302721088435
+hr_angle: 2.94302
+hr_radius: 17.6030
+#cert_url: "http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Forg%2Fcaida%2Fksk-1413219145012%2FID-CERT%2F%25FD%2500%2500%2501SRa%2591%25B5"
+nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
+operator_name: "Dan Andersen"
+operator_email: dea@caida.org
+site_email_domain: "caida.org"
+allowGuests: false
+doNotSendOpRequests: false
+doNotSendOpRequestsForGuests: false
+site_name: "Center for Applied Internet Data Analysis (CAIDA)"

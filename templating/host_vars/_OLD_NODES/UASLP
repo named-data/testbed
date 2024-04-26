@@ -1,0 +1,39 @@
+---
+
+# file: host_vars/UASLP
+#ansible_host: 148.224.92.99
+ansible_host: uaslp.testbed.named-data.net
+host_ip: 148.224.92.99
+local_ip: 148.224.92.99
+ethernet_device: eth0
+site: /mx/uaslp
+default_prefix: /ndn/mx/uaslp 
+advertised_prefixes: [/ndn/mx/uaslp]
+routable_prefixes: [/ndn/mx/uaslp]
+router_name: NDN 
+http_access: http
+memsize: 8
+neighbors: 
+  UFBA: {link_cost: 100}
+  ARIZONA: {link_cost: 32}
+  MEMPHIS: {link_cost: 100}
+network_regions: [/ndn/mx/uaslp]
+# AS22884
+# 22884   2.96457404506567        18.2295502581383
+# AS17072	2.96488127257358	19.0473935893716
+#hr_radius: 19.0473935893716
+#hr_angle: 2.96488127257358
+hr_angle: 2.96488
+hr_radius: 19.0473
+# certificate related variables
+# default name is same as default_prefix
+#cert_url: "http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fedu%2Fwustl%2Fksk-1412971440713%2FID-CERT%2F%25FD%2500%2500%2501SO%2596%2540n"
+supports_guest_certs: True
+nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
+operator_name: "David Arjona Villicana"
+operator_email: david.arjona@uaslp.mx
+site_email_domain: ["uaslp.mx"]
+allowGuests: false
+doNotSendOpRequests: false
+doNotSendOpRequestsForGuests: true
+site_name: "Universidad Autonoma de San Luis Potosi (UASLP)"

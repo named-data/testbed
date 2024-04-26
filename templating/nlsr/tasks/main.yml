@@ -1,0 +1,162 @@
+---
+# tasks file for nlsr
+- name: create nlsr user
+  user: name=nlsr state=present shell=/bin/bash createhome=yes home=/home/nlsr
+
+- name: create nlsr directories
+  file: path=/etc/ndn/nlsr/keys state=directory owner=nlsr group=nlsr mode=0755
+- file: path=/var/lib/ndn/nlsr state=directory owner=nlsr group=nlsr mode=0755
+- file: path=/var/log/ndn/nlsr state=directory owner=nlsr group=nlsr mode=0755
+- file: path=/etc/init state=directory owner=root group=nlsr mode=0755
+
+# copy nlsr /lib/systemd/ conf file
+- name: create nlsr /lib/systemd conf file
+  copy: src=roles/nlsr/files/nlsr.service dest=/lib/systemd/system/nlsr.service
+  when: ansible_distribution == "RedHat" or (ansible_distribution == "Ubuntu") 
+
+- file: path=/etc/systemd/system/multi-user.target.wants/nlsr.service state=link src=/lib/systemd/system/nlsr.service
+  when: ansible_distribution == "RedHat" or (ansible_distribution == "Ubuntu" )
+
+- name: set up rsyslog for nlsr.log for Ubuntu 16.04
+  copy: dest=/etc/rsyslog.d/26-nlsr.conf src=roles/nlsr/files/rsyslogd.26-nlsr.conf owner=root group=root mode=0644
+  when: (ansible_distribution == "Ubuntu" )
+
+- name: initialize nlsr.log
+  file: path=/var/log/ndn/nlsr/nlsr.log state=touch owner=syslog group=adm mode=0644
+  when: (ansible_distribution == "Ubuntu" )
+
+#- cron: name="log rotate" user="{{ansible_user}}" hour="1" minute="1" job="/home/{{ansible_user}}/ndn-ops/NOC/logRotation/rotateLogs.sh  "
+- cron: name="log rotate" state="absent" user="{{ansible_user}}" minute="28" job="/home/{{ansible_user}}/ndn-ops/NOC/bin/rotateLogs.sh  "
+
+- name: copy logrotate conf file for nlsr
+  copy: dest=/etc/logrotate.d/nlsr  src=roles/nlsr/files/logrotate.nlsr owner=root group=root mode=0644
+
+
+
+- name: create nlsr.conf
+  #template: src=nlsr.conf.j2 dest=/etc/ndn/nlsr/ansible_nlsr.conf owner=nlsr group=nlsr mode="u=rw,g=r,o=r"
+  template: src=nlsr.conf.j2 dest=/etc/ndn/nlsr/nlsr.conf owner=nlsr group=nlsr mode="u=rw,g=r,o=r"
+  notify: restart nlsr
+
+#- debug:
+#    msg: "default_prefix: {{ default_prefix }}"
+
+#- name: check if we have a root cert locally
+#  local_action: stat path=roles/nlsr/files/root.cert
+#  become: false
+#  register: root_stat_result
+
+## create a root cert at UCLA if we don't have one here
+#- script: roles/nlsr/files/key_gen_root.sh 
+#  when: (root_stat_result.stat.exists == False) and  (inventory_hostname == "UCLA")
+
+## fetch unsigned root.cert back to here
+#- fetch: 
+#    src: /home/nlsr/root.cert
+#    dest: roles/nlsr/files/root.cert
+#    flat: yes
+#  when: (root_stat_result.stat.exists == False) and  (inventory_hostname == "UCLA")
+
+## copy NLSR root cert
+#- copy: src=roles/nlsr/files/root.cert dest=/etc/ndn/nlsr/keys/root.cert
+
+# copy NLSR /etc/init/nlsr.conf
+- copy: src=roles/nlsr/files/nlsr.conf dest=/etc/init/nlsr.conf
+
+## generate site and nlsr keys for user nlsr if needed
+#- script: roles/nlsr/files/key_gen1.sh "{{ default_prefix }}" "{{ inventory_hostname }}"
+#  #register: keygen1
+#  ignore_errors: yes
+
+## fetch unsigned keys back to here
+#- fetch: 
+#    src: /home/nlsr/unsigned_site.cert
+#    dest: roles/nlsr/files/ANSIBLE_{{ inventory_hostname }}_unsigned_site.cert
+#    flat: yes
+
+#- fetch: 
+#    src: /home/nlsr/approval.info
+#    dest: roles/nlsr/files/ANSIBLE_{{ inventory_hostname }}_approval.info
+#    flat: yes
+
+## copy unsigned keys to UCLA for approval
+#- copy: src={{ item }} dest=/home/nlsr/ owner=nlsr group=nlsr mode=644
+#  with_fileglob:
+#    - roles/nlsr/files/*_unsigned_site.cert
+#  when: inventory_hostname == "UCLA"
+
+## copy approval info (NAME and PREFIX) to UCLA for use in approval process
+#- copy: src={{ item }} dest=/home/nlsr/ owner=nlsr group=nlsr mode=644
+#  with_fileglob:
+#    - roles/nlsr/files/*_approval.info
+#  when: inventory_hostname == "UCLA"
+
+## approve any unsigned keys
+#- script: roles/nlsr/files/key_approval.sh 
+#  #register: root_approved
+#  when: inventory_hostname == "UCLA"
+#  ignore_errors: yes
+
+## get the names of approved site certs
+#- name: get filenames of approved site certs
+#  shell: cd /home/nlsr/ ; ls -1 ANSIBLE_*_site.cert | grep -v unsigned
+#  register: approved_sites
+#  when: inventory_hostname == "UCLA"
+
+#- debug:
+#    msg: "approved_sites.stdout_lines: {{ approved_sites.stdout_lines }}"
+#  when: inventory_hostname == "UCLA"
+
+## fetch approved site certs
+#- fetch: src=/home/nlsr/{{ item }} dest=roles/nlsr/files/  flat=yes
+#  when: inventory_hostname == "UCLA"
+#  with_items: "{{ (inventory_hostname == 'UCLA') | ternary(approved_sites.stdout_lines, '') }}"
+
+#- name: check if <NAME>_site.cert exists
+#  local_action: stat path=roles/nlsr/files/ANSIBLE_{{inventory_hostname}}_site.cert
+#  #become_user: jdd
+#  become: false
+#  register: stat_result
+
+## copy approved site certs to sites
+#- copy: src=roles/nlsr/files/ANSIBLE_{{inventory_hostname}}_site.cert dest=/etc/ndn/nlsr/keys/site.cert
+#  when: stat_result|success
+#  ignore_errors: yes
+
+## clean up the approval info files, getting rid of any for which we have approved site certs
+#- local_action: command roles/nlsr/files/clean_approval_info.sh \"{{ role_path }}\"
+#  #become_user: jdd
+#  become: false
+
+#- debug:
+#    msg: "about to do key_gen2.sh {{default_prefix}} {{ansible_user}} {{inventory_hostname}} {{router_name}}"
+
+# finish generating keys and certs for user nlsr
+- script: roles/nlsr/files/new_key_gen.sh "{{default_prefix}}" "{{ansible_user}}"  "{{inventory_hostname}}" "{{router_name}}"
+  ignore_errors: yes
+  notify: restart nlsr
+
+
+#- name: create log4cxx.conf
+#  copy: dest=/etc/ndn/nlsr/log4cxx.conf src=roles/nlsr/files/log4cxx.conf owner=root group=root mode=0644
+#  notify: restart nlsr
+
+#- name: install chronosyn
+#  apt: name=libchronosync state=latest update_cache=yes
+#  ignore_errors: yes
+
+- name: install psync
+  apt: name=libpsync state=latest update_cache=yes
+  ignore_errors: yes
+
+- name: install nlsr
+  apt: name=nlsr state=latest update_cache=yes
+  ignore_errors: yes
+
+- command: systemctl enable nlsr.service
+  become: yes
+  when: ansible_distribution == "RedHat" or (ansible_distribution == "Ubuntu")
+
+- name: start nlsr
+  service: name=nlsr state=started enabled=yes
+

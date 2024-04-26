@@ -10,7 +10,6 @@ services:
         condition: service_healthy
     links:
       - nfd
-    command: /alice
   nfd:
     image: ghcr.io/named-data/nfd:latest
     volumes:

@@ -1,0 +1,38 @@
+---
+
+# file: host_vars/UUM
+#ansible_host: 203.80.17.88
+ansible_host: uum.testbed.named-data.net
+host_ip: 203.80.17.88
+local_ip: 203.80.17.88
+ethernet_device: eth0
+site: /my/edu/uum
+default_prefix: /ndn/my/edu/uum 
+advertised_prefixes: [/ndn/my/edu/uum]
+routable_prefixes: [/ndn/my/edu/uum]
+router_name: isan-ndn 
+http_access: https
+memsize: 16
+neighbors: 
+  MSU: {link_cost: 26}
+  SRRU: {link_cost: 42}
+  IIITH: {link_cost: 88}
+  #MUMBAI_AWS: {link_cost: 88}
+  #INDONESIA: {link_cost: 100}
+  OSAKA: {link_cost: 42}
+network_regions: [/ndn/my/edu/uum]
+# AS24514
+# 24514   3.44434857635893        14.835124912715
+#hr_radius: 14.835124912715
+#hr_angle: 3.44434857635893
+hr_angle: 3.44434
+hr_radius: 14.8351
+#cert_url: http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fth%2Fac%2Fmsu%2Fksk-1479486847708%2FID-CERT%2F%25FD%2500%2500%2501X%258D%2506%25D2%25C8
+nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
+operator_name: "Athirah Rosli"
+operator_email: athirah.rosli58@gmail.com
+site_email_domain: ["uum.edu.my"]
+allowGuests: false
+doNotSendOpRequests: false
+doNotSendOpRequestsForGuests: true
+site_name: "Universiti Utara Malaysia (UUM)"

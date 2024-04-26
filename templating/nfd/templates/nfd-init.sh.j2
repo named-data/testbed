@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# Tell bash to ignores errors in this script:
+set +e
+
+# Some issues with startup time, we need to sleep to make sure nfd is fully up
+
+sleep 15
+
+# set default strategy to best-route (bestroute2)
+{% if hyperbolic_state == "on" %}
+#/usr/bin/nfdc strategy set  ndn:/ ndn:/localhost/nfd/strategy/asf
+/usr/bin/nfdc strategy set ndn:/ ndn:/localhost/nfd/strategy/asf/%FD%04/max-timeouts~3
+#/usr/bin/nfdc strategy set ndn:/ ndn:/localhost/nfd/strategy/asf
+/usr/bin/nfdc strategy set /ndn/web ndn:/localhost/nfd/strategy/asf/%FD%04/max-timeouts~5
+# set /ndn/web/stats up with
+nfdc strategy set  ndn:/ndn/web/stats  ndn:/localhost/nfd/strategy/best-route
+{% else %}
+/usr/bin/nfdc strategy set  ndn:/ ndn:/localhost/nfd/strategy/best-route
+{% endif %}
+
+# set broadcast strategy
+/usr/bin/nfdc strategy set  /ndn/multicast /localhost/nfd/strategy/multicast
+/usr/bin/nfdc strategy set  /ndn/broadcast /localhost/nfd/strategy/multicast
+/usr/bin/nfdc strategy set  /localhost     /localhost/nfd/strategy/multicast
+# set /ndn/irl-workspace/32=sync with
+/usr/bin/nfdc strategy set  /ndn/irl-workspace/32=sync  /localhost/nfd/strategy/multicast
+/usr/bin/nfdc strategy set  /ndn/ndncomm2024/32=sync  /localhost/nfd/strategy/multicast
+/usr/bin/nfdc strategy set  /ndn/localfirst/meetingnotes/32=sync /localhost/nfd/strategy/multicast
+
+# default local access strategy
+nfdc strategy set  ndn:{{ default_prefix }} ndn:/localhost/nfd/strategy/access
+
+{% if inventory_hostname == "UCLA" %}
+nfdc strategy set  ndn:/ndn/edu/ucla/remap ndn:/localhost/nfd/strategy/best-route
+{% endif %}
+{% if inventory_hostname == "WU" %}
+# Set up route for ndnstatus to get to ndndemo:
+#nfdc register /ndn/edu/wustl/ndnstatus udp4://128.252.153.28:6363
+nfdc face create udp4://128.252.153.28:6363
+nfdc route add /ndn/edu/wustl/ndnstatus udp4://128.252.153.28:6363
+{% endif %}
+
+## Special stuff for NDN SIGCOMM demo:
+#nfdc strategy set /ndn/edu/wustl/jdd ndn:/localhost/nfd/strategy/asf/%FD%02
+##nfdc strategy set /ndn/edu/wustl/jdd ndn:/localhost/nfd/strategy/asf/%FD%02/n-silent-timeouts=4
+#nfdc strategy set /ndn/edu/wustl/jdd ndn:/localhost/nfd/strategy/asf/%FD%02/n-silent-timeouts=2
+
+
+# Build the faces that NLSR will need:
+  # {{ inventory_hostname}}  Neighbors: {{ neighbors }}
+{% for neighbor, data in neighbors.items() %}
+
+iptables -A INPUT -s {{ hostvars[neighbor].host_ip }}  -j DROP
+
+# just in case an on-demand face was created since NFD started, destroy it. 
+# This is a temporary fix because an update of a face with mtu change does not currently work.
+nfdc face destroy udp4://{{ hostvars[neighbor].host_ip }}:{{ hostvars[neighbor].udp_port }}
+
+## Test reliability just between ARIZONA and WU
+#{% if ( inventory_hostname == "ARIZONA" and neighbor == "WU" ) or ( inventory_hostname == "WU" and neighbor == "ARIZONA" )%}
+#nfdc face create udp4://{{ hostvars[neighbor].host_ip }}:{{ hostvars[neighbor].udp_port }} persistency permanent mtu 1450 reliability on
+#{% else %}
+#nfdc face create udp4://{{ hostvars[neighbor].host_ip }}:{{ hostvars[neighbor].udp_port }} persistency permanent mtu 1450
+#{% endif %}
+
+## Use reliability everywhere. Leave it off to LACL until we have them update.
+## once LACL gets updated, need to run this again so all nodes go to LACL with reliability turned on
+#{% if  neighbor == "LACL" %}
+#nfdc face create udp4://{{ hostvars[neighbor].host_ip }}:{{ hostvars[neighbor].udp_port }} persistency permanent mtu 1450 
+#{% else %}
+#nfdc face create udp4://{{ hostvars[neighbor].host_ip }}:{{ hostvars[neighbor].udp_port }} persistency permanent mtu 1450 reliability on
+#{% endif %}
+
+nfdc face create udp4://{{ hostvars[neighbor].host_ip }}:{{ hostvars[neighbor].udp_port }} persistency permanent mtu 1450 reliability on
+
+iptables -D INPUT -s {{ hostvars[neighbor].host_ip }}  -j DROP
+
+{% endfor %}
+

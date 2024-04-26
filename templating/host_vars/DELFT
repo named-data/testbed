@@ -1,0 +1,53 @@
+---
+
+# file: host_vars/DELFT
+#ansible_host: 131.180.178.63
+ansible_host: ndn-testbed.ewi.tudelft.nl
+host_ip: 131.180.178.63
+local_ip: 131.180.178.63
+ethernet_device: enp0s3
+site: /nl/delft
+default_prefix: /ndn/nl/delft 
+advertised_prefixes: [/ndn/nl/delft]
+routable_prefixes: [/ndn/nl/delft]
+router_name: ndn-testbed
+http_access: https
+ansible_python_interpreter: /usr/bin/python3
+memsize: 4
+neighbors: 
+  #PADUA: {link_cost: 15}
+  TNO: {link_cost: 2}
+  QUB: {link_cost: 15}
+  #GOETTINGEN: {link_cost: 12}
+  #LIP6: {link_cost: 9}
+  WU: {link_cost: 60}
+  MML2: {link_cost: 26}
+network_regions: [/ndn/nl/delft]
+# AS1128
+#hr_radius: 12.0148443703157
+#1128    2.46092086856031        19.4725378752518
+hr_angle: 2.46092086856031
+hr_radius: 19.4725378752518
+supports_guest_certs: True
+nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
+operator_name: "Chhagan Lal"
+operator_email: c.lal@tudelft.nl
+site_email_domain: ["delft.nl"]
+allowGuests: true
+doNotSendOpRequests: false
+doNotSendOpRequestsForGuests: true
+site_name: "Delft University of Technology, Netherlands"
+
+ansible_python_interpreter: /usr/bin/python3
+ansible_user: ndnops
+ansible_ssh_private_key_file: /home/tianyuan/mbp-keys-backup/id_rsa
+ndnNetwork: /ndn
+hyperbolic_state: off
+tcp_port: 6363
+udp_port: 6363
+multicast_port: 56363
+supports_guest_certs: False
+
+inventory_hostname: DELFT
+prefix: /alice
+secondary_ping_prefix: /bob

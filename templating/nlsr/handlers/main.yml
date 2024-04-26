@@ -1,0 +1,4 @@
+---
+# handlers file for nlsr
+- name: restart nlsr
+  service: name=nlsr state=restarted

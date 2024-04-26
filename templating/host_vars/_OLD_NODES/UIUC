@@ -1,0 +1,38 @@
+---
+
+# file: host_vars/UIUC
+ansible_host: ndnx.cs.illinois.edu
+host_ip: 72.36.112.82
+local_ip: 72.36.112.82
+ethernet_device: eth0
+site: /edu/illinois
+default_prefix: /ndn/edu/illinois 
+advertised_prefixes: [/ndn/edu/illinois,/ndn/edu/uiuc]
+routable_prefixes: [/ndn/edu/illinois,/ndn/edu/uiuc]
+router_name: ndnx 
+http_access: https
+memsize: 8
+neighbors: 
+  MICHIGAN: {link_cost: 5}
+  #CSU: {link_cost: 14}
+  #NIST: {link_cost: 12}
+  WU: {link_cost: 9}
+  PADUA: {link_cost: 80}
+network_regions: [/ndn/edu/illinois]
+# AS38
+# 38      2.98231233822261        29.2553552716
+#hr_radius: 29.2553552716
+#hr_angle: 2.98231233822261
+hr_angle: 2.98231
+hr_radius: 29.2553
+#cert_url: http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fedu%2Fillinois%2Fksk-1413296926433%2FID-CERT%2F%25FD%2500%2500%2501SRa%25B8%25D6
+#cert_url: http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fedu%2Fillinois%2Fksk-1489079438235%2FID-CERT%2F%25FD%2500%2500%2501Z%25B4%250E%25CC0
+supports_guest_certs: True
+nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
+operator_name: "Jongdeog Lee (JD)"
+operator_email: jlee700@illinois.edu
+site_email_domain: ["illinois.edu"]
+allowGuests: true
+doNotSendOpRequests: false
+doNotSendOpRequestsForGuests: true
+site_name: "University of Illinois"

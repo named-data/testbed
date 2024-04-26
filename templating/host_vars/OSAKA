@@ -1,0 +1,58 @@
+---
+
+# file: host_vars/OSAKA
+#ansible_host: 133.1.17.51
+ansible_host: ndn.ist.osaka-u.ac.jp
+host_ip: 133.1.17.51
+local_ip: 133.1.17.51
+ethernet_device: eth2
+site: /jp/ac/osaka-u
+default_prefix: /ndn/jp/ac/osaka-u 
+advertised_prefixes: [/ndn/jp/ac/osaka-u]
+routable_prefixes: [/ndn/jp/ac/osaka-u]
+router_name: NDNtestbed 
+http_access: http
+# memsize: unknown
+memsize: 16
+neighbors: 
+  #ITB: {link_cost: 80}
+  #UUM: {link_cost: 42}
+  #CNIC: {link_cost: 45}
+  #PKUSZ: {link_cost: 63}
+  SRRU: {link_cost: 67}
+  ANYANG: {link_cost: 36}
+  #TONGJI: {link_cost: 63}
+  #GOETTINGEN: {link_cost: 136}
+  WASEDA: {link_cost: 5}
+  ARIZONA: {link_cost: 100}
+network_regions: [/ndn/jp/ac/osaka-u]
+# AS4730
+# 4730    3.53687143597719        19.357383439933
+#hr_radius: 19.357383439933
+#hr_angle: 3.53687143597719
+hr_angle: 3.53687
+hr_radius: 19.3573
+#cert_url: http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fjp%2Fac%2Fosaka-u%2Fksk-1458244776784%2FID-CERT%2F%25FD%2500%2500%2501S%2586n%25C1%25B1
+supports_guest_certs: True
+nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
+operator_name: "Yuki Koizumi"
+operator_email: ykoizumi@ist.osaka-u.ac.jp
+site_email_domain: ["ist.osaka-u.ac.jp"]
+allowGuests: true
+doNotSendOpRequests: false
+doNotSendOpRequestsForGuests: true
+site_name: "Osaka University, Japan"
+
+ansible_python_interpreter: /usr/bin/python3
+ansible_user: ndnops
+ansible_ssh_private_key_file: /home/tianyuan/mbp-keys-backup/id_rsa
+ndnNetwork: /ndn
+hyperbolic_state: off
+tcp_port: 6363
+udp_port: 6363
+multicast_port: 56363
+supports_guest_certs: False
+
+inventory_hostname: OSAKA
+prefix: /alice
+secondary_ping_prefix: /bob

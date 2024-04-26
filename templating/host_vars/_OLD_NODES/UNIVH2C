@@ -1,0 +1,43 @@
+---
+
+# file: host_vars/UNIVH2C
+#ansible_host: 196.200.164.99
+ansible_host: univh2c.testbed.named-data.net
+host_ip: 196.200.164.99
+local_ip: 196.200.164.99
+ethernet_device: eth0
+site: /ma/univh2c
+default_prefix: /ndn/ma/univh2c 
+advertised_prefixes: [/ndn/ma/univh2c]
+routable_prefixes: [/ndn/ma/univh2c]
+router_name: ubuntu-ndn 
+http_access: http
+# memsize: unknown
+memsize: 2
+neighbors: 
+  WU: {link_cost: 75}
+  LACL: {link_cost: 50}
+  UFBA: {link_cost: 125}
+  PADUA: {link_cost: 50}
+  COPELABS: {link_cost: 50}
+  #CAGLIARI: {link_cost: 50}
+  URJC: {link_cost: 52}
+network_regions: [/ndn/ma/univh2c]
+# AS30983
+# 30983   3.03408110440034        15.7232000669204
+#hr_radius: 15.7232000669204
+#hr_angle: 3.03408110440034
+hr_angle: 3.03408
+hr_radius: 15.7232
+# certificate related variables
+# default name is same as default_prefix
+cert_url: "https://ndncert.named-data.net/cert/get/?name=%2Fndn%2Fma%2Funivh2c%2FKEY%2F%2508%253E%25E4%2506%25D7%2526%251Dv%2FNA%2F%25FD%2500%2500%2501e%2505U%25D3%25A5"
+supports_guest_certs: True
+nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
+operator_name: "Abderrahim Maizate"
+operator_email: maizate@hotmail.com
+site_email_domain: ["univh2c.ma"]
+allowGuests: true
+doNotSendOpRequests: false
+doNotSendOpRequestsForGuests: true
+site_name: "University of Hassan II Casablanca, Morocco"
