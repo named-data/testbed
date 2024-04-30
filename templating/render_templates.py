@@ -16,7 +16,7 @@ def get_templates(path):
     """
     Arguments:
     - path: path to the directory to get all files/templates from
-    
+
     This function takes in the path to a directory, and returns all files
     in the directory as a list.
     """
@@ -27,7 +27,7 @@ def get_hash(template_path):
     """
     Arguments:
     - template_path: path to the template whose hash is desired
-    
+
     This function takes in a path to a template, and returns the md5 hash of
     the contents of the file.
     """
@@ -38,7 +38,7 @@ def container_running(container_status):
     """
     Arguments:
     - container_status: string output of the docker compose ps command
-    
+
     This function takes in the string output of the docker compose ps command, and
     converts it to JSON to parse the state of the container. It returns whether or
     not the container is running.
@@ -136,9 +136,12 @@ def main():
             container_alive = container_running(result.stdout)
             # Restart the container if the hash has changed, or if it is not running,
             # or if this is the first time a template has been rendered for it.
-            if (container_alive and hash is not None and get_hash(file_path) != hash) or not container_alive or hash is None:
+            if container_alive and hash is not None and get_hash(file_path) != hash:
                 subprocess.call(
-                    "docker compose up -d --build " + service_name, shell=True)
+                    "docker compose restart " + service_name, shell=True)
+            elif not container_alive or hash is None:
+                subprocess.call(
+                    "docker compose up -d " + service_name, shell=True)
 
 
 if __name__ == '__main__':

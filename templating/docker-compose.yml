@@ -5,6 +5,7 @@ services:
     tty: true
     volumes:
       - ./nfd/rendered_templates:/run/nfd
+      - ./ndnping/rendered_templates:/ndnping
     depends_on:
       nfd:
         condition: service_healthy

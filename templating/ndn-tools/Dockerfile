@@ -27,12 +27,13 @@ RUN ls /usr/local/lib
 COPY --from=builder /usr/lib/libndn-cxx.so* /usr/lib/
 COPY --from=builder /usr/local/bin/ndnpingserver /usr/bin/
 COPY --from=builder /usr/local/bin/ndnping /usr/bin/
-COPY --from=builder /ndn-tools/entrypoint.sh ./
 
 ENV HOME=/config
 
 VOLUME /config
 VOLUME /run/nfd
+VOLUME /run/ndnping
 
 ENTRYPOINT [ "/bin/sh" ]
-CMD [ "./entrypoint.sh" ]
+# CMD [ "-c", "cat /ndnping/entrypoint.sh" ]
+CMD [ "/ndnping/entrypoint.sh" ]
