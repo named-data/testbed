@@ -1,0 +1,50 @@
+---
+
+# file: host_vars/MINHO
+ansible_host: vnetlab.gcom.di.uminho.pt
+host_ip: 193.136.9.206
+local_ip: 193.136.9.206
+ethernet_device: eth0
+site: /pt/uminho
+default_prefix: /ndn/pt/uminho
+advertised_prefixes: [/ndn/pt/uminho]
+routable_prefixes: [/ndn/pt/uminho]
+router_name: vnetlab
+http_access: https
+memsize: 4
+neighbors:
+  AVEIRO: {link_cost: 2}
+  #CORUNA: {link_cost: 27}
+  #COPELABS: {link_cost: 4}
+  #BASEL: {link_cost: 23}
+  URJC: {link_cost: 13}
+  #PADUA: {link_cost: 26}
+network_regions: [/ndn/pt/uminho]
+# AS1930
+# 1930    2.62082874954162        16.2060358549513
+#hr_radius: 16.2060358549513
+##hr_angle: 2.62082874954162
+#hr_angle: 2.62083
+hr_angle: 2.62083
+hr_radius: 16.2060
+#cert_url: http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fpt%2Fuminho%2Fksk-1458247661374%2FID-CERT%2F%25FD%2500%2500%2501S%2586n%25F6%25F0
+nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
+operator_name: "Ertugrul Dogruluk"
+operator_email: id5540@alunos.uminho.pt
+site_email_domain: ["di.minho.pt", "alunos.uminho.pt"]
+allowGuests: false
+doNotSendOpRequests: false
+doNotSendOpRequestsForGuests: false
+site_name: "University of Minho, Portugal"
+
+ansible_python_interpreter: /usr/bin/python3
+ansible_user: ndnops
+ansible_ssh_private_key_file: /home/tianyuan/mbp-keys-backup/id_rsa
+ndnNetwork: /ndn
+hyperbolic_state: off
+tcp_port: 6363
+udp_port: 6363
+multicast_port: 56363
+supports_guest_certs: False
+
+inventory_hostname: MINHO

@@ -1,1 +1,0 @@
-/home/nidhi/ndn-docker/templating/ndnping/rendered_templates/entrypoint.sh

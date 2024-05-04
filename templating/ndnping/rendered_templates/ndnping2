@@ -1,6 +1,0 @@
-# defaults for ndnping server
-
-# Prefix should be set to a valid value
-PREFIX="/bob"
-
-FLAGS=""
