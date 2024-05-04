@@ -2,7 +2,7 @@ services:
   nfd:
     image: ghcr.io/named-data/nfd:latest
     volumes:
-      - ./run/nfd:/run/nfd
+      - run/nfd:/run/nfd
       - ./dist/nfd:/config
     network_mode: host
     healthcheck:
