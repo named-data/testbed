@@ -1,7 +1,7 @@
 import os
 import hashlib
 
-def get_files(path: str) -> str:
+def get_files(path: str, recursive: bool = False):
     """
     Arguments:
     - path: path to the directory to get all files/templates from
@@ -10,10 +10,17 @@ def get_files(path: str) -> str:
     in the directory as a list.
     """
 
-    nodes = [os.path.join(path, f) for f in os.listdir(path)]
-    files = [file for file in nodes if os.path.isfile(file)]
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            yield os.path.join(root, file)
 
-    return files
+        if not recursive:
+            break
+
+    # nodes = [os.path.join(path, f) for f in os.listdir(path)]
+    # files = [file for file in nodes if os.path.isfile(file)]
+
+    # return files
 
 def hash_file(path: str) -> str:
     """

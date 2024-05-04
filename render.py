@@ -67,22 +67,35 @@ def render(node_name: str) -> None:
         pathlib.Path(render_path).mkdir(parents=True, exist_ok=True)
 
         # Get all templates for the service
-        template_paths = utils.get_files(values['template_path'])
+        base_template_path = values['template_path']
+        template_paths = utils.get_files(base_template_path, recursive=True)
 
         # Render all templates for the service
         for template_path in template_paths:
-            if not template_path.endswith('.j2'):
-                continue
+            output_basename = os.path.basename(template_path)
+            output_content = None
 
-            # Load the template
-            template = environment.get_template(template_path)
+            # Render if this is a Jinja2 template
+            if template_path.endswith('.j2'):
+                # Remove the .j2 extension from the output filename
+                output_basename = os.path.splitext(output_basename)[0]
 
-            # Render the template with the values
-            content = template.render(**render_vars)
+                # Render the template with the values
+                output_content = environment.get_template(template_path).render(**render_vars)
+            else:
+                # Read the file
+                with open(template_path, 'r') as f:
+                    output_content = f.read()
+
+            # Get relative path of template to base directory
+            relative_path = os.path.dirname(os.path.relpath(template_path, base_template_path))
 
             # Get the output filename (remove .j2 extension)
-            output_basename = os.path.splitext(os.path.basename(template_path))[0]
-            output_path = os.path.join(render_path, output_basename)
+            output_dir = os.path.join(render_path, relative_path)
+            output_path = os.path.join(output_dir, output_basename)
+
+            # Create the output directory if it does not exist
+            os.makedirs(output_dir, exist_ok=True)
 
             # Read the existing file if it exists
             existing_content = None
@@ -91,11 +104,11 @@ def render(node_name: str) -> None:
                     existing_content = f.read()
 
             # Check if the content has changed
-            if existing_content != content:
+            if existing_content != output_content:
                 print(f"Template {template_path} has changed.")
                 service_changed = True
                 with open(output_path, 'w') as f:
-                    f.write(content)
+                    f.write(output_content)
 
         if service_changed and False:
             # Check if the docker container is already running
