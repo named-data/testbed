@@ -9,6 +9,6 @@ services:
   nfd:
     template_path: templates/nfd
     render_path: dist/nfd
-  ndnping:
-    template_path: templates/ndnping
-    render_path: dist/ndnping
+  # ndnping:
+  #   template_path: templates/ndnping
+  #   render_path: dist/ndnping

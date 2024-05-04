@@ -108,16 +108,13 @@ def render(node_name: str) -> None:
                 with open(output_path, 'w') as f:
                     f.write(output_content)
 
-        if service_changed and False:
-            # Check if the docker container is already running
-            service_status = compose.status(service)
-            container_alive = compose.is_running(service_status)
+        # Check if the docker container is already running
+        service_status = compose.status(service)
+        service_running = compose.is_running(service_status)
 
-            # Restart the container if the hash has changed, or if it is not running,
-            # or if this is the first time a template has been rendered for it.
-            if container_alive and hash is not None and utils.hash_file(file_path) != hash:
-                subprocess.call(
-                    "docker compose restart " + service, shell=True)
-            elif not container_alive or hash is None:
-                subprocess.call(
-                    "docker compose up -d " + service_name, shell=True)
+        if not service_running:
+            print(f"WARN: Service {service} is not running.")
+            compose.up(service)
+        elif service_changed:
+            print(f"Service {service} has changed. Restarting.")
+            compose.restart(service)

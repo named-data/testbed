@@ -31,3 +31,21 @@ def exec(service: str, command: list[str]):
 
     print(f"Executed command {cmd}")
     print(f"{result.stdout}")
+
+def up(service: str):
+    """
+    Start a docker compose service
+    """
+
+    cmd = ['docker', 'compose', 'up', '-d', service]
+    result = subprocess.call(cmd, stdout=subprocess.PIPE)
+    print(f"Started service {service}")
+
+def restart(service: str):
+    """
+    Restart a docker compose service
+    """
+
+    cmd = ['docker', 'compose', 'restart', service]
+    result = subprocess.call(cmd, stdout=subprocess.PIPE)
+    print(f"Restarted service {service}")
