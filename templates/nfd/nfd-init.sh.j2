@@ -41,13 +41,11 @@ nfdc route add /ndn/edu/wustl/ndnstatus udp4://128.252.153.28:6363
 #   {{ inventory_hostname}}
 #   Neighbors: {{ neighbors }}
 
-{% for neighbor, data in neighbors.items() %}
-
 # Just in case an on-demand face was created since NFD started, destroy it.
 # This is a temporary fix because an update of a face with mtu change does not currently work.
 
+{% for neighbor, data in neighbors.items() %}
 nfdc face destroy udp4://{{ hostvars[neighbor].host_ip }}:{{ hostvars[neighbor].udp_port }}
 nfdc face create udp4://{{ hostvars[neighbor].host_ip }}:{{ hostvars[neighbor].udp_port }} persistency permanent mtu 1450 reliability on
-
 {% endfor %}
 

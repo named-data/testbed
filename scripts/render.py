@@ -61,11 +61,11 @@ def render(node_name: str) -> None:
         service_changed = False
 
         # Create the output directory if it does not exist
-        render_path = values['render_path']
+        render_path = values.get('render_path')
         pathlib.Path(render_path).mkdir(parents=True, exist_ok=True)
 
         # Get all templates for the service
-        base_template_path = values['template_path']
+        base_template_path = values.get('template_path')
         template_paths = utils.get_files(base_template_path, recursive=True)
 
         # Render all templates for the service
@@ -118,3 +118,8 @@ def render(node_name: str) -> None:
         elif service_changed:
             print(f"Service {service} has changed. Restarting.")
             compose.restart(service)
+
+        # Run init script if status change
+        if not service_running or service_changed:
+            if init_exec := values.get('init_exec'):
+                compose.exec(service, init_exec)

@@ -26,11 +26,9 @@ def exec(service: str, command: list[str]):
     Execute a command in a docker compose service
     """
 
+    print(service, command)
     cmd = ['docker', 'compose', 'exec', service] + command
-    result = subprocess.call(cmd, stdout=subprocess.PIPE)
-
-    print(f"Executed command {cmd}")
-    print(f"{result.stdout}")
+    subprocess.run(cmd)
 
 def up(service: str):
     """
@@ -38,7 +36,7 @@ def up(service: str):
     """
 
     cmd = ['docker', 'compose', 'up', '-d', service]
-    result = subprocess.call(cmd, stdout=subprocess.PIPE)
+    subprocess.call(cmd, stdout=subprocess.PIPE)
     print(f"Started service {service}")
 
 def restart(service: str):
@@ -47,5 +45,5 @@ def restart(service: str):
     """
 
     cmd = ['docker', 'compose', 'restart', service]
-    result = subprocess.call(cmd, stdout=subprocess.PIPE)
+    subprocess.call(cmd, stdout=subprocess.PIPE)
     print(f"Restarted service {service}")
