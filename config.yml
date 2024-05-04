@@ -1,0 +1,14 @@
+# Note that the service name must match what is in the corresponding docker compose
+environment_path: .
+
+# Path to directory containing variable values for each host
+host_vars_path: host_vars
+
+# This must match exactly with the docker-compose.yml file
+services:
+  nfd:
+    template_path: templates/nfd
+    render_path: output/nfd
+  ndnping:
+    template_path: templates/ndnping
+    render_path: output/ndnping
