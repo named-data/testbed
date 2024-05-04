@@ -1,16 +1,14 @@
 import os
 import pathlib
 import subprocess
-import sys
 import yaml
 import jinja2
-
-import compose
-import utils
-
 from dataclasses import dataclass
 
-CONFIG_FILE = './config.yml'
+from . import compose
+from . import utils
+
+CONFIG_FILE = 'config.yml'
 
 @dataclass
 class Config:
@@ -123,10 +121,3 @@ def render(node_name: str) -> None:
             elif not container_alive or hash is None:
                 subprocess.call(
                     "docker compose up -d " + service_name, shell=True)
-
-
-if __name__ == '__main__':
-    arguments = sys.argv
-    if (len(arguments) < 2):
-        raise Exception('No node provided.')
-    render(arguments[1])

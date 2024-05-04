@@ -17,11 +17,6 @@ def get_files(path: str, recursive: bool = False):
         if not recursive:
             break
 
-    # nodes = [os.path.join(path, f) for f in os.listdir(path)]
-    # files = [file for file in nodes if os.path.isfile(file)]
-
-    # return files
-
 def hash_file(path: str) -> str:
     """
     Arguments:
