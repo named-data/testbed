@@ -1,23 +1,24 @@
 services:
-  ndnping:
-    build:
-      context: ./ndn-tools
-    tty: true
-    volumes:
-      - ./nfd/rendered_templates:/run/nfd
-      - ./ndnping/rendered_templates:/ndnping
-    depends_on:
-      nfd:
-        condition: service_healthy
-    links:
-      - nfd
   nfd:
     image: ghcr.io/named-data/nfd:latest
     volumes:
-      - ./nfd/rendered_templates:/run/nfd
-      - ./nfd/rendered_templates:/config
+      - /run/nfd:/run/nfd
+      - ./dist/nfd:/config
     healthcheck:
       test: ["CMD", "nfdc", "status"]
       interval: 5s
       timeout: 10s
       retries: 5
+
+  ndnping:
+    build:
+      context: ./ndn-tools
+    tty: true
+    volumes:
+      - /run/nfd:/run/nfd
+      - ./dist/ndnping:/ndnping
+    depends_on:
+      nfd:
+        condition: service_healthy
+    links:
+      - nfd
