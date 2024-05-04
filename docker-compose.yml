@@ -5,6 +5,7 @@ services:
       - /run/nfd:/run/nfd
       - ./dist/nfd:/config
     network_mode: host
+    restart: always
     healthcheck:
       test: ["CMD", "nfdc", "status"]
       interval: 5s
@@ -12,13 +13,14 @@ services:
       retries: 5
 
   ndnpingserver:
-    image: ghcr.io/pulsejet/ndn-tools@sha256:342a3d45abc7ae81401789d14df083f620c7b637fe06a08c321ab2353057c032
+    image: ghcr.io/pulsejet/ndn-tools:latest
     tty: true
     volumes:
       - /run/nfd:/run/nfd
       - ./dist/ndnpingserver:/ndnpingserver
     entrypoint: /bin/bash
     command: /ndnpingserver/entrypoint.sh
+    restart: always
     depends_on:
       nfd:
         condition: service_healthy
