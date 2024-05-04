@@ -103,7 +103,7 @@ def render(node_name: str) -> None:
 
             # Check if the content has changed
             if existing_content != output_content:
-                print(f"Template {template_path} has changed.")
+                print(f"File {output_path} has changed.")
                 service_changed = True
                 with open(output_path, 'w') as f:
                     f.write(output_content)
