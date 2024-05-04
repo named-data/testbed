@@ -4,7 +4,10 @@ services:
     volumes:
       - /run/nfd:/run/nfd
       - ./dist/nfd:/config
-    network_mode: host
+    ports:
+      - "6363:6363"
+      - "6363:6363/udp"
+      - "9696:9696"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "nfdc", "status"]
