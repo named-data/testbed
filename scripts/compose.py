@@ -20,3 +20,14 @@ def is_running(status: dict):
     """
 
     return 'State' in status and status['State'] == "running"
+
+def exec(service: str, command: list[str]):
+    """
+    Execute a command in a docker compose service
+    """
+
+    cmd = ['docker', 'compose', 'exec', service] + command
+    result = subprocess.call(cmd, stdout=subprocess.PIPE)
+
+    print(f"Executed command {cmd}")
+    print(f"{result.stdout}")
