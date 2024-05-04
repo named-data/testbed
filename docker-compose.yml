@@ -4,6 +4,7 @@ services:
     volumes:
       - /run/nfd:/run/nfd
       - ./dist/nfd:/config
+    network_mode: host
     healthcheck:
       test: ["CMD", "nfdc", "status"]
       interval: 5s
