@@ -20,7 +20,7 @@ rm -rf "${PRIVATE_DIR}" "${KEYS_DIR}"
 mkdir -p "${PRIVATE_DIR}" "${KEYS_DIR}"
 
 # Issue operator cert
-if [ ! -s keys/operator.cert ]
+if [ ! -s "${KEYS_DIR}/operator.cert" ]
 then
   export HOME="${PRIVATE_DIR}"
   ndnsec-key-gen -n "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.cert"
