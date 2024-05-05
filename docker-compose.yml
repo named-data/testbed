@@ -22,7 +22,6 @@ services:
     ports:
       - "6363:6363"
       - "6363:6363/udp"
-      - "9696:9696"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "nfdc", "status"]
@@ -35,8 +34,6 @@ services:
     volumes:
       - /run/nfd:/run/nfd
     restart: unless-stopped
-    ports:
-      - "8080:8080"
     depends_on:
       nfd:
         condition: service_healthy
