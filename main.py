@@ -1,6 +1,6 @@
 import argparse
 
-from scripts.render import render
+from framework.render import render
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
