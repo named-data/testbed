@@ -59,9 +59,8 @@ services:
       - /run/nfd:/run/nfd
       - /etc/ndn/keys/anchors:/keys/anchors
       - /var/lib/ndn/serve-certs:/certs
-      - ./dist/serve-certs:/config
     entrypoint: /bin/bash
-    command: /serve-certs/entrypoint.sh
+    command: ['-c', 'ndn6-serve-certs /keys/anchors/*.base64  /certs/*.ndncert']
     restart: unless-stopped
     depends_on:
       nfd:
