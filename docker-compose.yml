@@ -16,6 +16,18 @@ services:
       timeout: 10s
       retries: 5
 
+  nfd-http-status-server:
+    image: ghcr.io/named-data/nfd-status-http-server:latest
+    volumes:
+      - /run/nfd:/run/nfd
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      nfd:
+        condition: service_healthy
+    links: [nfd]
+
   ndnpingserver:
     image: ghcr.io/pulsejet/ndn-tools:latest
     tty: true

@@ -53,11 +53,14 @@ def render(node_name: str) -> None:
 
         # Create the output directory if it does not exist
         render_path = values.get('render_path')
-        pathlib.Path(render_path).mkdir(parents=True, exist_ok=True)
+        if render_path:
+            pathlib.Path(render_path).mkdir(parents=True, exist_ok=True)
 
         # Get all templates for the service
+        template_paths = []
         base_template_path = values.get('template_path')
-        template_paths = utils.get_files(base_template_path, recursive=True)
+        if base_template_path:
+            template_paths = utils.get_files(base_template_path, recursive=True)
 
         # Render all templates for the service
         for template_path in template_paths:
