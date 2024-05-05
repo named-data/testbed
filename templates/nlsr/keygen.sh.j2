@@ -17,6 +17,7 @@ NDNCERT_DIR="/var/lib/ndn/ndncert-ca"
 
 # Clean out existing keys and redo
 rm -rf "${PRIVATE_DIR}" "${KEYS_DIR}"
+mkdir -p "${PRIVATE_DIR}" "${KEYS_DIR}"
 
 # Issue operator cert
 if [ ! -s keys/operator.cert ]
