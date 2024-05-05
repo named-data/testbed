@@ -1,6 +1,6 @@
 services:
   caddy:
-    image: caddy:latest
+    image: caddy:2
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
@@ -14,7 +14,7 @@ services:
       - ./dist/caddy/config:/config
 
   nfd:
-    image: ghcr.io/named-data/nfd:latest
+    image: ghcr.io/named-data/nfd:20240420
     volumes:
       - /run/nfd:/run/nfd
       - /etc/ndn/keys/anchors:/keys/anchors
@@ -30,7 +30,7 @@ services:
       retries: 5
 
   nfd-http-status-server:
-    image: ghcr.io/named-data/nfd-status-http-server:latest
+    image: ghcr.io/named-data/nfd-status-http-server:20240420
     volumes:
       - /run/nfd:/run/nfd
     restart: unless-stopped
