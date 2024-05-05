@@ -1,1 +1,3 @@
-NFD: mount /etc/ndn/keys/anchors ?
+* NFD: mount `/etc/ndn/keys/anchors` ?
+* Creation of `/var/lib/ndn/serve-certs`
+* NLSR `/etc/ndn/nlsr/keys` and `/var/lib/ndn/nlsr` private keys?
