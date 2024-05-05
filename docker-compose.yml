@@ -11,7 +11,7 @@ services:
     volumes:
       - ./dist/caddy/Caddyfile:/etc/caddy/Caddyfile
       - ./dist/caddy/data:/data
-      - ./dist/cdady/config:/config
+      - ./dist/caddy/config:/config
 
   nfd:
     image: ghcr.io/named-data/nfd:latest
