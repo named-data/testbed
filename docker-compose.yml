@@ -114,6 +114,7 @@ services:
       - ./dist/ndncert:/config
     environment:
       HOME: /private
+      NDN_LOG: '*=TRACE'
     restart: unless-stopped
     depends_on:
       nfd:
