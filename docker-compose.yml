@@ -43,6 +43,7 @@ services:
   ndnpingserver:
     image: ghcr.io/pulsejet/ndn-tools:latest
     tty: true
+    init: true
     volumes:
       - /run/nfd:/run/nfd
       - ./dist/ndnpingserver:/ndnpingserver
