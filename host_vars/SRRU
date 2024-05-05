@@ -6,7 +6,6 @@ ansible_host: srru.testbed.named-data.net
 host_ip: 202.29.30.31
 local_ip: 192.168.2.60
 ethernet_device: eth0
-ansible_user: ndnops
 site: /th/ac/srru
 default_prefix: /ndn/th/ac/srru
 advertised_prefixes: [/ndn/th/ac/srru]
@@ -45,7 +44,7 @@ ansible_python_interpreter: /usr/bin/python3
 ansible_user: ndnops
 ansible_ssh_private_key_file: /home/tianyuan/mbp-keys-backup/id_rsa
 ndnNetwork: /ndn
-hyperbolic_state: off
+hyperbolic_state: "off"
 tcp_port: 6363
 udp_port: 6363
 multicast_port: 56363

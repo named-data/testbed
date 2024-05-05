@@ -36,7 +36,11 @@ services:
       - /run/nfd:/run/nfd
       - /etc/ndn/nlsr/keys:/keys
       - /etc/ndn/keys/anchors:/keys/anchors
-      - ./dist/nlsr/state:/state
+      - /var/lib/ndn/nlsr:/private
+      - ./dist/nlsr:/config
+    environment:
+      HOME: /private
+      NDN_LOG: nlsr.*=DEBUG
     restart: unless-stopped
     depends_on:
       nfd:
