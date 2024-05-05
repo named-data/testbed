@@ -3,6 +3,7 @@ services:
     image: ghcr.io/named-data/nfd:latest
     volumes:
       - /run/nfd:/run/nfd
+      - /etc/ndn/keys/anchors:/keys/anchors
       - ./dist/nfd:/config
     ports:
       - "6363:6363"
@@ -23,6 +24,19 @@ services:
       - ./dist/ndnpingserver:/ndnpingserver
     entrypoint: /bin/bash
     command: /ndnpingserver/entrypoint.sh
+    restart: unless-stopped
+    depends_on:
+      nfd:
+        condition: service_healthy
+    links: [nfd]
+
+  nlsr:
+    image: ghcr.io/pulsejet/nlsr@sha256:25776438396b506b7cae8b00c94d1e2b0b0a7a005e40c09afa6436b5922574ef
+    volumes:
+      - /run/nfd:/run/nfd
+      - /etc/ndn/nlsr/keys/:/keys
+      - /etc/ndn/keys/anchors:/keys/anchors
+      - ./dist/nlsr/state:/state
     restart: unless-stopped
     depends_on:
       nfd:

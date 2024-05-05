@@ -1,0 +1,226 @@
+general
+{
+  network {{ ndnNetwork }}
+  site {{ site }}
+  router /%C1.Router/{{ router_name }}
+
+  lsa-refresh-time 1800
+  lsa-interest-lifetime 4
+
+  sync-protocol psync
+  sync-interest-lifetime 60000
+
+  state-dir /state
+
+  log-level  INFO
+
+  log-dir       /logs
+  seq-dir       /state
+}
+
+neighbors
+{
+  hello-retries  3
+  hello-timeout  1
+  hello-interval 60
+
+  adj-lsa-build-interval 5
+  first-hello-interval  10
+
+  face-dataset-fetch-tries 3
+  face-dataset-fetch-interval 3600
+
+  {% for neighbor, data in neighbors.items() %}
+    neighbor
+    {
+      ; {{ neighbor }}
+      name {{ ndnNetwork }}{{hostvars[neighbor].site }}/%C1.Router/{{ hostvars[neighbor].router_name }}
+      link-cost {{ data['link_cost'] }}
+
+      ;face-uri  udp4://{{ hostvars[neighbor].ansible_host }}:{{ hostvars[neighbor].udp_port }}
+      face-uri  udp4://{{ hostvars[neighbor].host_ip }}:{{ hostvars[neighbor].udp_port }}
+    }
+  {% endfor %}
+}
+
+hyperbolic
+{
+  state {{ hyperbolic_state }}
+  radius   {{ hr_radius }}
+  angle    {{ hr_angle }}
+}
+
+fib
+{
+  max-faces-per-prefix 10
+  routing-calc-interval 15
+}
+
+advertising
+{
+  {% for prefix in advertised_prefixes %}
+    prefix {{ prefix }}
+  {% endfor %}
+}
+
+security
+{
+  validator
+  {
+    rule
+    {
+      id "NLSR Hello Rule"
+      for data
+      filter
+      {
+        type name
+        regex ^[^<nlsr><INFO>]*<nlsr><INFO><><>$
+      }
+      checker
+      {
+        type customized
+        sig-type ecdsa-sha256
+        key-locator
+        {
+          type name
+          hyper-relation
+          {
+            k-regex ^([^<KEY><nlsr>]*)<nlsr><KEY><><>?<>?$
+            k-expand \\1
+            h-relation equal
+            p-regex ^([^<nlsr><INFO>]*)<nlsr><INFO><><>$
+            p-expand \\1
+          }
+        }
+      }
+    }
+
+    rule
+    {
+      id "NLSR LSA Rule"
+      for data
+      filter
+      {
+        type name
+        regex ^[^<nlsr><LSA>]*<nlsr><LSA>
+      }
+      checker
+      {
+        type customized
+        sig-type ecdsa-sha256
+        key-locator
+        {
+          type name
+          hyper-relation
+          {
+            k-regex ^([^<KEY><nlsr>]*)<nlsr><KEY><><>?<>?$
+            k-expand \\1
+            h-relation equal
+            ; the last four components in the prefix should be <lsaType><seqNo><version><segmentNo>
+            p-regex ^<localhop>([^<nlsr><LSA>]*)<nlsr><LSA>(<>*)<><><><>$
+            p-expand \\1\\2
+          }
+        }
+      }
+    }
+
+    rule
+    {
+      id "NLSR Hierarchy Exception Rule"
+      for data
+      filter
+      {
+        type name
+        regex ^[^<KEY><%C1.Router>]*<%C1.Router>[^<KEY><nlsr>]*<KEY><><><>$
+      }
+      checker
+      {
+        type customized
+        sig-type ecdsa-sha256
+        key-locator
+        {
+          type name
+          hyper-relation
+          {
+            k-regex ^([^<KEY><%C1.Operator>]*)<%C1.Operator>[^<KEY>]*<KEY><><>?<>?$
+            k-expand \\1
+            h-relation equal
+            p-regex ^([^<KEY><%C1.Router>]*)<%C1.Router>[^<KEY>]*<KEY><><><>$
+            p-expand \\1
+          }
+        }
+      }
+    }
+
+    rule
+    {
+      id "NLSR Hierarchical Rule"
+      for data
+      filter
+      {
+        type name
+        regex ^[^<KEY>]*<KEY><><><>$
+      }
+      checker
+      {
+        type hierarchical
+        sig-type ecdsa-sha256
+      }
+    }
+
+    trust-anchor
+    {
+      type dir
+      dir /keys/anchors
+    }
+  }
+
+  prefix-update-validator
+  {
+    rule
+    {
+      id "NLSR ControlCommand Rule"
+      for interest
+      filter
+      {
+        type name
+        regex ^<localhost><nlsr><prefix-update>[<advertise><withdraw>]<><><>$
+      }
+      checker
+      {
+        type customized
+        sig-type ecdsa-sha256
+        key-locator
+        {
+          type name
+          regex ^([^<KEY><%C1.Operator>]*)<%C1.Operator>[^<KEY>]*<KEY><><>?<>?$
+        }
+      }
+    }
+
+    rule
+    {
+      id "NLSR Hierarchy Rule"
+      for data
+      filter
+      {
+        type name
+        regex ^[^<KEY>]*<KEY><><><>$
+      }
+      checker
+      {
+        type hierarchical
+        sig-type ecdsa-sha256
+      }
+    }
+
+    trust-anchor
+    {
+      type dir
+      dir /keys/anchors
+    }
+  }
+
+  cert-to-publish "/keys/operator.cert"
+  cert-to-publish "/keys/router.cert"
+}

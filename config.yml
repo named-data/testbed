@@ -14,3 +14,7 @@ services:
   ndnpingserver:
     template_path: templates/ndnpingserver
     render_path: dist/ndnpingserver
+
+  nlsr:
+    template_path: templates/nlsr
+    render_path: dist/nlsr
