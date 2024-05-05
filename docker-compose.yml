@@ -72,9 +72,8 @@ services:
     image: ghcr.io/pulsejet/nlsr@sha256:ed9cab86de7dd37196df764128bfed49eb9cec6aa687292dabb63cbdf4738b83
     volumes:
       - /run/nfd:/run/nfd
-      - /etc/ndn/nlsr/keys:/keys
       - /etc/ndn/keys/anchors:/keys/anchors
-      - /var/lib/ndn/nlsr:/private
+      - ./dist/nlsr/private:/private
       - ./dist/nlsr:/config
     environment:
       HOME: /private

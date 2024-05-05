@@ -12,35 +12,34 @@ ROUTER="{{ router_name }}"
 
 # Home and keys directories
 PRIVATE_DIR="$(pwd)/private"
-KEYS_DIR="$(pwd)/keys"
 NDNCERT_DIR="/var/lib/ndn/ndncert-ca"
 
 # Clean out existing keys and redo
-rm -rf "${PRIVATE_DIR}" "${KEYS_DIR}"
-mkdir -p "${PRIVATE_DIR}" "${KEYS_DIR}"
+rm -rf "${PRIVATE_DIR}"
+mkdir -p "${PRIVATE_DIR}"
 
 # Issue operator cert
-if [ ! -s "${KEYS_DIR}/operator.cert" ]
+if [ ! -s "${PRIVATE_DIR}/operator.cert" ]
 then
   export HOME="${PRIVATE_DIR}"
   ndnsec-key-gen -n "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.cert"
 
   export HOME="${NDNCERT_DIR}"
   ndnsec-cert-gen -S 202204010000 -E 20320401000 -s "${PREFIX}" \
-    -r "${PRIVATE_DIR}/unsigned_operator.cert" > "${KEYS_DIR}/operator.cert"
+    -r "${PRIVATE_DIR}/unsigned_operator.cert" > "${PRIVATE_DIR}/operator.cert"
 
   export HOME="${PRIVATE_DIR}"
-  ndnsec-cert-install -f "${KEYS_DIR}/operator.cert"
+  ndnsec-cert-install -f "${PRIVATE_DIR}/operator.cert"
 fi
 
 # Issue router cert
-if [ ! -s "${KEYS_DIR}/router.cert" ]
+if [ ! -s "${PRIVATE_DIR}/router.cert" ]
 then
   export HOME="${PRIVATE_DIR}"
   ndnsec-key-gen -n "${PREFIX}/%C1.Router/${ROUTER}" > "${PRIVATE_DIR}/unsigned_router.cert"
 
   ndnsec-cert-gen -S 201802010000 -E 202802010000 -s "${PREFIX}/%C1.Operator/${OPERATOR}" \
-    -r "${PRIVATE_DIR}/unsigned_router.cert" > "${KEYS_DIR}/router.cert"
+    -r "${PRIVATE_DIR}/unsigned_router.cert" > "${PRIVATE_DIR}/router.cert"
 
-  ndnsec-cert-install -f "${KEYS_DIR}/router.cert"
+  ndnsec-cert-install -f "${PRIVATE_DIR}/router.cert"
 fi
