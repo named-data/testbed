@@ -22,6 +22,10 @@ services:
     template_path: templates/ndnpingserver
     render_path: dist/ndnpingserver
 
+  serve-certs:
+    template_path: templates/serve-certs
+    render_path: dist/serve-certs
+
   nlsr:
     template_path: templates/nlsr
     render_path: dist/nlsr
