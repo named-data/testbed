@@ -1,53 +1,30 @@
----
-
-# file: host_vars/WASEDA
-ansible_host: ndn-tb.nz.comm.waseda.ac.jp
-#ansible_host: 133.9.67.98 #
-host_ip: 133.9.67.98 #
-local_ip: 133.9.67.98 #
-ethernet_device: eno1
 site: /jp/waseda
+site_name: Waseda University, Tokyo, Japan
+operator_name: Xiabo Li
+operator_email: lxb385@fuji.waseda.jp
+ansible_host: ndn-tb.nz.comm.waseda.ac.jp
+host_ip: 133.9.67.98
+local_ip: 133.9.67.98
+site_email_domain:
+- waseda.jp
+- fuji.waseda.jp
 default_prefix: /ndn/jp/waseda
-advertised_prefixes: [/ndn/jp/waseda]
-routable_prefixes: [/ndn/jp/waseda]
+advertised_prefixes:
+- /ndn/jp/waseda
+routable_prefixes:
+- /ndn/jp/waseda
+network_regions:
+- /ndn/jp/waseda
 router_name: ndn-tb
 http_access: htt
-# memsize: unknown
 memsize: 2
 neighbors:
-  #PKUSZ: {link_cost: 98}
-  OSAKA: {link_cost: 5}
-  #INDONESIA: {link_cost: 49}
-  #KISTI: {link_cost: 39}
-  ANYANG: {link_cost: 40}
-  ARIZONA: {link_cost: 75}
-  #TONGJI: {link_cost: 98}
-  #BUPT: {link_cost: 48}
-network_regions: [/ndn/jp/waseda]
-# AS17956
-# 17956   2.99935233160622        19.3583257471934
-#hr_radius: 19.3583257471934
-#hr_angle: 2.99935233160622
+  OSAKA:
+    link_cost: 5
+  ANYANG:
+    link_cost: 40
+  ARIZONA:
+    link_cost: 75
 hr_angle: 2.99935
 hr_radius: 19.3583
-#cert_url: "http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fjp%2Fwaseda%2Fksk-1486849781320%2FID-CERT%2F%25FD%2500%2500%2501Z%252F5V%25B5"
-nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
-operator_name: "Xiabo Li"
-operator_email: lxb385@fuji.waseda.jp
-site_email_domain: ["waseda.jp", "fuji.waseda.jp"]
-allowGuests: false
-doNotSendOpRequests: false
-doNotSendOpRequestsForGuests: false
-site_name: "Waseda University, Tokyo, Japan"
-
-ansible_python_interpreter: /usr/bin/python3
-ansible_user: ndnops
-ansible_ssh_private_key_file: /home/tianyuan/mbp-keys-backup/id_rsa
-ndnNetwork: /ndn
-hyperbolic_state: "off"
-tcp_port: 6363
-udp_port: 6363
-multicast_port: 56363
-supports_guest_certs: False
-
-inventory_hostname: WASEDA
+ethernet_device: eno1

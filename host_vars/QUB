@@ -1,52 +1,31 @@
----
-
-# file: host_vars/QUB
+site: /uk/ac/qub
+site_name: Queen's University Belfast, UK
+operator_name: Paul McAllister
+operator_email: P.McAllister@qub.ac.uk
 ansible_host: ndn.qub.ac.uk
 host_ip: 51.148.47.242
 local_ip: 10.60.60.2
-ethernet_device: ens160
-site: /uk/ac/qub
+site_email_domain:
+- qub.ac.uk
 default_prefix: /ndn/uk/ac/qub
-advertised_prefixes: [/ndn/uk/ac/qub]
-routable_prefixes: [/ndn/uk/ac/qub]
+advertised_prefixes:
+- /ndn/uk/ac/qub
+routable_prefixes:
+- /ndn/uk/ac/qub
+network_regions:
+- /ndn/uk/ac/qub
 router_name: ndn
 http_access: https
 memsize: 8
 neighbors:
-  DELFT: {link_cost: 15}
-  WU: {link_cost: 60}
-  NEU: {link_cost: 60}
-  TNO: {link_cost: 15}
-  #LIP6: {link_cost: 12}
-network_regions: [/ndn/uk/ac/qub]
-
-#AS31641
-# 31641   2.42743127401714        17.8582321576696
+  DELFT:
+    link_cost: 15
+  WU:
+    link_cost: 60
+  NEU:
+    link_cost: 60
+  TNO:
+    link_cost: 15
 hr_angle: 2.42743127401714
 hr_radius: 17.8582321576696
-#hr_angle: 4.31067
-#hr_radius: 19.4268
-
-# certificate related variables
-# default name is same as default_prefix
-supports_guest_certs: True
-nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
-operator_name: "Paul McAllister"
-operator_email: P.McAllister@qub.ac.uk
-site_email_domain: ["qub.ac.uk"]
-allowGuests: true
-doNotSendOpRequests: false
-doNotSendOpRequestsForGuests: true
-site_name: "Queen's University Belfast, UK"
-
-ansible_python_interpreter: /usr/bin/python3
-ansible_user: ndnops
-ansible_ssh_private_key_file: /home/tianyuan/mbp-keys-backup/id_rsa
-ndnNetwork: /ndn
-hyperbolic_state: "off"
-tcp_port: 6363
-udp_port: 6363
-multicast_port: 56363
-supports_guest_certs: False
-
-inventory_hostname: QUB
+ethernet_device: ens160

@@ -18,3 +18,32 @@ services:
   nlsr:
     template_path: templates/nlsr
     render_path: dist/nlsr
+
+globals:
+  ndnNetwork: /ndn
+  hyperbolic_state: "off"
+  tcp_port: 6363
+  udp_port: 6363
+  multicast_port: 56363
+  supports_guest_certs: False
+
+variables:
+  site: string
+  site_name: string
+  operator_name: string
+  operator_email: string
+  ansible_host: string
+  host_ip: string
+  local_ip: string
+  site_email_domain: list
+  default_prefix: string
+  advertised_prefixes: list
+  routable_prefixes: list
+  network_regions: list
+  router_name: string
+  http_access: string
+  memsize: number
+  neighbors: dict
+  hr_angle: number
+  hr_radius: number
+  ethernet_device: string

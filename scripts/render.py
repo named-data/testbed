@@ -3,18 +3,13 @@ import pathlib
 import subprocess
 import yaml
 import jinja2
-from dataclasses import dataclass
 
+from dataclasses import dataclass
+from typing import Any
+
+from . import conf
 from . import compose
 from . import utils
-
-CONFIG_FILE = 'config.yml'
-
-@dataclass
-class Config:
-    environment_path: str
-    host_vars_path: str
-    services: dict[str, dict]
 
 def render(node_name: str) -> None:
     """
@@ -29,9 +24,7 @@ def render(node_name: str) -> None:
     """
 
     # Read config file
-    config = None
-    with open(CONFIG_FILE) as stream:
-        config = Config(**yaml.safe_load(stream))
+    config = conf.get()
 
     # Load environment and templates for each service. Set undefined to StrictUndefined to throw
     # a noisy error if a value that is present in the template is not passed in as a value.
@@ -39,20 +32,22 @@ def render(node_name: str) -> None:
         loader=jinja2.FileSystemLoader(config.environment_path),
         undefined=jinja2.StrictUndefined)
 
-    # Get the host_vars from the node name and place into dictionary
-    render_vars = {}
-    with open(os.path.join(config.host_vars_path, node_name)) as stream:
-        render_vars = yaml.safe_load(stream)
-
     # Get all host vars, so we can access neighbors while filling in the templates.
-    all_host_vars = {}
+    all_host_vars: dict[str, dict] = {}
     for host_path in utils.get_files(config.host_vars_path):
         with open(host_path) as stream:
             try:
                 host_name = os.path.basename(host_path)
                 all_host_vars[host_name] = yaml.safe_load(stream)
+
+                # Copy globals from config file
+                all_host_vars[host_name]['inventory_hostname'] = host_name
+                all_host_vars[host_name].update(config.globals)
             except yaml.YAMLError as exc:
                 print("Error reading host vars file: ", host_path, exc)
+
+    # Rendering variables for this node
+    render_vars = all_host_vars[node_name].copy()
     render_vars['hostvars'] = all_host_vars
 
     # For each service, render templates with the corresponding values

@@ -1,54 +1,29 @@
----
-
-# file: host_vars/NEU
-#ansible_host: 129.10.224.42
-#ansible_host: dyn-148-53.dhcp.ece.neu.edu
-#ansible_host: 129.10.52.193 #
+site: /edu/neu
+site_name: Northeastern University
+operator_name: Ran Liu
+operator_email: liuranapply@gmail.com
 ansible_host: neu.testbed.named-data.net
 host_ip: 129.10.224.42
 local_ip: 129.10.224.42
-ethernet_device: eth0
-site: /edu/neu
+site_email_domain:
+- neu.edu
 default_prefix: /ndn/edu/neu
-advertised_prefixes: [/ndn/edu/neu]
-routable_prefixes: [/ndn/edu/neu]
+advertised_prefixes:
+- /ndn/edu/neu
+routable_prefixes:
+- /ndn/edu/neu
+network_regions:
+- /ndn/edu/neu
 router_name: ndnrtr
 http_access: http
-# memsize: unknown
 memsize: 2
 neighbors:
-  QUB: {link_cost: 60}
-  SAVI: {link_cost: 15}
-  #NIST: {link_cost: 12}
-  #NTNU: {link_cost: 69}
-  #MICHIGAN: {link_cost: 14}
-  MEMPHIS: {link_cost: 21}
-network_regions: [/ndn/edu/neu]
-# AS156
-# 156     2.13894230769231        19.9001283692128
-#hr_radius: 19.9001283692128
-#hr_angle: 2.13894230769231
+  QUB:
+    link_cost: 60
+  SAVI:
+    link_cost: 15
+  MEMPHIS:
+    link_cost: 21
 hr_angle: 2.13894
 hr_radius: 19.9001
-#cert_url: http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fedu%2Fneu%2Fksk-1413219498728%2FID-CERT%2F%25FD%2500%2500%2501SRal%257E
-supports_guest_certs: True
-nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
-operator_name: "Ran Liu"
-operator_email: liuranapply@gmail.com
-site_email_domain: ["neu.edu"]
-allowGuests: true
-doNotSendOpRequests: false
-doNotSendOpRequestsForGuests: true
-site_name: "Northeastern University"
-
-ansible_python_interpreter: /usr/bin/python3
-ansible_user: ndnops
-ansible_ssh_private_key_file: /home/tianyuan/mbp-keys-backup/id_rsa
-ndnNetwork: /ndn
-hyperbolic_state: "off"
-tcp_port: 6363
-udp_port: 6363
-multicast_port: 56363
-supports_guest_certs: False
-
-inventory_hostname: NEU
+ethernet_device: eth0

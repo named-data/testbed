@@ -1,50 +1,27 @@
----
-
-# file: host_vars/MML2
+site: /gr/edu/mmlab2
+site_name: Athens University of Economics and Business, Greece
+operator_name: Nikos Fotiou
+operator_email: fotiou@aueb.gr
 ansible_host: mmlab-aueb-2.mmlab.edu.gr
 host_ip: 195.251.234.12
 local_ip: 195.251.234.12
-ethernet_device: enp0s3
-site: /gr/edu/mmlab2
+site_email_domain:
+- aueb.gr
 default_prefix: /ndn/gr/edu/mmlab2
-advertised_prefixes: [/ndn/gr/edu/mmlab2]
-routable_prefixes: [/ndn/gr/edu/mmlab2]
+advertised_prefixes:
+- /ndn/gr/edu/mmlab2
+routable_prefixes:
+- /ndn/gr/edu/mmlab2
+network_regions:
+- /ndn/gr/edu/mmlab1
 router_name: mmlab12
 http_access: http
 memsize: 2
 neighbors:
-  #LIP6: {link_cost: 35}
-  TNO: {link_cost: 25}
-  DELFT: {link_cost: 26}
-network_regions: [/ndn/gr/edu/mmlab1]
-# AS8611 (192.251.232.0/22 (Athens University of Economics and Business))
-# AS5408 (192.251.0.0/16 (National Infrastructures for Research and Technology S.A.))
-# 5408    3.01596203623814        14.1225478439239
-# 8611 does not show up in my tables
+  TNO:
+    link_cost: 25
+  DELFT:
+    link_cost: 26
 hr_angle: 3.01597
 hr_radius: 14.1226
-# certificate related variables
-# default name is same as default_prefix
-#cert_url: "http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fedu%2Fwustl%2Fksk-1412971440713%2FID-CERT%2F%25FD%2500%2500%2501SO%2596%2540n"
-#cert_url: "https://ndncert.named-data.net/cert/get/?name=%2Fndn%2Fedu%2Fwustl%2FKEY%2F%253C%25AB%2507po%25EBf%250F%2FNA%2F%25FD%2500%2500%2501a%255DV%2518%25DA"
-supports_guest_certs: True
-#nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
-operator_name: "Nikos Fotiou"
-operator_email: fotiou@aueb.gr
-site_email_domain: ["aueb.gr"]
-allowGuests: true
-doNotSendOpRequests: false
-doNotSendOpRequestsForGuests: true
-site_name: "Athens University of Economics and Business, Greece"
-
-ansible_python_interpreter: /usr/bin/python3
-ansible_user: ndnops
-ansible_ssh_private_key_file: /home/tianyuan/mbp-keys-backup/id_rsa
-ndnNetwork: /ndn
-hyperbolic_state: "off"
-tcp_port: 6363
-udp_port: 6363
-multicast_port: 56363
-supports_guest_certs: False
-
-inventory_hostname: MML2
+ethernet_device: enp0s3

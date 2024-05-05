@@ -1,46 +1,29 @@
----
-
-# file: host_vars/IIITH
+site: /in/ac/iiith
+site_name: International Institute of Information Technology, Hyderabad, India
+operator_name: Madhubabu Dontineni
+operator_email: madhu@iiit.ac.in
 ansible_host: ndntestbed.iiit.ac.in
 host_ip: 14.139.82.16
 local_ip: 14.139.82.16
-ethernet_device: ens3
-site: /in/ac/iiith
+site_email_domain:
+- iiit.ac.in
 default_prefix: /ndn/in/ac/iiith
-advertised_prefixes: [/ndn/in/ac/iiith]
-routable_prefixes: [/ndn/in/ac/iiith]
+advertised_prefixes:
+- /ndn/in/ac/iiith
+routable_prefixes:
+- /ndn/in/ac/iiith
+network_regions:
+- /ndn/in/ac/iiith
 router_name: ndntestbed
 http_access: http
 memsize: 2
 neighbors:
-  #ITB: {link_cost: 40}
-  URJC: {link_cost: 90}
-  #PADUA: {link_cost: 90}
-  WU: {link_cost: 122}
-  #UUM: {link_cost: 88}
-  #MUMBAI_AWS: {link_cost: 40}
-  AFA: {link_cost: 72}
-network_regions: [/ndn/in/ac/iiith]
-# AS55824 3.00582605076987        15.9760646783892
+  URJC:
+    link_cost: 90
+  WU:
+    link_cost: 122
+  AFA:
+    link_cost: 72
 hr_angle: 3.00582605076987
 hr_radius: 15.9760646783892
-supports_guest_certs: True
-operator_name: "Madhubabu Dontineni"
-operator_email: madhu@iiit.ac.in
-site_email_domain: ["iiit.ac.in"]
-allowGuests: true
-doNotSendOpRequests: false
-doNotSendOpRequestsForGuests: true
-site_name: "International Institute of Information Technology, Hyderabad, India"
-
-ansible_python_interpreter: /usr/bin/python3
-ansible_user: ndnops
-ansible_ssh_private_key_file: /home/tianyuan/mbp-keys-backup/id_rsa
-ndnNetwork: /ndn
-hyperbolic_state: "off"
-tcp_port: 6363
-udp_port: 6363
-multicast_port: 56363
-supports_guest_certs: False
-
-inventory_hostname: IITH
+ethernet_device: ens3

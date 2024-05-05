@@ -1,53 +1,27 @@
----
-
-# file: host_vars/BERN
-ethernet_device: ens3
+site: /ch/unibe
+site_name: University of Bern, Switzerland
+operator_name: Jonnahtan Saltarin
+operator_email: saltarin@inf.unibe.ch
 ansible_host: os-float159.cnds.unibe.ch
 host_ip: 130.92.70.159
 local_ip: 192.168.111.10
-#ansible_host: os-float172.cnds.unibe.ch
-#host_ip: 130.92.70.172
-#ansible_host: 130.92.70.172 #
-site: /ch/unibe
+site_email_domain:
+- inf.unibe.ch
 default_prefix: /ndn/ch/unibe
-advertised_prefixes: [/ndn/ch/unibe]
-routable_prefixes: [/ndn/ch/unibe]
+advertised_prefixes:
+- /ndn/ch/unibe
+routable_prefixes:
+- /ndn/ch/unibe
+network_regions:
+- /ndn/ch/unibe
 router_name: ndn-1
 http_access: http
-# memsize: unknown
 memsize: 2
 neighbors:
-  WU: {link_cost: 60}
-  #AAU: {link_cost: 16}
-  #LACL: {link_cost: 18}
-  #LIP6: {link_cost: 18}
-  #BASEL: {link_cost: 2}
-  AFA: {link_cost: 15}
-network_regions: [/ndn/ch/unibe]
-# AS559 same as BASEL
-#hr_radius: 13.2717666496574
-##hr_angle: 2.41932700603969
-#hr_angle: 2.41933
+  WU:
+    link_cost: 60
+  AFA:
+    link_cost: 15
 hr_angle: 2.41933
 hr_radius: 13.2717
-#cert_url: http://ndncert.named-data.net/cert/get/?name=%2Fndn%2FKEY%2Fch%2Funibas%2Fksk-1457396430480%2FID-CERT%2F%25FD%2500%2500%2501Sv%25D9%259Bg
-nlsr_version: 4c66119046e21c503a5c5dfb9cc478d360c65a10
-operator_name: "Jonnahtan Saltarin"
-operator_email: saltarin@inf.unibe.ch
-site_email_domain: ["inf.unibe.ch"]
-allowGuests: false
-doNotSendOpRequests: false
-doNotSendOpRequestsForGuests: true
-site_name: "University of Bern, Switzerland"
-
-ansible_python_interpreter: /usr/bin/python3
-ansible_user: ndnops
-ansible_ssh_private_key_file: /home/tianyuan/mbp-keys-backup/id_rsa
-ndnNetwork: /ndn
-hyperbolic_state: "off"
-tcp_port: 6363
-udp_port: 6363
-multicast_port: 56363
-supports_guest_certs: False
-
-inventory_hostname: BERN
+ethernet_device: ens3
