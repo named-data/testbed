@@ -40,7 +40,7 @@ services:
       - ./dist/nlsr:/config
     environment:
       HOME: /private
-      NDN_LOG: nlsr.*=INFO
+      NDN_LOG: nlsr.*=DEBUG
     restart: unless-stopped
     depends_on:
       nfd:
