@@ -53,6 +53,21 @@ services:
         condition: service_healthy
     links: [nfd]
 
+  serve-certs:
+    image: ghcr.io/pulsejet/ndn6-tools@sha256:c1e04d49b4e62e05335a3e78e1a9bb10b10b6f61f7dd5884326067ad23ca9422
+    volumes:
+      - /run/nfd:/run/nfd
+      - /etc/ndn/keys/anchors:/keys/anchors
+      - /var/lib/ndn/serve-certs:/certs
+      - ./dist/serve-certs:/config
+    entrypoint: /bin/bash
+    command: /serve-certs/entrypoint.sh
+    restart: unless-stopped
+    depends_on:
+      nfd:
+        condition: service_healthy
+    links: [nfd]
+
   nlsr:
     image: ghcr.io/pulsejet/nlsr@sha256:ed9cab86de7dd37196df764128bfed49eb9cec6aa687292dabb63cbdf4738b83
     volumes:
