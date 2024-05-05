@@ -33,6 +33,7 @@ services:
     template_path: templates/ndn-python-repo
     render_path: dist/ndn-python-repo
 
+# Global variables that are available in all templates
 globals:
   ndnNetwork: /ndn
   hyperbolic_state: "off"
@@ -41,6 +42,9 @@ globals:
   multicast_port: 56363
   supports_guest_certs: False
 
+# Declare variables available for each host
+# You can use lint.py to check variables, their types and
+# reformat the host_vars correctly
 variables:
   site: string
   site_name: string
