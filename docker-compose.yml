@@ -16,6 +16,7 @@ services:
 
   nfd:
     image: ghcr.io/named-data/nfd:20240420
+    init: true
     volumes:
       - /run/nfd:/run/nfd
       - ./anchors:/keys/anchors
@@ -32,6 +33,7 @@ services:
 
   nfd-http-status-server:
     image: ghcr.io/named-data/nfd-status-http-server:20240420
+    init: true
     volumes:
       - /run/nfd:/run/nfd
     restart: unless-stopped
@@ -57,6 +59,7 @@ services:
 
   serve-certs:
     image: ghcr.io/yoursunny/ndn6-tools:20240505
+    init: true
     volumes:
       - /run/nfd:/run/nfd
       - /var/lib/ndn/serve-certs:/certs
@@ -71,6 +74,7 @@ services:
 
   nlsr:
     image: ghcr.io/pulsejet/nlsr@sha256:ed9cab86de7dd37196df764128bfed49eb9cec6aa687292dabb63cbdf4738b83
+    init: true
     volumes:
       - /run/nfd:/run/nfd
       - ./anchors:/keys/anchors
@@ -87,6 +91,7 @@ services:
 
   ndn-python-repo:
     image: ghcr.io/ucla-irl/ndn-python-repo:20240505
+    init: true
     volumes:
       - /run/nfd:/run/nfd
       - /root:/private
