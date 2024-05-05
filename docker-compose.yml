@@ -103,3 +103,18 @@ services:
       nfd:
         condition: service_healthy
     links: [nfd]
+
+  ndncert:
+    image: ghcr.io/pulsejet/ndncert:20240505
+    init: true
+    volumes:
+      - /run/nfd:/run/nfd
+      - /etc/ndncert/ndncert-mail.conf:/etc/ndncert/ndncert-mail.conf
+      - ./dist/ndncert:/config
+    environment:
+      HOME: /private
+    restart: unless-stopped
+    depends_on:
+      nfd:
+        condition: service_healthy
+    links: [nfd]

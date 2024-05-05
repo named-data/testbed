@@ -33,6 +33,10 @@ services:
     template_path: templates/ndn-python-repo
     render_path: dist/ndn-python-repo
 
+  ndncert:
+    template_path: templates/ndncert
+    render_path: dist/ndncert
+
 # Global variables that are available in all templates
 globals:
   ndnNetwork: /ndn
