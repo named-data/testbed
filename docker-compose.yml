@@ -54,7 +54,7 @@ services:
     links: [nfd]
 
   serve-certs:
-    image: ghcr.io/pulsejet/ndn6-tools@sha256:c1e04d49b4e62e05335a3e78e1a9bb10b10b6f61f7dd5884326067ad23ca9422
+    image: ghcr.io/yoursunny/ndn6-tools:20240505
     volumes:
       - /run/nfd:/run/nfd
       - /etc/ndn/keys/anchors:/keys/anchors
