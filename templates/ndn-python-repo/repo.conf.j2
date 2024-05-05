@@ -1,0 +1,20 @@
+repo_config:
+  repo_name: {{default_prefix}}
+  register_root: False
+
+db_config:
+  # choose one among sqlite3, leveldb, and mongodb
+  db_type: sqlite3
+
+  sqlite3:
+    path: /config/repo-sqlite3.db
+  mongodb:
+    db: {{inventory_hostname}}_cert_repo
+    collection: certs
+
+tcp_bulk_insert:
+  addr: 0.0.0.0
+  port: 7378
+
+logging_config:
+  level: INFO

@@ -29,6 +29,10 @@ services:
     template_path: templates/nlsr
     render_path: dist/nlsr
 
+  ndn-python-repo:
+    template_path: templates/ndn-python-repo
+    render_path: dist/ndn-python-repo
+
 globals:
   ndnNetwork: /ndn
   hyperbolic_state: "off"

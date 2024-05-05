@@ -83,3 +83,14 @@ services:
       nfd:
         condition: service_healthy
     links: [nfd]
+
+  ndn-python-repo:
+    image: ghcr.io/pulsejet/ndn-python-repo@sha256:88977be9128a8524245d472d30be89e8b35d4f772d3590210f3f959c230f2446
+    volumes:
+      - /run/nfd:/run/nfd
+      - ./dist/ndn-python-repo:/config
+    restart: unless-stopped
+    depends_on:
+      nfd:
+        condition: service_healthy
+    links: [nfd]
