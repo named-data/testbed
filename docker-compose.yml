@@ -1,3 +1,4 @@
+name: testbed
 services:
   caddy:
     image: caddy:2
