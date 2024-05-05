@@ -1,21 +1,24 @@
 general
-{}
+{
+
+}
 
 log
 {
   default_level INFO
 }
+
 tables
 {
-{% if memsize <= 2 %}
-  cs_max_packets 32768
-{% elif memsize <= 4 %}
-  cs_max_packets 65536
-{% elif memsize <= 8 %}
-  cs_max_packets 131072
-{% elif memsize > 8 %}
-  cs_max_packets 262144
-{% endif %}
+  {% if memsize <= 2 %}
+    cs_max_packets 32768
+  {% elif memsize <= 4 %}
+    cs_max_packets 65536
+  {% elif memsize <= 8 %}
+    cs_max_packets 131072
+  {% elif memsize > 8 %}
+    cs_max_packets 262144
+  {% endif %}
 
   cs_policy priority_fifo
   cs_unsolicited_policy drop-all
@@ -30,10 +33,9 @@ tables
 
   network_region
   {
-  ; Network regions: {{ network_regions }}
-{% for region in network_regions %}
-    {{region}}
-{% endfor %}
+    {% for region in network_regions %}
+      {{ region }}
+    {% endfor %}
   }
 }
 
@@ -74,8 +76,12 @@ face_system
     mcast_port_v6 56363
     mcast_ad_hoc no
 
-    whitelist {*}
-    blacklist { }
+    whitelist {
+      *
+    }
+    blacklist {
+
+    }
   }
 
   ether
@@ -87,8 +93,12 @@ face_system
     mcast_group 01:00:5E:00:17:AA
     mcast_ad_hoc no
 
-    whitelist {*}
-    blacklist { }
+    whitelist {
+      *
+    }
+    blacklist {
+
+    }
   }
 
   websocket
