@@ -85,10 +85,13 @@ services:
     links: [nfd]
 
   ndn-python-repo:
-    image: ghcr.io/pulsejet/ndn-python-repo@sha256:88977be9128a8524245d472d30be89e8b35d4f772d3590210f3f959c230f2446
+    image: ghcr.io/pulsejet/ndn-python-repo:20240505
     volumes:
       - /run/nfd:/run/nfd
+      - /root:/private
       - ./dist/ndn-python-repo:/config
+    environment:
+      HOME: /private
     restart: unless-stopped
     depends_on:
       nfd:

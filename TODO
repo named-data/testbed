@@ -1,7 +1,9 @@
 * NFD: mount `/etc/ndn/keys/anchors` ?
 * Creation of `/var/lib/ndn/serve-certs`
 * NLSR `/etc/ndn/nlsr/keys` and `/var/lib/ndn/nlsr` private keys?
+* Repo: what is there in `/root`?
 
 * https://gerrit.named-data.net/c/NLSR/+/7461
 * https://gerrit.named-data.net/c/ndn-tools/+/7460
 * https://github.com/yoursunny/ndn6-tools/pull/1
+* https://github.com/UCLA-IRL/ndn-python-repo/pull/86
