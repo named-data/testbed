@@ -7,7 +7,7 @@ from . import conf
 from . import compose
 from . import utils
 
-def render(node_name: str) -> None:
+def render(node_name: str, dry: bool = False) -> None:
     """
     Arguments:
     - node_name: name of node (case sensitive)
@@ -101,6 +101,10 @@ def render(node_name: str) -> None:
                 service_changed = True
                 with open(output_path, 'w') as f:
                     f.write(output_content)
+
+        # Skip service checkers on dry run
+        if dry:
+            continue
 
         # Check if the docker container is already running
         service_status = compose.status(service)
