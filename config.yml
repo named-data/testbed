@@ -6,6 +6,10 @@ host_vars_path: host_vars
 
 # This must match exactly with the docker-compose.yml file
 services:
+  caddy:
+    template_path: templates/caddy
+    render_path: dist/caddy
+
   nfd:
     template_path: templates/nfd
     render_path: dist/nfd

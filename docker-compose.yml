@@ -1,4 +1,18 @@
 services:
+  caddy:
+    image: caddy:latest
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./dist/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./dist/caddy/data:/data
+      - ./dist/cdady/config:/config
+
   nfd:
     image: ghcr.io/named-data/nfd:latest
     volumes:
