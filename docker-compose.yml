@@ -43,7 +43,7 @@ services:
     links: [nfd]
 
   ndnpingserver:
-    image: ghcr.io/pulsejet/ndn-tools:latest
+    image: ghcr.io/named-data/ndn-tools:20240505
     tty: true
     init: true
     volumes:
