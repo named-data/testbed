@@ -1,6 +1,6 @@
-* NFD: mount `/etc/ndn/keys/anchors` ?
 * Creation of `/var/lib/ndn/serve-certs`
-* NLSR `/etc/ndn/nlsr/keys` and `/var/lib/ndn/nlsr` private keys?
+* NLSR running the keygen script
+* Generation of operator keys
 * Repo: what is there in `/root`?
 
 * https://gerrit.named-data.net/c/NLSR/+/7461

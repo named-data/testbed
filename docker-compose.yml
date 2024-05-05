@@ -18,7 +18,7 @@ services:
     image: ghcr.io/named-data/nfd:20240420
     volumes:
       - /run/nfd:/run/nfd
-      - /etc/ndn/keys/anchors:/keys/anchors
+      - ./anchors:/keys/anchors
       - ./dist/nfd:/config
     ports:
       - "6363:6363"
@@ -58,8 +58,8 @@ services:
     image: ghcr.io/yoursunny/ndn6-tools:20240505
     volumes:
       - /run/nfd:/run/nfd
-      - /etc/ndn/keys/anchors:/keys/anchors
       - /var/lib/ndn/serve-certs:/certs
+      - ./anchors:/keys/anchors
     entrypoint: /bin/bash
     command: ['-c', 'ndn6-serve-certs /keys/anchors/*.base64  /certs/*.ndncert']
     restart: unless-stopped
@@ -72,7 +72,7 @@ services:
     image: ghcr.io/pulsejet/nlsr@sha256:ed9cab86de7dd37196df764128bfed49eb9cec6aa687292dabb63cbdf4738b83
     volumes:
       - /run/nfd:/run/nfd
-      - /etc/ndn/keys/anchors:/keys/anchors
+      - ./anchors:/keys/anchors
       - ./dist/nlsr/private:/private
       - ./dist/nlsr:/config
     environment:
