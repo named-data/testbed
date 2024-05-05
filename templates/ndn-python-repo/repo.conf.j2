@@ -1,5 +1,5 @@
 repo_config:
-  repo_name: {{default_prefix}}/python-repo
+  repo_name: {{ default_prefix }}/python-repo
   register_root: False
 
 db_config:
@@ -9,7 +9,7 @@ db_config:
   sqlite3:
     path: /config/repo-sqlite3.db
   mongodb:
-    db: {{inventory_hostname}}_cert_repo
+    db: {{ inventory_hostname }}_cert_repo
     collection: certs
 
 tcp_bulk_insert:

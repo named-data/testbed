@@ -26,20 +26,7 @@ nfdc strategy set  ndn:/ndn/web/stats  ndn:/localhost/nfd/strategy/best-route
 /usr/bin/nfdc strategy set  /ndn/localfirst/meetingnotes/32=sync /localhost/nfd/strategy/multicast
 
 # Default local access strategy
-nfdc strategy set  ndn:{{ default_prefix }} ndn:/localhost/nfd/strategy/access
-
-{% if inventory_hostname == "UCLA" %}
-nfdc strategy set  ndn:/ndn/edu/ucla/remap ndn:/localhost/nfd/strategy/best-route
-{% endif %}
-
-{% if inventory_hostname == "WU" %}
-nfdc face create udp4://128.252.153.28:6363
-nfdc route add /ndn/edu/wustl/ndnstatus udp4://128.252.153.28:6363
-{% endif %}
-
-# Build the faces that NLSR will need:
-#   {{ inventory_hostname}}
-#   Neighbors: {{ neighbors }}
+nfdc strategy set ndn:{{ default_prefix }} ndn:/localhost/nfd/strategy/access
 
 # Just in case an on-demand face was created since NFD started, destroy it.
 # This is a temporary fix because an update of a face with mtu change does not currently work.
