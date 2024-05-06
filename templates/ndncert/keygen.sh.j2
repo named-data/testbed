@@ -27,4 +27,4 @@ curl -s -X POST --upload-file "${PRIVATE_DIR}/ndncert.csr" -o "${PRIVATE_DIR}/si
     "${ROOT_CA_HTTPS}/sign?secret=${ROOT_CA_SECRET}"
 
 # Install certificate to keychain
-ndnsec-cert-install -f "${PRIVATE_DIR}/site.ndncert"
+ndnsec cert-install -f "${PRIVATE_DIR}/site.ndncert"

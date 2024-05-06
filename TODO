@@ -3,6 +3,7 @@
 * Generation of operator keys
 * Repo: what is there in `/root`?
 * http-ca-server --> caddy
+* Usage of smtp_password as secret
 
 * https://gerrit.named-data.net/c/NLSR/+/7461
 * https://gerrit.named-data.net/c/ndncert/+/7462

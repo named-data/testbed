@@ -62,7 +62,7 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd
-      - /var/lib/ndn/serve-certs:/certs
+      - ./dist/ndncert/private/site.ndncert:/certs/site.ndncert
       - ./anchors:/keys/anchors
     entrypoint: /bin/bash
     command: ['-c', 'ndn6-serve-certs /keys/anchors/*.base64  /certs/*.ndncert']
@@ -109,7 +109,7 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd
-      - /var/lib/ndn/ndncert-ca:/private
+      - ./dist/ndncert/private:/private
       - ./dist/ndncert/ndncert-mail.conf:/etc/ndncert/ndncert-mail.conf
       - ./dist/ndncert:/config
     environment:

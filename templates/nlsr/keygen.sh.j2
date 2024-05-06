@@ -14,34 +14,47 @@ ROUTER="{{ router_name }}"
 
 # Home and keys directories
 PRIVATE_DIR="$(pwd)/private"
-NDNCERT_DIR="/var/lib/ndn/ndncert-ca"
+NDNCERT_DIR="$(pwd)/../ndncert/private"
 
-# Clean out existing keys and redo
-rm -rf "${PRIVATE_DIR}"
+# Make sure the private directory exists
 mkdir -p "${PRIVATE_DIR}"
 
 # Issue operator cert
 if [ ! -s "${PRIVATE_DIR}/operator.cert" ]
 then
   export HOME="${PRIVATE_DIR}"
-  ndnsec-key-gen -n "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.cert"
+  ndnsec sign-req "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.csr"
+  if [ $? -ne 0 ]
+  then
+    echo -e "Generating new operator keypair"
+    ndnsec key-gen -n "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.csr"
+  else
+    echo -e "Operator keypair already exists"
+  fi
 
   export HOME="${NDNCERT_DIR}"
-  ndnsec-cert-gen -S 202204010000 -E 20320401000 -s "${PREFIX}" \
-    -r "${PRIVATE_DIR}/unsigned_operator.cert" > "${PRIVATE_DIR}/operator.cert"
+  ndnsec cert-gen -S 202204010000 -E 20320401000 -s "${PREFIX}" \
+    -r "${PRIVATE_DIR}/unsigned_operator.csr" > "${PRIVATE_DIR}/operator.cert"
 
   export HOME="${PRIVATE_DIR}"
-  ndnsec-cert-install -f "${PRIVATE_DIR}/operator.cert"
+  ndnsec cert-install -f "${PRIVATE_DIR}/operator.cert"
 fi
 
 # Issue router cert
 if [ ! -s "${PRIVATE_DIR}/router.cert" ]
 then
   export HOME="${PRIVATE_DIR}"
-  ndnsec-key-gen -n "${PREFIX}/%C1.Router/${ROUTER}" > "${PRIVATE_DIR}/unsigned_router.cert"
+  ndnsec sign-req "${PREFIX}/%C1.Router/${ROUTER}" > "${PRIVATE_DIR}/unsigned_router.csr"
+  if [ $? -ne 0 ]
+  then
+    echo -e "Generating new router keypair"
+    ndnsec key-gen -n "${PREFIX}/%C1.Router/${ROUTER}" > "${PRIVATE_DIR}/unsigned_router.csr"
+  else
+    echo -e "Router keypair already exists"
+  fi
 
-  ndnsec-cert-gen -S 201802010000 -E 202802010000 -s "${PREFIX}/%C1.Operator/${OPERATOR}" \
-    -r "${PRIVATE_DIR}/unsigned_router.cert" > "${PRIVATE_DIR}/router.cert"
+  ndnsec cert-gen -S 201802010000 -E 202802010000 -s "${PREFIX}/%C1.Operator/${OPERATOR}" \
+    -r "${PRIVATE_DIR}/unsigned_router.csr" > "${PRIVATE_DIR}/router.cert"
 
-  ndnsec-cert-install -f "${PRIVATE_DIR}/router.cert"
+  ndnsec cert-install -f "${PRIVATE_DIR}/router.cert"
 fi
