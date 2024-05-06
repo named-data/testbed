@@ -16,6 +16,7 @@ RUN <<EOF
         tee /etc/apt/sources.list.d/docker.list > /dev/null
 
     apt-get install -Uy --no-install-recommends \
+        git \
         python3 \
         python3-pip \
         docker-ce-cli \
