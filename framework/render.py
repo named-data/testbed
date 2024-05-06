@@ -116,7 +116,7 @@ def render(node_name: str, dry: bool = False) -> None:
         service_running = compose.is_running(service_status)
 
         if not service_running:
-            print(f"WARN: Service {service} is not running.")
+            print(f"Service {service} is not running.")
             compose.up(service)
         elif service_changed:
             print(f"Service {service} has changed. Restarting.")
