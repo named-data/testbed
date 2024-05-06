@@ -1,7 +1,7 @@
 name: testbed
 services:
   master:
-    image: ghcr.io/ucla-irl/testbed-master@sha256:cead6fd2018e442a1df654b13fbb4f6b8f6d92558fd6e5923c5b1d9b0810dae7
+    image: ghcr.io/ucla-irl/testbed-master:latest
     init: true
     tty: true
     volumes:
