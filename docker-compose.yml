@@ -6,9 +6,9 @@ services:
     cap_add:
       - NET_ADMIN
     ports:
-      - "80:80"
-      - "443:443"
-      - "443:443/udp"
+      - 80:80
+      - 443:443
+      - 443:443/udp
     volumes:
       - ./dist/caddy/Caddyfile:/etc/caddy/Caddyfile
       - ./dist/caddy/data:/data
@@ -22,16 +22,14 @@ services:
       - ./anchors:/keys/anchors
       - ./dist/nfd:/config
     ports:
-      - "6363:6363"
-      - "6363:6363/udp"
+      - 6363:6363
+      - 6363:6363/udp
     entrypoint: /bin/bash
     command: /config/entrypoint.sh
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "nfdc", "status"]
+      test: [CMD, nfdc, status]
       interval: 5s
-      timeout: 10s
-      retries: 5
 
   nfd-http-status-server:
     image: ghcr.io/named-data/nfd-status-http-server:20240420
