@@ -3,8 +3,7 @@
 set -e
 
 # Change directory to containing folder
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd $SCRIPT_DIR
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 # Variables
 PREFIX="{{ default_prefix }}"
@@ -37,8 +36,6 @@ then
   then
     echo -e "Generating new operator keypair"
     ndnsec key-gen -n "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.csr"
-  else
-    echo -e "Operator keypair already exists"
   fi
 
   export HOME="${NDNCERT_DIR}"
@@ -58,8 +55,6 @@ then
   then
     echo -e "Generating new router keypair"
     ndnsec key-gen -n "${PREFIX}/%C1.Router/${ROUTER}" > "${PRIVATE_DIR}/unsigned_router.csr"
-  else
-    echo -e "Router keypair already exists"
   fi
 
   ndnsec cert-gen -S 201802010000 -E 202802010000 -s "${PREFIX}/%C1.Operator/${OPERATOR}" \
