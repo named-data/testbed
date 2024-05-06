@@ -5,7 +5,7 @@
 
 set -e
 
-echo -e "Starting master service at $(date)\n"
+echo -e "Starting master service at $(date)"
 
 rm -f dist/.master-ready
 

@@ -5,10 +5,9 @@
 
 set +e
 
-echo -e "Running cron-1 at $(date)\n"
-
 cd /repo
-
 git pull
 
 PWD=$ROOT_DIR python3 framework/main.py
+
+echo -e "Finished cron-1 at $(date)"
