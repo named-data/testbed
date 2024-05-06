@@ -38,9 +38,7 @@ services:
       - /run/nfd:/run/nfd
     restart: unless-stopped
     depends_on:
-      nfd:
-        condition: service_healthy
-    links: [nfd]
+      nfd: { condition: service_healthy }
 
   ndnpingserver:
     image: ghcr.io/named-data/ndn-tools:20240505
@@ -53,9 +51,7 @@ services:
     command: /ndnpingserver/entrypoint.sh
     restart: unless-stopped
     depends_on:
-      nfd:
-        condition: service_healthy
-    links: [nfd]
+      nfd: { condition: service_healthy }
 
   serve-certs:
     image: ghcr.io/yoursunny/ndn6-tools:20240505
@@ -68,9 +64,7 @@ services:
     command: ['-c', 'ndn6-serve-certs /keys/anchors/*.base64  /certs/*.ndncert']
     restart: unless-stopped
     depends_on:
-      nfd:
-        condition: service_healthy
-    links: [nfd]
+      nfd: { condition: service_healthy }
 
   nlsr:
     image: ghcr.io/pulsejet/nlsr@sha256:567558e8ce37453f410cf2cdc612c1bf11252de0b935b8b7d5da41ce6381f5de
@@ -85,9 +79,8 @@ services:
       NDN_LOG: nlsr.*=DEBUG
     restart: unless-stopped
     depends_on:
-      nfd:
-        condition: service_healthy
-    links: [nfd]
+      nfd: { condition: service_healthy }
+      serve-certs: { condition: service_started }
 
   ndn-python-repo:
     image: ghcr.io/ucla-irl/ndn-python-repo:20240505
@@ -100,9 +93,7 @@ services:
       HOME: /private
     restart: unless-stopped
     depends_on:
-      nfd:
-        condition: service_healthy
-    links: [nfd]
+      nfd: { condition: service_healthy }
 
   ndncert:
     image: ghcr.io/pulsejet/ndncert:20240506
@@ -117,9 +108,7 @@ services:
       NDN_LOG: '*=TRACE'
     restart: unless-stopped
     depends_on:
-      nfd:
-        condition: service_healthy
-    links: [nfd]
+      nfd: { condition: service_healthy }
 
   http-ca-server:
     image: ghcr.io/ucla-irl/http-ca-server:latest
