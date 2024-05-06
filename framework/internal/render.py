@@ -118,8 +118,9 @@ def render(node_name: str, dry: bool = False) -> None:
         service_running = compose.is_running(service_status)
 
         if not service_running:
+            # We don't start the service, instead a subsequent
+            # docker compose up will start everything in the right order
             print(f"Service {service} is not running.")
-            compose.up(service)
         elif service_changed:
             print(f"Service {service} has changed. Restarting.")
             compose.restart(service)
