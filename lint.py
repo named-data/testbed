@@ -52,10 +52,11 @@ def lint(path: str):
         else:
             print(f"WARNING: Missing key '{key}' in file: {path}")
 
-    # Check for illegal keys
+    # Check for any unknown keys
     for key in content:
         if key not in config.variables:
-            print(f"WARNING: Removing illegal key '{key}' in file: {path}")
+            print(f"WARNING: Unknown key '{key}' in file: {path}")
+            ordered_content[key] = content[key]
 
     # Sort keys by name and write the file back
     with open(path, 'w') as stream:
