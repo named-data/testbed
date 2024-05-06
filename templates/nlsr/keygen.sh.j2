@@ -19,6 +19,11 @@ NDNCERT_DIR="$(pwd)/../ndncert/private"
 # Make sure the private directory exists
 mkdir -p "${PRIVATE_DIR}"
 
+# TODO: check expiry before removal
+rm -f "${PRIVATE_DIR}/*.csr"
+rm -f "${PRIVATE_DIR}/operator.cert"
+rm -f "${PRIVATE_DIR}/router.cert"
+
 # Issue operator cert
 if [ ! -s "${PRIVATE_DIR}/operator.cert" ]
 then
