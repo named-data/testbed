@@ -8,6 +8,8 @@ cd $SCRIPT_DIR
 
 # Variables
 PREFIX="{{ default_prefix }}"
+ROOT_CA_HTTPS="{{ root_ca_https }}"
+ROOT_CA_SECRET="{{ smtp_password }}"
 
 # Home and keys directories
 PRIVATE_DIR="$(pwd)/private"
@@ -21,11 +23,8 @@ mkdir -p "${PRIVATE_DIR}"
 export HOME="${PRIVATE_DIR}"
 ndnsec key-gen "${PREFIX}" > "${PRIVATE_DIR}/ndncert.csr"
 
-cat "${PRIVATE_DIR}/ndncert.csr"
+curl -X POST --upload-file "${PRIVATE_DIR}/ndncert.csr" -o "${PRIVATE_DIR}/site.ndncert"
+    "${ROOT_CA_HTTPS}/sign?secret=${ROOT_CA_SECRET}"
 
-# On UCLA
-# HOME=/var/lib/ndn/ndncert-ca ndnsec cert-gen -s /ndn ndncert.csr > ndncert.signed.cert
-# sudo -u ndn HOME=/var/lib/ndn/ndncert-ca ndnsec cert-gen -s /ndn savi.csr > savi.signed.cert
-
-# After getting cert
-# ndnsec-cert-install -f "${PRIVATE_DIR}/ndncert.signed.cert"
+# Install certificate to keychain
+ndnsec-cert-install -f "${PRIVATE_DIR}/site.ndncert"
