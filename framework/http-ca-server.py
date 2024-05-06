@@ -55,7 +55,8 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
 
         # Send the signed certificate
         self.send_response(200)
-        self.wfile.write(proc.stdout)
+        self.end_headers()
+        self.wfile.write(certificate)
 
     def do_POST(self):
         # Check if the path is correct
