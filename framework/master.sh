@@ -3,16 +3,14 @@
 # This script is used to run the master service.
 # It should be called from the root of the project.
 
-# Clear ready flag
+set -e
+
 rm -f dist/.master-ready
 
-# Perform initial rendering
-python3 framework/main.py --dry
+git pull
+python3 framework/main.py
 
-# Set ready flag
 date > dist/.master-ready
 
-# Sleep forever
-while true; do
-    sleep 10000000
-done
+cp framework/crontab "/var/spool/cron/crontabs/$(whoami)"
+exec busybox crond -f -L /dev/stdout

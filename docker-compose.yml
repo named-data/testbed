@@ -6,6 +6,7 @@ services:
     tty: true
     volumes:
       - .:/repo
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       MANAGED_HOST: ${MANAGED_HOST}
     entrypoint: /bin/sh

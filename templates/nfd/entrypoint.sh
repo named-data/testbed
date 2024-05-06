@@ -6,4 +6,4 @@ set -e
 /bin/bash /config/nfd-init.sh &
 
 # Start NFD
-/usr/bin/nfd --config /config/nfd.conf
+exec /usr/bin/nfd --config /config/nfd.conf

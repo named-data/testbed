@@ -53,7 +53,6 @@ def render(node_name: str, dry: bool = False) -> None:
     for service, values in config.services.items():
         # Check if the service is enabled
         if service not in compose_config['services']:
-            print(f"Service {service} is not enabled.")
             continue
 
         # Check if any file did change
