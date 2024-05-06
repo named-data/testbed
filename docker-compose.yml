@@ -105,7 +105,7 @@ services:
     links: [nfd]
 
   ndncert:
-    image: ghcr.io/pulsejet/ndncert@sha256:990794f5200a450c0ffd5ba2536d49108173dfcb18a269479d60a91292fb588e
+    image: ghcr.io/pulsejet/ndncert:20240506
     init: true
     volumes:
       - /run/nfd:/run/nfd
