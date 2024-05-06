@@ -39,7 +39,7 @@ then
 fi
 
 # Get certificate from root certificate authority
-curl -s -X POST --upload-file "${NDNCERT_CERT_PATH}.csr" -o "${NDNCERT_CERT_PATH}" \
+curl -fsSL -X POST --upload-file "${NDNCERT_CERT_PATH}.csr" -o "${NDNCERT_CERT_PATH}" \
     "${ROOT_CA_HTTPS}/sign?secret=${ROOT_CA_SECRET}"
 
 # Install certificate to keychain
