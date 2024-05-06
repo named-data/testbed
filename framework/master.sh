@@ -7,7 +7,9 @@ set -e
 
 rm -f dist/.master-ready
 
+git config --global --add safe.directory /repo
 git pull
+
 python3 framework/main.py
 
 date > dist/.master-ready
