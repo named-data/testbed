@@ -28,6 +28,6 @@ date > dist/.master-ready
 # so that all services becomes healthy first.
 sleep 120
 
-mkdir -p "/var/spool/cron/crontabs/$(whoami)"
+mkdir -p "/var/spool/cron/crontabs"
 cp scripts/crontab "/var/spool/cron/crontabs/$(whoami)"
 exec busybox crond -f -L /dev/stdout
