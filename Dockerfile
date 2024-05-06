@@ -5,7 +5,8 @@ ARG NDN_CXX_VERSION=latest
 FROM python:3-alpine AS testbed-master
 
 RUN <<EOF
-    apk add docker-cli docker-cli-compose git
+    apk add docker-cli-compose --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community
+    apk add git
     pip install --no-cache-dir --disable-pip-version-check \
         PyYAML \
         python-ndn==0.4.2 \

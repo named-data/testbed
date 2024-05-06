@@ -19,7 +19,7 @@ services:
     healthcheck:
       test: [CMD, stat, /repo/dist/.master-ready]
       interval: 3s
-    restart: unless-stopped
+    restart: always
 
   caddy:
     image: caddy:2
