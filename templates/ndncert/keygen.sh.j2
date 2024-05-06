@@ -18,12 +18,12 @@ PRIVATE_DIR="$(pwd)/private"
 rm -rf "${PRIVATE_DIR}"
 mkdir -p "${PRIVATE_DIR}"
 
-# Create new key
-# TODO: skip if a valid key already exists
+# Create new keypair (TODO: skip if a valid key already exists)
 export HOME="${PRIVATE_DIR}"
 ndnsec key-gen "${PREFIX}" > "${PRIVATE_DIR}/ndncert.csr"
 
-curl -X POST --upload-file "${PRIVATE_DIR}/ndncert.csr" -o "${PRIVATE_DIR}/site.ndncert" \
+# Get certificate from root certificate authority
+curl -s -X POST --upload-file "${PRIVATE_DIR}/ndncert.csr" -o "${PRIVATE_DIR}/site.ndncert" \
     "${ROOT_CA_HTTPS}/sign?secret=${ROOT_CA_SECRET}"
 
 # Install certificate to keychain
