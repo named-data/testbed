@@ -40,6 +40,11 @@ services:
     template_path: templates/ndncert
     render_path: dist/ndncert
 
+  http-ca-server:
+    template_path: templates/root-ca
+    render_path: dist/root-ca
+    if: root_ca
+
 # Global variables that are available in all templates
 globals:
   ndnNetwork: /ndn
@@ -73,3 +78,4 @@ variables:
   hr_angle: number
   hr_radius: number
   ethernet_device: string
+  root_ca: ?boolean

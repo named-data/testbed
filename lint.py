@@ -44,11 +44,18 @@ def lint(path: str):
 
     # Create an ordered dict with the same order as the config file
     ordered_content = {}
-    for key in config.variables:
+    for key, typ in config.variables.items():
+        # Check if optional key
+        is_optional = False
+        if typ[0] == '?':
+            is_optional = True
+            typ = typ[1:]
+
+        # Check if key is present
         if key in content:
-            check_type(key, content[key], config.variables[key], path)
+            check_type(key, content[key], typ, path)
             ordered_content[key] = content[key]
-        else:
+        elif not is_optional:
             print(f"WARNING: Missing key '{key}' in file: {path}")
 
     # Check for any unknown keys

@@ -120,3 +120,12 @@ services:
       nfd:
         condition: service_healthy
     links: [nfd]
+
+  http-ca-server:
+    image: ghcr.io/ucla-irl/http-ca-server:latest
+    volumes:
+      - /var/lib/ndn/ndncert-ca:/private
+      - ./dist/root-ca:/config
+    environment:
+      HOME: /private
+    restart: unless-stopped

@@ -48,6 +48,11 @@ def render(node_name: str, dry: bool = False) -> None:
 
     # For each service, render templates with the corresponding values
     for service, values in config.services.items():
+        # Check if the service is enabled
+        if expr := values.get('if', False):
+            if expr not in render_vars or not render_vars[expr]:
+                continue
+
         # Check if any file did change
         service_changed = False
 
