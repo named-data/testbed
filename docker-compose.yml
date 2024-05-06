@@ -24,6 +24,8 @@ services:
     ports:
       - "6363:6363"
       - "6363:6363/udp"
+    entrypoint: /bin/bash
+    command: /config/entrypoint.sh
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "nfdc", "status"]

@@ -16,7 +16,6 @@ services:
   nfd:
     template_path: templates/nfd
     render_path: dist/nfd
-    init_exec: ['/bin/bash', '/config/nfd-init.sh']
 
   nfd-http-status-server:
     pass: on
