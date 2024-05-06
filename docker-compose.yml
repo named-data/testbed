@@ -10,7 +10,7 @@ services:
     environment:
       MANAGED_HOST: ${MANAGED_HOST}
     entrypoint: /bin/sh
-    command: [framework/master.sh]
+    command: [scripts/master.sh]
     healthcheck:
       test: [CMD, stat, /repo/dist/.master-ready]
       interval: 3s

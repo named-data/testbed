@@ -1,3 +1,0 @@
-# Cron jobs for master container
-
-* * * * * /bin/sh /repo/framework/cron-1.sh
