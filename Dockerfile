@@ -17,6 +17,7 @@ RUN <<EOF
 
     apt-get install -Uy --no-install-recommends \
         git \
+        busybox \
         python3 \
         python3-pip \
         docker-ce-cli \
