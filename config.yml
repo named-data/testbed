@@ -4,9 +4,6 @@ environment_path: .
 # Path to directory containing variable values for each host
 host_vars_path: host_vars
 
-# Path to file containing secrets (will extend this file)
-secret_config: secrets.yml
-
 # This must match exactly with the docker-compose.yml file
 services:
   caddy:
@@ -42,7 +39,6 @@ services:
   http-ca-server:
     template_path: templates/root-ca
     render_path: dist/root-ca
-    if: root_ca
 
 # Global variables that are available in all templates
 globals:

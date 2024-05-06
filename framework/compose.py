@@ -1,6 +1,14 @@
 import json
 import subprocess
 
+def config() -> dict:
+    """
+    Get the global configuration for the docker compose
+    """
+    cmd = ['docker', 'compose', 'config', '--format', 'json']
+    result = subprocess.run(cmd, stdout=subprocess.PIPE)
+    return json.loads(result.stdout)
+
 def status(service: str) -> dict:
     """
     Get the status JSON for a docker compose service

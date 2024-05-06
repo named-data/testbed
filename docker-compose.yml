@@ -125,6 +125,7 @@ services:
 
   http-ca-server:
     image: ghcr.io/ucla-irl/http-ca-server:latest
+    profiles: [root-ca]  # only run on Root CA
     init: true
     tty: true
     volumes:

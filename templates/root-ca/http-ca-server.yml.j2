@@ -1,6 +1,6 @@
 global_prefix: {{ ndnNetwork }}
 port: 8777
-secret: {{ smtp_password }}
+secret: {{ ROOT_CA_SECRET }}
 
 hosts:
   {% for name, data in hostvars.items() %}

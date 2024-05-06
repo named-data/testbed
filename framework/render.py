@@ -22,6 +22,9 @@ def render(node_name: str, dry: bool = False) -> None:
     # Read config file
     config = conf.get()
 
+    # Get the docker compose config
+    compose_config = compose.config()
+
     # Load environment and templates for each service. Set undefined to StrictUndefined to throw
     # a noisy error if a value that is present in the template is not passed in as a value.
     environment = jinja2.Environment(
@@ -49,9 +52,9 @@ def render(node_name: str, dry: bool = False) -> None:
     # For each service, render templates with the corresponding values
     for service, values in config.services.items():
         # Check if the service is enabled
-        if expr := values.get('if', False):
-            if expr not in render_vars or not render_vars[expr]:
-                continue
+        if service not in compose_config['services']:
+            print(f"Service {service} is not enabled.")
+            continue
 
         # Check if any file did change
         service_changed = False

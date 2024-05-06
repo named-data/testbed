@@ -26,3 +26,17 @@ def hash_file(path: str) -> str:
     the contents of the file.
     """
     return hashlib.md5(open(path, 'rb').read()).hexdigest()
+
+def read_dotenv(file='.env') -> dict[str, str]:
+    """
+    This function reads a .env file and returns a dictionary of the key-value
+    """
+
+    dotenv = {}
+    with open(file) as f:
+        for line in f:
+            if not line.strip() or line.startswith('#'):
+                continue
+            key, value = line.strip().split('=', 1)
+            dotenv[key] = value
+    return dotenv
