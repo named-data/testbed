@@ -15,23 +15,22 @@ def check_type(key: str, value: Any, typ: str, path: str):
      - typ: The type to validate against (string, number, boolean, list, dict)
     """
 
+    valid_type = False
     if typ == 'string':
-        if not isinstance(value, str):
-            print(f"WARNING: Key '{key}' in file: {path} is not a string.")
+        valid_type = isinstance(value, str)
     elif typ == 'number':
-        if not isinstance(value, int) and not isinstance(value, float):
-            print(f"WARNING: Key '{key}' in file: {path} is not a number.")
+        valid_type = isinstance(value, int) or isinstance(value, float)
     elif typ == 'boolean':
-        if not isinstance(value, bool):
-            print(f"WARNING: Key '{key}' in file: {path} is not a boolean.")
+        valid_type = isinstance(value, bool)
     elif typ == 'list':
-        if not isinstance(value, list):
-            print(f"WARNING: Key '{key}' in file: {path} is not a list.")
+        valid_type = isinstance(value, list)
     elif typ == 'dict':
-        if not isinstance(value, dict):
-            print(f"WARNING: Key '{key}' in file: {path} is not a dict.")
+        valid_type = isinstance(value, dict)
     else:
         print(f"WARNING: Unknown type '{typ}' for key '{key}'")
+
+    if not valid_type:
+        print(f"WARNING: Key '{key}' has invalid type (got '{type(value).__name__}', epxected '{typ}') in file: {path}")
 
 def lint(path: str):
     # Read YAML file
