@@ -14,5 +14,9 @@ python3 framework/main.py
 
 date > dist/.master-ready
 
+# Wait for 2 minutes before starting cron,
+# so that the master becomes healthy first.
+sleep 120
+
 cp framework/crontab "/var/spool/cron/crontabs/$(whoami)"
 exec busybox crond -f -L /dev/stdout
