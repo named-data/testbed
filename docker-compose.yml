@@ -123,6 +123,8 @@ services:
 
   http-ca-server:
     image: ghcr.io/ucla-irl/http-ca-server:latest
+    init: true
+    tty: true
     volumes:
       - /var/lib/ndn/ndncert-ca:/private
       - ./dist/root-ca:/config
