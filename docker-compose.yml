@@ -110,7 +110,7 @@ services:
     volumes:
       - /run/nfd:/run/nfd
       - /var/lib/ndn/ndncert-ca:/private
-      - /etc/ndncert/ndncert-mail.conf:/etc/ndncert/ndncert-mail.conf
+      - ./dist/ndncert/ndncert-mail.conf:/etc/ndncert/ndncert-mail.conf
       - ./dist/ndncert:/config
     environment:
       HOME: /private

@@ -4,6 +4,9 @@ environment_path: .
 # Path to directory containing variable values for each host
 host_vars_path: host_vars
 
+# Path to file containing secrets (will extend this file)
+secret_config: secrets.yml
+
 # This must match exactly with the docker-compose.yml file
 services:
   caddy:
