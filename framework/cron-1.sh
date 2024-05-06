@@ -5,6 +5,8 @@
 
 set -e
 
+echo -e "Running cron-1 at $(date)\n"
+
 cd /repo
 
 git pull

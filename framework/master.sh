@@ -5,6 +5,8 @@
 
 set -e
 
+echo -e "Starting master service at $(date)\n"
+
 rm -f dist/.master-ready
 
 git config --global --add safe.directory /repo
