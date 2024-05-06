@@ -1,0 +1,9 @@
+port: 8777
+secret: {{ smtp_password }}
+
+hosts:
+  {% for name, data in hostvars.items() %}
+  {{ name }}:
+    ip_address: {{ data['host_ip'] }}
+    prefix: {{ data['default_prefix'] }}
+  {% endfor %}

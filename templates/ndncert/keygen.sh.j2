@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -e
+
+# Change directory to containing folder
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd $SCRIPT_DIR
+
+# Variables
+PREFIX="{{ default_prefix }}"
+
+# Home and keys directories
+PRIVATE_DIR="$(pwd)/private"
+
+# Make sure the private directory exists
+rm -rf "${PRIVATE_DIR}"
+mkdir -p "${PRIVATE_DIR}"
+
+# Create new key
+# TODO: skip if a valid key already exists
+export HOME="${PRIVATE_DIR}"
+ndnsec key-gen "${PREFIX}" > "${PRIVATE_DIR}/ndncert.csr"
+
+cat "${PRIVATE_DIR}/ndncert.csr"
+
+# On UCLA
+# HOME=/var/lib/ndn/ndncert-ca ndnsec cert-gen -s /ndn ndncert.csr > ndncert.signed.cert
+# sudo -u ndn HOME=/var/lib/ndn/ndncert-ca ndnsec cert-gen -s /ndn savi.csr > savi.signed.cert
+
+# After getting cert
+# ndnsec-cert-install -f "${PRIVATE_DIR}/ndncert.signed.cert"
