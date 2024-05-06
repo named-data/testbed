@@ -1,5 +1,7 @@
 # syntax=docker/dockerfile:1
 
+ARG NDN_CXX_VERSION=latest
+
 FROM python:3-alpine AS testbed-master
 
 RUN <<EOF
@@ -14,7 +16,6 @@ VOLUME /repo
 WORKDIR /repo
 
 
-ARG NDN_CXX_VERSION=latest
 FROM ghcr.io/named-data/ndn-cxx-runtime:${NDN_CXX_VERSION} AS http-ca-server
 
 RUN <<EOF
