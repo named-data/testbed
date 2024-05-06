@@ -2,12 +2,15 @@
 
 set -e
 
+# Function to allow call to fail and return exit code
+allow_fail_status=0
+function allow_fail { set +e; $@; allow_fail_status=$?; set -e; }
+
 # Change directory to containing folder
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd $SCRIPT_DIR
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 # Variables
-PREFIX="{{ default_prefix }}"
+KEY_NAME="{{ default_prefix }}"
 ROOT_CA_HTTPS="{{ root_ca_https }}"
 ROOT_CA_SECRET="{{ ROOT_CA_SECRET }}"
 
@@ -15,12 +18,16 @@ ROOT_CA_SECRET="{{ ROOT_CA_SECRET }}"
 PRIVATE_DIR="$(pwd)/private"
 
 # Make sure the private directory exists
-rm -rf "${PRIVATE_DIR}"
 mkdir -p "${PRIVATE_DIR}"
 
-# Create new keypair (TODO: skip if a valid key already exists)
+# Create new keypair if it does not exist
 export HOME="${PRIVATE_DIR}"
-ndnsec key-gen "${PREFIX}" > "${PRIVATE_DIR}/ndncert.csr"
+allow_fail ndnsec sign-req "${KEY_NAME}" > "${PRIVATE_DIR}/ndncert.csr"
+if [ $allow_fail_status -ne 0 ]
+then
+  echo -e "Generating new operator keypair"
+  ndnsec key-gen -n "${KEY_NAME}" > "${PRIVATE_DIR}/ndncert.csr"
+fi
 
 # Get certificate from root certificate authority
 curl -s -X POST --upload-file "${PRIVATE_DIR}/ndncert.csr" -o "${PRIVATE_DIR}/site.ndncert" \
@@ -28,3 +35,6 @@ curl -s -X POST --upload-file "${PRIVATE_DIR}/ndncert.csr" -o "${PRIVATE_DIR}/si
 
 # Install certificate to keychain
 ndnsec cert-install -f "${PRIVATE_DIR}/site.ndncert"
+
+# Clear intermediate files
+rm -f "${PRIVATE_DIR}/*.csr"
