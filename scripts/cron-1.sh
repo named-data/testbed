@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Do not call this script directly
 # It is only called by the crontab

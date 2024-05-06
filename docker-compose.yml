@@ -15,7 +15,7 @@ services:
     environment:
       MANAGED_HOST: ${MANAGED_HOST}
       ROOT_DIR: ${PWD}
-    entrypoint: /bin/sh
+    entrypoint: /bin/bash
     command: [scripts/master.sh]
     healthcheck:
       test: [CMD, stat, /repo/dist/.master-ready]

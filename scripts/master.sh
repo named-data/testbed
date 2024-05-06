@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This script is used to run the master service.
 # It should be called from the root of the project.
