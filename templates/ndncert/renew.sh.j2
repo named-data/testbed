@@ -14,27 +14,36 @@ KEY_NAME="{{ default_prefix }}"
 ROOT_CA_HTTPS="{{ root_ca_https }}"
 ROOT_CA_SECRET="{{ ROOT_CA_SECRET }}"
 
-# Home and keys directories
+# Directories
 PRIVATE_DIR="$(pwd)/private"
-
-# Make sure the private directory exists
 mkdir -p "${PRIVATE_DIR}"
+
+# Output file names
+NDNCERT_CERT_PATH="${PRIVATE_DIR}/site.ndncert"
+
+# If set then only continue if certs don't exist
+if [ -n "${TESTBED_BOOTSTRAP}" ]; then
+  if [ -f "${NDNCERT_CERT_PATH}" ]; then
+    echo -e "NDNCERT certificate already exists, skipping generation"
+    exit 0
+  fi
+fi
 
 # Create new keypair if it does not exist
 export HOME="${PRIVATE_DIR}"
-allow_fail ndnsec sign-req "${KEY_NAME}" > "${PRIVATE_DIR}/ndncert.csr"
+allow_fail ndnsec sign-req "${KEY_NAME}" > "${NDNCERT_CERT_PATH}.csr"
 if [ $allow_fail_status -ne 0 ]
 then
   echo -e "Generating new operator keypair"
-  ndnsec key-gen -n "${KEY_NAME}" > "${PRIVATE_DIR}/ndncert.csr"
+  ndnsec key-gen -n "${KEY_NAME}" > "${NDNCERT_CERT_PATH}.csr"
 fi
 
 # Get certificate from root certificate authority
-curl -s -X POST --upload-file "${PRIVATE_DIR}/ndncert.csr" -o "${PRIVATE_DIR}/site.ndncert" \
+curl -s -X POST --upload-file "${NDNCERT_CERT_PATH}.csr" -o "${NDNCERT_CERT_PATH}" \
     "${ROOT_CA_HTTPS}/sign?secret=${ROOT_CA_SECRET}"
 
 # Install certificate to keychain
-ndnsec cert-install -f "${PRIVATE_DIR}/site.ndncert"
+ndnsec cert-install -f "${NDNCERT_CERT_PATH}"
 
 # Clear intermediate files
 rm -f "${PRIVATE_DIR}/*.csr"

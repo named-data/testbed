@@ -12,8 +12,16 @@ rm -f dist/.master-ready
 git config --global --add safe.directory /repo
 git pull
 
+# Bootstrap all configuration files
+export TESTBED_BOOTSTRAP=1
 python3 framework/main.py --dry
 
+# Check and reissue certificates
+bash dist/ndncert/renew.sh
+bash dist/nlsr/renew.sh
+
+# End bootstrapping
+unset TESTBED_BOOTSTRAP
 date > dist/.master-ready
 
 # Wait for 2 minutes before starting cron,

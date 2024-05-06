@@ -15,46 +15,56 @@ OPERATOR="{{ operator_user }}"
 HOSTNAME="{{ inventory_hostname }}"
 ROUTER="{{ router_name }}"
 
-# Home and keys directories
+# Directories
 PRIVATE_DIR="$(pwd)/private"
 NDNCERT_DIR="$(pwd)/../ndncert/private"
+mkdir -p "${PRIVATE_DIR}"
+
+# Output file names
+OPERATOR_CERTFILE="${PRIVATE_DIR}/operator.cert"
+ROUTER_CERTFILE="${PRIVATE_DIR}/router.cert"
 
 # Key names
 OPERATOR_KEY="${PREFIX}/%C1.Operator/${OPERATOR}"
 ROUTER_KEY="${PREFIX}/%C1.Router/${ROUTER}"
 
-# Make sure the private directory exists
-mkdir -p "${PRIVATE_DIR}"
+# If set then only continue if certs don't exist
+if [ -n "${TESTBED_BOOTSTRAP}" ]; then
+  if [ -f "${OPERATOR_CERTFILE}" ] && [ -f "${ROUTER_CERTFILE}" ]; then
+    echo -e "NLSR certificates already exist, skipping generation"
+    exit 0
+  fi
+fi
 
 # Issue operator cert
 export HOME="${PRIVATE_DIR}"
-allow_fail ndnsec sign-req "${OPERATOR_KEY}" > "${PRIVATE_DIR}/unsigned_operator.csr"
+allow_fail ndnsec sign-req "${OPERATOR_KEY}" > "${OPERATOR_CERTFILE}.csr"
 if [ $allow_fail_status -ne 0 ]
 then
   echo -e "Generating new operator keypair"
-  ndnsec key-gen -n "${OPERATOR_KEY}" > "${PRIVATE_DIR}/unsigned_operator.csr"
+  ndnsec key-gen -n "${OPERATOR_KEY}" > "${OPERATOR_CERTFILE}.csr"
 fi
 
 export HOME="${NDNCERT_DIR}"
 ndnsec cert-gen -S 202204010000 -E 20320401000 -s "${PREFIX}" \
-  -r "${PRIVATE_DIR}/unsigned_operator.csr" > "${PRIVATE_DIR}/operator.cert"
+  -r "${OPERATOR_CERTFILE}.csr" > "${OPERATOR_CERTFILE}"
 
 export HOME="${PRIVATE_DIR}"
-ndnsec cert-install -f "${PRIVATE_DIR}/operator.cert"
+ndnsec cert-install -f "${OPERATOR_CERTFILE}"
 
 # Issue router cert
 export HOME="${PRIVATE_DIR}"
-allow_fail ndnsec sign-req "${ROUTER_KEY}" > "${PRIVATE_DIR}/unsigned_router.csr"
+allow_fail ndnsec sign-req "${ROUTER_KEY}" > "${ROUTER_CERTFILE}.csr"
 if [ $allow_fail_status -ne 0 ]
 then
   echo -e "Generating new router keypair"
-  ndnsec key-gen -n "${ROUTER_KEY}" > "${PRIVATE_DIR}/unsigned_router.csr"
+  ndnsec key-gen -n "${ROUTER_KEY}" > "${ROUTER_CERTFILE}.csr"
 fi
 
 ndnsec cert-gen -S 201802010000 -E 202802010000 -s "${OPERATOR_KEY}" \
-  -r "${PRIVATE_DIR}/unsigned_router.csr" > "${PRIVATE_DIR}/router.cert"
+  -r "${PRIVATE_DIR}/unsigned_router.csr" > "${ROUTER_CERTFILE}"
 
-ndnsec cert-install -f "${PRIVATE_DIR}/router.cert"
+ndnsec cert-install -f "${ROUTER_CERTFILE}"
 
 # Clear intermediate files
 rm -f "${PRIVATE_DIR}/*.csr"
