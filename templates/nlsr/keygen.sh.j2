@@ -25,14 +25,15 @@ rm -f "${PRIVATE_DIR}/operator.cert"
 rm -f "${PRIVATE_DIR}/router.cert"
 
 # Function to allow call to fail and return exit code
-function allow_fail { set +e ; $@ ; CODE=$? ; set -e; return $CODE; }
+allow_fail_status=0
+function allow_fail { set +e; $@; allow_fail_status=$?; set -e; }
 
 # Issue operator cert
 if [ ! -s "${PRIVATE_DIR}/operator.cert" ]
 then
   export HOME="${PRIVATE_DIR}"
   allow_fail ndnsec sign-req "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.csr"
-  if [ $? -ne 0 ]
+  if [ $allow_fail_status -ne 0 ]
   then
     echo -e "Generating new operator keypair"
     ndnsec key-gen -n "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.csr"
@@ -53,7 +54,7 @@ if [ ! -s "${PRIVATE_DIR}/router.cert" ]
 then
   export HOME="${PRIVATE_DIR}"
   allow_fail ndnsec sign-req "${PREFIX}/%C1.Router/${ROUTER}" > "${PRIVATE_DIR}/unsigned_router.csr"
-  if [ $? -ne 0 ]
+  if [ $allow_fail_status -ne 0 ]
   then
     echo -e "Generating new router keypair"
     ndnsec key-gen -n "${PREFIX}/%C1.Router/${ROUTER}" > "${PRIVATE_DIR}/unsigned_router.csr"
