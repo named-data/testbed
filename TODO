@@ -1,8 +1,4 @@
-* NLSR running the keygen script
-* Prevent regeneration of operator keys
 * Repo: what is there in `/root`?
 * http-ca-server --> caddy
-
-* https://gerrit.named-data.net/c/NLSR/+/7461
-* https://gerrit.named-data.net/c/ndncert/+/7462
-* https://github.com/UCLA-IRL/ndn-python-repo/issues/87 (switch repo to mongodb)
+* Switch to upstream NLSR, NDNCERT
+* Switch repo to mongodb
