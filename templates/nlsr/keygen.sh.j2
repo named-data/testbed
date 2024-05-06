@@ -31,7 +31,7 @@ function allow_fail { set +e ; $@ ; CODE=$? ; set -e; return $CODE; }
 if [ ! -s "${PRIVATE_DIR}/operator.cert" ]
 then
   export HOME="${PRIVATE_DIR}"
-  allow_fail sign-req "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.csr"
+  allow_fail ndnsec sign-req "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.csr"
   if [ $? -ne 0 ]
   then
     echo -e "Generating new operator keypair"
