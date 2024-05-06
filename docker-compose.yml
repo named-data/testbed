@@ -10,15 +10,16 @@ services:
     init: true
     tty: true
     volumes:
-      - ${PWD}:/repo
+      - ${PWD}:/testbed
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       MANAGED_HOST: ${MANAGED_HOST}
       ROOT_DIR: ${PWD}
     entrypoint: /bin/bash
     command: [scripts/master.sh]
+    working_dir: /testbed
     healthcheck:
-      test: [CMD, stat, /repo/dist/.master-ready]
+      test: [CMD, stat, /testbed/dist/.master-ready]
       interval: 3s
 
   caddy:

@@ -28,8 +28,8 @@ RUN <<EOF
         Jinja2==3.1.4
 EOF
 
-VOLUME /repo
-WORKDIR /repo
+VOLUME /testbed
+WORKDIR /testbed
 
 
 FROM ghcr.io/named-data/ndn-cxx-runtime:${NDN_CXX_VERSION} AS http-ca-server

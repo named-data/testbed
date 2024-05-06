@@ -9,7 +9,7 @@ echo -e "Starting master service at $(date)"
 
 rm -f dist/.master-ready
 
-git config --global --add safe.directory /repo
+git config --global --add safe.directory /testbed
 git pull
 
 # Bootstrap all configuration files

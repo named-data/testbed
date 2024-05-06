@@ -5,7 +5,7 @@
 
 set +e
 
-cd /repo
+cd /testbed
 git pull
 
 PWD=$ROOT_DIR python3 framework/main.py
