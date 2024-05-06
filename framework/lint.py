@@ -1,7 +1,7 @@
 import yaml
 
-import framework.utils as utils
-import framework.conf as conf
+import internal.utils as utils
+import internal.conf as conf
 
 from typing import Any
 

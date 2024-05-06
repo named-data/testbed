@@ -1,5 +1,19 @@
 name: testbed
 services:
+  master:
+    image: ghcr.io/ucla-irl/testbed-master@sha256:cead6fd2018e442a1df654b13fbb4f6b8f6d92558fd6e5923c5b1d9b0810dae7
+    init: true
+    tty: true
+    volumes:
+      - .:/repo
+    environment:
+      MANAGED_HOST: ${MANAGED_HOST}
+    entrypoint: /bin/sh
+    command: [framework/master.sh]
+    healthcheck:
+      test: [CMD, stat, /repo/dist/.master-ready]
+      interval: 3s
+
   caddy:
     image: caddy:2
     restart: unless-stopped
@@ -13,6 +27,8 @@ services:
       - ./dist/caddy/Caddyfile:/etc/caddy/Caddyfile
       - ./dist/caddy/data:/data
       - ./dist/caddy/config:/config
+    depends_on:
+      master: { condition: service_healthy }
 
   nfd:
     image: ghcr.io/named-data/nfd:20240420
@@ -30,6 +46,8 @@ services:
     healthcheck:
       test: [CMD, nfdc, status]
       interval: 5s
+    depends_on:
+      master: { condition: service_healthy }
 
   nfd-http-status-server:
     image: ghcr.io/named-data/nfd-status-http-server:20240420
@@ -121,3 +139,5 @@ services:
     environment:
       HOME: /private
     restart: unless-stopped
+    depends_on:
+      master: { condition: service_healthy }

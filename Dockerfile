@@ -29,7 +29,7 @@ RUN <<EOF
         python-ndn==0.4.2
 EOF
 
-COPY http-ca-server.py /app/http-ca-server.py
+COPY framework/http-ca-server.py /app/http-ca-server.py
 
 ENV HOME=/config
 VOLUME /config
