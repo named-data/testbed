@@ -2,6 +2,10 @@
 
 set -e
 
+# Function to allow call to fail and return exit code
+allow_fail_status=0
+function allow_fail { set +e; $@; allow_fail_status=$?; set -e; }
+
 # Change directory to containing folder
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
@@ -15,50 +19,42 @@ ROUTER="{{ router_name }}"
 PRIVATE_DIR="$(pwd)/private"
 NDNCERT_DIR="$(pwd)/../ndncert/private"
 
+# Key names
+OPERATOR_KEY="${PREFIX}/%C1.Operator/${OPERATOR}"
+ROUTER_KEY="${PREFIX}/%C1.Router/${ROUTER}"
+
 # Make sure the private directory exists
 mkdir -p "${PRIVATE_DIR}"
 
-# TODO: check expiry before removal
-rm -f "${PRIVATE_DIR}/*.csr"
-rm -f "${PRIVATE_DIR}/operator.cert"
-rm -f "${PRIVATE_DIR}/router.cert"
-
-# Function to allow call to fail and return exit code
-allow_fail_status=0
-function allow_fail { set +e; $@; allow_fail_status=$?; set -e; }
-
 # Issue operator cert
-if [ ! -s "${PRIVATE_DIR}/operator.cert" ]
+export HOME="${PRIVATE_DIR}"
+allow_fail ndnsec sign-req "${OPERATOR_KEY}" > "${PRIVATE_DIR}/unsigned_operator.csr"
+if [ $allow_fail_status -ne 0 ]
 then
-  export HOME="${PRIVATE_DIR}"
-  allow_fail ndnsec sign-req "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.csr"
-  if [ $allow_fail_status -ne 0 ]
-  then
-    echo -e "Generating new operator keypair"
-    ndnsec key-gen -n "${PREFIX}/%C1.Operator/${OPERATOR}" > "${PRIVATE_DIR}/unsigned_operator.csr"
-  fi
-
-  export HOME="${NDNCERT_DIR}"
-  ndnsec cert-gen -S 202204010000 -E 20320401000 -s "${PREFIX}" \
-    -r "${PRIVATE_DIR}/unsigned_operator.csr" > "${PRIVATE_DIR}/operator.cert"
-
-  export HOME="${PRIVATE_DIR}"
-  ndnsec cert-install -f "${PRIVATE_DIR}/operator.cert"
+  echo -e "Generating new operator keypair"
+  ndnsec key-gen -n "${OPERATOR_KEY}" > "${PRIVATE_DIR}/unsigned_operator.csr"
 fi
+
+export HOME="${NDNCERT_DIR}"
+ndnsec cert-gen -S 202204010000 -E 20320401000 -s "${PREFIX}" \
+  -r "${PRIVATE_DIR}/unsigned_operator.csr" > "${PRIVATE_DIR}/operator.cert"
+
+export HOME="${PRIVATE_DIR}"
+ndnsec cert-install -f "${PRIVATE_DIR}/operator.cert"
 
 # Issue router cert
-if [ ! -s "${PRIVATE_DIR}/router.cert" ]
+export HOME="${PRIVATE_DIR}"
+allow_fail ndnsec sign-req "${ROUTER_KEY}" > "${PRIVATE_DIR}/unsigned_router.csr"
+if [ $allow_fail_status -ne 0 ]
 then
-  export HOME="${PRIVATE_DIR}"
-  allow_fail ndnsec sign-req "${PREFIX}/%C1.Router/${ROUTER}" > "${PRIVATE_DIR}/unsigned_router.csr"
-  if [ $allow_fail_status -ne 0 ]
-  then
-    echo -e "Generating new router keypair"
-    ndnsec key-gen -n "${PREFIX}/%C1.Router/${ROUTER}" > "${PRIVATE_DIR}/unsigned_router.csr"
-  fi
-
-  ndnsec cert-gen -S 201802010000 -E 202802010000 -s "${PREFIX}/%C1.Operator/${OPERATOR}" \
-    -r "${PRIVATE_DIR}/unsigned_router.csr" > "${PRIVATE_DIR}/router.cert"
-
-  ndnsec cert-install -f "${PRIVATE_DIR}/router.cert"
+  echo -e "Generating new router keypair"
+  ndnsec key-gen -n "${ROUTER_KEY}" > "${PRIVATE_DIR}/unsigned_router.csr"
 fi
+
+ndnsec cert-gen -S 201802010000 -E 202802010000 -s "${OPERATOR_KEY}" \
+  -r "${PRIVATE_DIR}/unsigned_router.csr" > "${PRIVATE_DIR}/router.cert"
+
+ndnsec cert-install -f "${PRIVATE_DIR}/router.cert"
+
+# Clear intermediate files
+rm -f "${PRIVATE_DIR}/*.csr"
