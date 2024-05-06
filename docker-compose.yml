@@ -1,3 +1,7 @@
+# This file is a part of the testbed project.
+# Please read the comments below carefully if you are changing this file.
+# 1. Volume mounts MUST use ${PWD} instead of .
+
 name: testbed
 services:
   master:
@@ -5,10 +9,11 @@ services:
     init: true
     tty: true
     volumes:
-      - .:/repo
+      - ${PWD}:/repo
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       MANAGED_HOST: ${MANAGED_HOST}
+      ROOT_DIR: ${PWD}
     entrypoint: /bin/sh
     command: [scripts/master.sh]
     healthcheck:
@@ -26,9 +31,9 @@ services:
       - 443:443
       - 443:443/udp
     volumes:
-      - ./dist/caddy/Caddyfile:/etc/caddy/Caddyfile
-      - ./dist/caddy/data:/data
-      - ./dist/caddy/config:/config
+      - ${PWD}/dist/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ${PWD}/dist/caddy/data:/data
+      - ${PWD}/dist/caddy/config:/config
     depends_on:
       master: { condition: service_healthy }
 
@@ -37,8 +42,8 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd
-      - ./anchors:/keys/anchors
-      - ./dist/nfd:/config
+      - ${PWD}/anchors:/keys/anchors
+      - ${PWD}/dist/nfd:/config
     ports:
       - 6363:6363
       - 6363:6363/udp
@@ -66,7 +71,7 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd
-      - ./dist/ndnpingserver:/ndnpingserver
+      - ${PWD}/dist/ndnpingserver:/ndnpingserver
     entrypoint: /bin/bash
     command: /ndnpingserver/entrypoint.sh
     restart: unless-stopped
@@ -78,8 +83,8 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd
-      - ./dist/ndncert/private/site.ndncert:/certs/site.ndncert
-      - ./anchors:/keys/anchors
+      - ${PWD}/dist/ndncert/private/site.ndncert:/certs/site.ndncert
+      - ${PWD}/anchors:/keys/anchors
     entrypoint: /bin/bash
     command: ['-c', 'ndn6-serve-certs /keys/anchors/*.base64  /certs/*.ndncert']
     restart: unless-stopped
@@ -91,9 +96,9 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd
-      - ./anchors:/keys/anchors
-      - ./dist/nlsr/private:/private
-      - ./dist/nlsr:/config
+      - ${PWD}/anchors:/keys/anchors
+      - ${PWD}/dist/nlsr/private:/private
+      - ${PWD}/dist/nlsr:/config
     environment:
       HOME: /private
       NDN_LOG: nlsr.*=DEBUG
@@ -108,7 +113,7 @@ services:
     volumes:
       - /run/nfd:/run/nfd
       - /root:/private
-      - ./dist/ndn-python-repo:/config
+      - ${PWD}/dist/ndn-python-repo:/config
     environment:
       HOME: /private
     restart: unless-stopped
@@ -120,9 +125,9 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd
-      - ./dist/ndncert/private:/private
-      - ./dist/ndncert/ndncert-mail.conf:/etc/ndncert/ndncert-mail.conf
-      - ./dist/ndncert:/config
+      - ${PWD}/dist/ndncert/private:/private
+      - ${PWD}/dist/ndncert/ndncert-mail.conf:/etc/ndncert/ndncert-mail.conf
+      - ${PWD}/dist/ndncert:/config
     environment:
       HOME: /private
       NDN_LOG: '*=TRACE'
@@ -137,7 +142,7 @@ services:
     tty: true
     volumes:
       - /var/lib/ndn/ndncert-ca:/private
-      - ./dist/root-ca:/config
+      - ${PWD}/dist/root-ca:/config
     environment:
       HOME: /private
     restart: unless-stopped
