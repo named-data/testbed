@@ -6,6 +6,7 @@ name: testbed
 services:
   master:
     image: ghcr.io/ucla-irl/testbed-master:latest
+    restart: unless-stopped
     init: true
     tty: true
     volumes:
@@ -19,7 +20,6 @@ services:
     healthcheck:
       test: [CMD, stat, /repo/dist/.master-ready]
       interval: 3s
-    restart: always
 
   caddy:
     image: caddy:2

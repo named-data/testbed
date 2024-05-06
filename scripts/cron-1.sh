@@ -11,9 +11,4 @@ cd /repo
 
 git pull
 
-export PWD=$ROOT_DIR
-python3 framework/main.py
-
-# Apply changes to the docker-compose.yml
-# Also starts up any services that are not running
-docker compose up -d --remove-orphans
+PWD=$ROOT_DIR python3 framework/main.py
