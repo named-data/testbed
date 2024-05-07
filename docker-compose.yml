@@ -113,6 +113,8 @@ services:
       - /run/nfd:/run/nfd:ro
       - /root:/config
       - ${PWD}/dist/ndn-python-repo/repo.conf:/config/repo.conf:ro
+    environment:
+      HOME: /config
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
