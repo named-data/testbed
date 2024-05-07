@@ -142,6 +142,7 @@ services:
       - /var/lib/ndn/ndncert-ca:/config
       - ${PWD}/dist/root-ca/cert-store:/config/cert-store
       - ${PWD}/dist/root-ca/http-ca-server.yml:/config/http-ca-server.yml:ro
+      - ${PWD}/framework/http-ca-server.py:/app/http-ca-server.py:ro
     restart: unless-stopped
     depends_on:
       master: { condition: service_healthy }
