@@ -46,4 +46,4 @@ curl -fsSL -X POST --upload-file "${NDNCERT_CERT_PATH}.csr" -o "${NDNCERT_CERT_P
 ndnsec cert-install -f "${NDNCERT_CERT_PATH}"
 
 # Clear intermediate files
-rm -f "${PRIVATE_DIR}/*.csr"
+rm -f ${PRIVATE_DIR}/*.csr

@@ -67,4 +67,4 @@ ndnsec cert-gen -S 201802010000 -E 202802010000 -s "${OPERATOR_KEY}" \
 ndnsec cert-install -f "${ROUTER_CERTFILE}"
 
 # Clear intermediate files
-rm -f "${PRIVATE_DIR}/*.csr"
+rm -f ${PRIVATE_DIR}/*.csr
