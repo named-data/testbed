@@ -8,18 +8,21 @@ import subprocess
 import ndn
 import ipaddress
 
+from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-CONFIG_FILE: str = sys.argv[1]
+@dataclass
+class Config:
+    global_prefix: str
+    secret: str
+    hosts: dict[str, dict]
+    port: int
 
-GLOBAL_PREFIX: str = '<prefix>'
-SECRET: str = '<super-secret>'
-HOSTS: dict[str, dict] = {}
-PORT: int = 8777
+config: Config = None
 
 class MyHTTPRequestHandler(BaseHTTPRequestHandler):
     def which_host_ip(self, address):
-        for _, host in HOSTS.items():
+        for _, host in config.hosts.items():
             for subnet in host['subnets']:
                 if ipaddress.ip_address(address) in ipaddress.ip_network(subnet):
                     return host
@@ -27,7 +30,7 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def sign(self, path, query, data):
         # Check if the secret is correct from query parameter
-        if query != f'secret={SECRET}':
+        if query != f'secret={config.secret}':
             self.send_error(401, "Invalid secret")
             return
 
@@ -47,7 +50,7 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
             return
 
         # Sign a certificate for the name
-        proc = subprocess.run(['ndnsec', 'cert-gen', '-s', GLOBAL_PREFIX, '-'], input=data, capture_output=True)
+        proc = subprocess.run(['ndnsec', 'cert-gen', '-s', config.global_prefix, '-'], input=data, capture_output=True)
 
         if proc.returncode != 0:
             self.send_error(500, f"Failed to sign certificate: {proc.stderr}")
@@ -97,15 +100,11 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
 
 if __name__ == '__main__':
     # Read YAML config
-    with open(CONFIG_FILE, 'r') as f:
-        config = yaml.safe_load(f)
-        GLOBAL_PREFIX = config['global_prefix']
-        SECRET = config['secret']
-        HOSTS = config['hosts']
-        PORT = config['port']
+    with open(sys.argv[1], 'r') as f:
+        config = Config(**yaml.safe_load(f))
 
     # Start server
-    server_address = ('', PORT)
+    server_address = ('', config.port)
     httpd = HTTPServer(server_address, MyHTTPRequestHandler)
-    print(f"Starting Root CA server on port {PORT}")
+    print(f"Starting HTTP CA server on port {config.port}")
     httpd.serve_forever()
