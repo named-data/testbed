@@ -58,6 +58,11 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(certificate)
 
+        # Store the certificate if path provided
+        if path := host.get('cert_file'):
+            with open(path, 'wb') as f:
+                f.write(certificate)
+
     def do_POST(self):
         # Check if the path is correct
         parts = self.path.split('?')

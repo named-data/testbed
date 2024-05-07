@@ -1,10 +1,11 @@
-global_prefix: {{ ndnNetwork }}
+global_prefix: "{{ ndnNetwork }}"
 port: 8777
-secret: {{ ROOT_CA_SECRET }}
+secret: "{{ ROOT_CA_SECRET }}"
 
 hosts:
   {% for name, data in hostvars.items() %}
   {{ name }}:
-    ip_address: {{ data['host_ip'] }}
-    prefix: {{ data['default_prefix'] }}
+    cert_file: "/config/cert-store/site-ca.{{ data['inventory_hostname'] }}.ndncert"
+    ip_address: "{{ data['host_ip'] }}"
+    prefix: "{{ data['default_prefix'] }}"
   {% endfor %}
