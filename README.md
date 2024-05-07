@@ -38,9 +38,9 @@ The master container will automatically attempt to get certificates initiall if 
 
 ```bash
 # Renew certificates
-docker compose exec master bash /testbed/dist/ndncert/renew.sh
-docker compose exec master bash /testbed/dist/nlsr/renew.sh
-docker compose exec master bash /testbed/dist/ndn-python-repo/renew.sh
+docker compose exec master bash /testbed/dist/ndncert/renew.sh --force
+docker compose exec master bash /testbed/dist/nlsr/renew.sh --force
+docker compose exec master bash /testbed/dist/ndn-python-repo/renew.sh --force
 
 # Restart containers
 docker compose restart nlsr ndncert serve-certs

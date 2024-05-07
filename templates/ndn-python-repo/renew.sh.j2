@@ -1,49 +1,29 @@
 #!/bin/bash
 
 set -e
-
-# Function to allow call to fail and return exit code
-allow_fail_status=0
-function allow_fail { set +e; $@; allow_fail_status=$?; set -e; }
-
-# Change directory to containing folder
-cd "$(dirname "${BASH_SOURCE[0]}")"
+source "$(pwd)/scripts/utils.sh"
+cd_script_dir
 
 # Variables
 PREFIX="{{ default_prefix }}"
-REPO_KEY="${PREFIX}/%C1.Repo"
+KEY_NAME="${PREFIX}/%C1.Repo"
 
-# Directories
+# Paths
 WORKING_DIR="$(pwd)"
 NDNCERT_DIR="$(pwd)/../ndncert"
-mkdir -p "${WORKING_DIR}"
-
-# Output file names
 REPO_CERTFILE="${WORKING_DIR}/repo.cert"
 
-# If set then only continue if certs don't exist
-if [ -n "${TESTBED_BOOTSTRAP}" ]; then
-  if [ -f "${REPO_CERTFILE}" ]; then
-    echo -e "Repo certificates already exist, skipping generation"
-    exit 0
-  fi
+# Repo certificate
+if [[ $(needs_renewal "${REPO_CERTFILE}") ]]; then
+  export HOME="${WORKING_DIR}"
+  get_csr "${KEY_NAME}" > "${REPO_CERTFILE}.csr"
+
+  export HOME="${NDNCERT_DIR}"
+  ndnsec cert-gen -S 202204010000 -E 20320401000 -s "${PREFIX}" \
+    -r "${REPO_CERTFILE}.csr" > "${REPO_CERTFILE}"
+
+  export HOME="${WORKING_DIR}"
+  ndnsec cert-install -f "${REPO_CERTFILE}"
 fi
 
-# Issue repo cert
-export HOME="${WORKING_DIR}"
-allow_fail ndnsec sign-req "${REPO_KEY}" > "${REPO_CERTFILE}.csr"
-if [ $allow_fail_status -ne 0 ]
-then
-  echo -e "Generating new repo keypair"
-  ndnsec key-gen -n "${REPO_KEY}" > "${REPO_CERTFILE}.csr"
-fi
-
-export HOME="${NDNCERT_DIR}"
-ndnsec cert-gen -S 202204010000 -E 20320401000 -s "${PREFIX}" \
-  -r "${REPO_CERTFILE}.csr" > "${REPO_CERTFILE}"
-
-export HOME="${WORKING_DIR}"
-ndnsec cert-install -f "${REPO_CERTFILE}"
-
-# Clear intermediate files
-rm -f ${WORKING_DIR}/*.csr
+renew_cleanup

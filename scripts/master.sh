@@ -13,7 +13,6 @@ git config --global --add safe.directory /testbed
 git pull
 
 # Bootstrap all configuration files
-export TESTBED_BOOTSTRAP=1
 python3 framework/main.py --dry
 
 # Check and reissue certificates
@@ -22,7 +21,6 @@ bash dist/nlsr/renew.sh
 bash dist/ndn-python-repo/renew.sh
 
 # End bootstrapping
-unset TESTBED_BOOTSTRAP
 date > dist/.master-ready
 
 # Wait for 2 minutes before starting cron,

@@ -1,48 +1,29 @@
 #!/bin/bash
 
 set -e
-
-# Function to allow call to fail and return exit code
-allow_fail_status=0
-function allow_fail { set +e; $@; allow_fail_status=$?; set -e; }
-
-# Change directory to containing folder
-cd "$(dirname "${BASH_SOURCE[0]}")"
+source "$(pwd)/scripts/utils.sh"
+cd_script_dir
 
 # Variables
 KEY_NAME="{{ default_prefix }}"
 ROOT_CA_HTTPS="{{ root_ca_https }}"
 ROOT_CA_SECRET="{{ ROOT_CA_SECRET }}"
 
-# Set working directory
+# Paths
 WORKING_DIR="$(pwd)"
+NDNCERT_CERTFILE="${WORKING_DIR}/site.ndncert"
 
-# Output file names
-NDNCERT_CERT_PATH="${WORKING_DIR}/site.ndncert"
+# NDNCERT certificate
+if [[ $(needs_renewal "${NDNCERT_CERTFILE}") ]]; then
+  export HOME="${WORKING_DIR}"
+  get_csr "${KEY_NAME}" > "${NDNCERT_CERTFILE}.csr"
 
-# If set then only continue if certs don't exist
-if [ -n "${TESTBED_BOOTSTRAP}" ]; then
-  if [ -f "${NDNCERT_CERT_PATH}" ]; then
-    echo -e "NDNCERT certificate already exists, skipping generation"
-    exit 0
-  fi
+  # Get certificate from root certificate authority
+  curl -fsSL -X POST --upload-file "${NDNCERT_CERTFILE}.csr" -o "${NDNCERT_CERTFILE}" \
+      "${ROOT_CA_HTTPS}/sign?secret=${ROOT_CA_SECRET}"
+
+  # Install certificate to keychain
+  ndnsec cert-install -f "${NDNCERT_CERTFILE}"
 fi
 
-# Create new keypair if it does not exist
-export HOME="${WORKING_DIR}"
-allow_fail ndnsec sign-req "${KEY_NAME}" > "${NDNCERT_CERT_PATH}.csr"
-if [ $allow_fail_status -ne 0 ]
-then
-  echo -e "Generating new operator keypair"
-  ndnsec key-gen -n "${KEY_NAME}" > "${NDNCERT_CERT_PATH}.csr"
-fi
-
-# Get certificate from root certificate authority
-curl -fsSL -X POST --upload-file "${NDNCERT_CERT_PATH}.csr" -o "${NDNCERT_CERT_PATH}" \
-    "${ROOT_CA_HTTPS}/sign?secret=${ROOT_CA_SECRET}"
-
-# Install certificate to keychain
-ndnsec cert-install -f "${NDNCERT_CERT_PATH}"
-
-# Clear intermediate files
-rm -f ${WORKING_DIR}/*.csr
+renew_cleanup

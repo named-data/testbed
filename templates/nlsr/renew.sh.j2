@@ -1,13 +1,8 @@
 #!/bin/bash
 
 set -e
-
-# Function to allow call to fail and return exit code
-allow_fail_status=0
-function allow_fail { set +e; $@; allow_fail_status=$?; set -e; }
-
-# Change directory to containing folder
-cd "$(dirname "${BASH_SOURCE[0]}")"
+source "$(pwd)/scripts/utils.sh"
+cd_script_dir
 
 # Variables
 PREFIX="{{ default_prefix }}"
@@ -15,56 +10,38 @@ OPERATOR="{{ operator_user }}"
 HOSTNAME="{{ inventory_hostname }}"
 ROUTER="{{ router_name }}"
 
-# Directories
-WORKING_DIR="$(pwd)"
-NDNCERT_DIR="$(pwd)/../ndncert"
-mkdir -p "${WORKING_DIR}"
-
-# Output file names
-OPERATOR_CERTFILE="${WORKING_DIR}/operator.cert"
-ROUTER_CERTFILE="${WORKING_DIR}/router.cert"
-
 # Key names
 OPERATOR_KEY="${PREFIX}/%C1.Operator/${OPERATOR}"
 ROUTER_KEY="${PREFIX}/%C1.Router/${ROUTER}"
 
-# If set then only continue if certs don't exist
-if [ -n "${TESTBED_BOOTSTRAP}" ]; then
-  if [ -f "${OPERATOR_CERTFILE}" ] && [ -f "${ROUTER_CERTFILE}" ]; then
-    echo -e "NLSR certificates already exist, skipping generation"
-    exit 0
-  fi
+# Paths
+WORKING_DIR="$(pwd)"
+NDNCERT_DIR="$(pwd)/../ndncert"
+OPERATOR_CERTFILE="${WORKING_DIR}/operator.cert"
+ROUTER_CERTFILE="${WORKING_DIR}/router.cert"
+
+# Operator certificate
+if [[ $(needs_renewal "${OPERATOR_CERTFILE}") ]]; then
+  export HOME="${WORKING_DIR}"
+  get_csr "${OPERATOR_KEY}" > "${OPERATOR_CERTFILE}.csr"
+
+  export HOME="${NDNCERT_DIR}"
+  ndnsec cert-gen -S 202204010000 -E 20320401000 -s "${PREFIX}" \
+    -r "${OPERATOR_CERTFILE}.csr" > "${OPERATOR_CERTFILE}"
+
+  export HOME="${WORKING_DIR}"
+  ndnsec cert-install -f "${OPERATOR_CERTFILE}"
 fi
 
-# Issue operator cert
-export HOME="${WORKING_DIR}"
-allow_fail ndnsec sign-req "${OPERATOR_KEY}" > "${OPERATOR_CERTFILE}.csr"
-if [ $allow_fail_status -ne 0 ]
-then
-  echo -e "Generating new operator keypair"
-  ndnsec key-gen -n "${OPERATOR_KEY}" > "${OPERATOR_CERTFILE}.csr"
+# Router certificate
+if [[ $(needs_renewal "${ROUTER_CERTFILE}") ]]; then
+  export HOME="${WORKING_DIR}"
+  get_csr "${ROUTER_KEY}" > "${ROUTER_CERTFILE}.csr"
+
+  ndnsec cert-gen -S 201802010000 -E 202802010000 -s "${OPERATOR_KEY}" \
+    -r "${ROUTER_CERTFILE}.csr" > "${ROUTER_CERTFILE}"
+
+  ndnsec cert-install -f "${ROUTER_CERTFILE}"
 fi
 
-export HOME="${NDNCERT_DIR}"
-ndnsec cert-gen -S 202204010000 -E 20320401000 -s "${PREFIX}" \
-  -r "${OPERATOR_CERTFILE}.csr" > "${OPERATOR_CERTFILE}"
-
-export HOME="${WORKING_DIR}"
-ndnsec cert-install -f "${OPERATOR_CERTFILE}"
-
-# Issue router cert
-export HOME="${WORKING_DIR}"
-allow_fail ndnsec sign-req "${ROUTER_KEY}" > "${ROUTER_CERTFILE}.csr"
-if [ $allow_fail_status -ne 0 ]
-then
-  echo -e "Generating new router keypair"
-  ndnsec key-gen -n "${ROUTER_KEY}" > "${ROUTER_CERTFILE}.csr"
-fi
-
-ndnsec cert-gen -S 201802010000 -E 202802010000 -s "${OPERATOR_KEY}" \
-  -r "${ROUTER_CERTFILE}.csr" > "${ROUTER_CERTFILE}"
-
-ndnsec cert-install -f "${ROUTER_CERTFILE}"
-
-# Clear intermediate files
-rm -f ${WORKING_DIR}/*.csr
+renew_cleanup
