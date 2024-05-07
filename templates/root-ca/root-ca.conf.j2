@@ -1,0 +1,39 @@
+{
+  "ca-prefix": "/ndncert-demo",
+  "ca-info": "NDN Testbed NDNCERT CA (Demo)",
+  "max-validity-period": "1296000",
+  "max-suffix-length": "5",
+  "probe-parameters":
+  [
+    { "probe-parameter-key": "email" }
+  ],
+  "name-assignment":
+  {
+    "inst-email": "/nonexist"
+  },
+  "supported-challenges":
+  [
+    { "challenge": "email" }
+  ],
+ "redirect-to":
+  [
+  {% for name, data in hostvars.items() %}
+  {% set outer_loop = loop %}
+  {% set cert_path = "certs/ndncert-site-ca." + data.inventory_hostname + ".signed.cert" %}
+
+  {%- if path_exists(cert_path) -%}
+  {% set cert_oneline = oneline(read_file(cert_path)) %}
+  {% for email_domain in data['site_email_domain'] %}
+    {
+      "ca-prefix": "{{ data.default_prefix }}",
+      "certificate": "{{ cert_oneline }}",
+      "policy-type": "email",
+      "policy-param": "{{ email_domain }}"
+    }
+    {%- if not (loop.last and outer_loop.last) -%},{% endif %}
+  {% endfor %}
+  {%- endif -%}
+
+  {% endfor %}
+  ]
+}

@@ -7,6 +7,12 @@ from . import conf
 from . import compose
 from . import utils
 
+JINJA_FUNCTIONS = {
+    'path_exists': lambda path: os.path.exists(path),
+    'read_file': lambda path: open(path).read(),
+    'oneline': lambda text: ''.join(text.splitlines()),
+}
+
 def render(node_name: str, dry: bool = False) -> None:
     """
     Arguments:
@@ -82,7 +88,7 @@ def render(node_name: str, dry: bool = False) -> None:
                 output_basename = os.path.splitext(output_basename)[0]
 
                 # Render the template with the values
-                output_content = environment.get_template(template_path).render(**render_vars)
+                output_content = environment.get_template(template_path).render(**render_vars, **JINJA_FUNCTIONS)
             else:
                 # Read the file
                 with open(template_path, 'r') as f:
