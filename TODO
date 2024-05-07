@@ -1,4 +1,3 @@
-* Repo: what is there in `/root`?
 * http-ca-server --> caddy
 * Switch to upstream NLSR
 * Switch repo to mongodb
