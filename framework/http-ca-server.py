@@ -21,14 +21,14 @@ class Config:
 config: Config = None
 
 class MyHTTPRequestHandler(BaseHTTPRequestHandler):
-    def which_host_ip(self, address):
+    def which_host_ip(self, address: str) -> dict|None:
         for _, host in config.hosts.items():
             for subnet in host['subnets']:
                 if ipaddress.ip_address(address) in ipaddress.ip_network(subnet):
                     return host
         return None
 
-    def sign(self, path, query, data):
+    def sign(self, path: str, query: str, data: bytes) -> None:
         # Check if the secret is correct from query parameter
         if query != f'secret={config.secret}':
             self.send_error(401, "Invalid secret")
