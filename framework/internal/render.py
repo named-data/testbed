@@ -29,7 +29,9 @@ def render(node_name: str, dry: bool = False) -> None:
     # a noisy error if a value that is present in the template is not passed in as a value.
     environment = jinja2.Environment(
         loader=jinja2.FileSystemLoader(config.environment_path),
-        undefined=jinja2.StrictUndefined)
+        undefined=jinja2.StrictUndefined,
+        trim_blocks=True,
+        lstrip_blocks=True)
 
     # Get all host vars, so we can access neighbors while filling in the templates.
     all_host_vars: dict[str, dict] = {}
