@@ -111,7 +111,7 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
-      - /root:/config
+      - ${PWD}/dist/ndn-python-repo:/config
       - ${PWD}/dist/ndn-python-repo/repo.conf:/config/repo.conf:ro
     environment:
       HOME: /config
