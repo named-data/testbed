@@ -122,7 +122,7 @@ services:
       nfd: { condition: service_healthy }
 
   ndncert:
-    image: ghcr.io/pulsejet/ndncert:20240506
+    image: ghcr.io/named-data/ndncert-ca:20240507
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
