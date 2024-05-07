@@ -40,6 +40,7 @@ The master container will automatically attempt to get certificates initiall if 
 # Renew certificates
 docker compose exec master bash /testbed/dist/ndncert/renew.sh
 docker compose exec master bash /testbed/dist/nlsr/renew.sh
+docker compose exec master bash /testbed/dist/ndn-python-repo/renew.sh
 
 # Restart containers
 docker compose restart nlsr ndncert serve-certs
@@ -50,4 +51,5 @@ To get the list of currently installed certificates, run
 ```bash
 docker compose exec -e HOME=/testbed/dist/ndncert master ndnsec list -c
 docker compose exec -e HOME=/testbed/dist/nlsr master ndnsec list -c
+docker compose exec -e HOME=/testbed/dist/ndn-python-repo master ndnsec list -c
 ```
