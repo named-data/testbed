@@ -11,16 +11,6 @@ function allow_fail {
 # Declare all command line flags here
 HAS_FORCE=$(echo $@ | allow_fail grep -ow "\-\-force")
 
-# Get the directory of the script
-function script_dir {
-    echo "$(dirname "${BASH_SOURCE[0]}")"
-}
-
-# Change to the directory of the script
-function cd_script_dir {
-    cd "$(script_dir)"
-}
-
 # Get CSR for a key or generate a new keypair
 function get_csr {
     local key_name=$1

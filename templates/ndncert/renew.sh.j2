@@ -2,7 +2,7 @@
 
 set -e
 source "$(pwd)/scripts/utils.sh"
-cd_script_dir
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
 # Variables
 KEY_NAME="{{ default_prefix }}"
