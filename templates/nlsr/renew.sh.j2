@@ -16,13 +16,13 @@ HOSTNAME="{{ inventory_hostname }}"
 ROUTER="{{ router_name }}"
 
 # Directories
-PRIVATE_DIR="$(pwd)/private"
-NDNCERT_DIR="$(pwd)/../ndncert/private"
-mkdir -p "${PRIVATE_DIR}"
+WORKING_DIR="$(pwd)"
+NDNCERT_DIR="$(pwd)/../ndncert"
+mkdir -p "${WORKING_DIR}"
 
 # Output file names
-OPERATOR_CERTFILE="${PRIVATE_DIR}/operator.cert"
-ROUTER_CERTFILE="${PRIVATE_DIR}/router.cert"
+OPERATOR_CERTFILE="${WORKING_DIR}/operator.cert"
+ROUTER_CERTFILE="${WORKING_DIR}/router.cert"
 
 # Key names
 OPERATOR_KEY="${PREFIX}/%C1.Operator/${OPERATOR}"
@@ -37,7 +37,7 @@ if [ -n "${TESTBED_BOOTSTRAP}" ]; then
 fi
 
 # Issue operator cert
-export HOME="${PRIVATE_DIR}"
+export HOME="${WORKING_DIR}"
 allow_fail ndnsec sign-req "${OPERATOR_KEY}" > "${OPERATOR_CERTFILE}.csr"
 if [ $allow_fail_status -ne 0 ]
 then
@@ -49,11 +49,11 @@ export HOME="${NDNCERT_DIR}"
 ndnsec cert-gen -S 202204010000 -E 20320401000 -s "${PREFIX}" \
   -r "${OPERATOR_CERTFILE}.csr" > "${OPERATOR_CERTFILE}"
 
-export HOME="${PRIVATE_DIR}"
+export HOME="${WORKING_DIR}"
 ndnsec cert-install -f "${OPERATOR_CERTFILE}"
 
 # Issue router cert
-export HOME="${PRIVATE_DIR}"
+export HOME="${WORKING_DIR}"
 allow_fail ndnsec sign-req "${ROUTER_KEY}" > "${ROUTER_CERTFILE}.csr"
 if [ $allow_fail_status -ne 0 ]
 then
@@ -67,4 +67,4 @@ ndnsec cert-gen -S 201802010000 -E 202802010000 -s "${OPERATOR_KEY}" \
 ndnsec cert-install -f "${ROUTER_CERTFILE}"
 
 # Clear intermediate files
-rm -f ${PRIVATE_DIR}/*.csr
+rm -f ${WORKING_DIR}/*.csr

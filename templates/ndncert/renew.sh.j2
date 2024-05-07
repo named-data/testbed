@@ -14,12 +14,11 @@ KEY_NAME="{{ default_prefix }}"
 ROOT_CA_HTTPS="{{ root_ca_https }}"
 ROOT_CA_SECRET="{{ ROOT_CA_SECRET }}"
 
-# Directories
-PRIVATE_DIR="$(pwd)/private"
-mkdir -p "${PRIVATE_DIR}"
+# Set working directory
+WORKING_DIR="$(pwd)"
 
 # Output file names
-NDNCERT_CERT_PATH="${PRIVATE_DIR}/site.ndncert"
+NDNCERT_CERT_PATH="${WORKING_DIR}/site.ndncert"
 
 # If set then only continue if certs don't exist
 if [ -n "${TESTBED_BOOTSTRAP}" ]; then
@@ -30,7 +29,7 @@ if [ -n "${TESTBED_BOOTSTRAP}" ]; then
 fi
 
 # Create new keypair if it does not exist
-export HOME="${PRIVATE_DIR}"
+export HOME="${WORKING_DIR}"
 allow_fail ndnsec sign-req "${KEY_NAME}" > "${NDNCERT_CERT_PATH}.csr"
 if [ $allow_fail_status -ne 0 ]
 then
@@ -46,4 +45,4 @@ curl -fsSL -X POST --upload-file "${NDNCERT_CERT_PATH}.csr" -o "${NDNCERT_CERT_P
 ndnsec cert-install -f "${NDNCERT_CERT_PATH}"
 
 # Clear intermediate files
-rm -f ${PRIVATE_DIR}/*.csr
+rm -f ${WORKING_DIR}/*.csr

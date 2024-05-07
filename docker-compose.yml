@@ -84,7 +84,7 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
-      - ${PWD}/dist/ndncert/private/site.ndncert:/certs/site.ndncert:ro
+      - ${PWD}/dist/ndncert/site.ndncert:/certs/site.ndncert:ro
       - ${PWD}/anchors:/keys/anchors:ro
     entrypoint: /bin/bash
     command: ['-c', 'ndn6-serve-certs /keys/anchors/*.base64  /certs/*.ndncert']
@@ -98,10 +98,8 @@ services:
     volumes:
       - /run/nfd:/run/nfd:ro
       - ${PWD}/anchors:/keys/anchors:ro
-      - ${PWD}/dist/nlsr/private:/private
-      - ${PWD}/dist/nlsr:/config:ro
+      - ${PWD}/dist/nlsr:/config
     environment:
-      HOME: /private
       NDN_LOG: nlsr.*=DEBUG
     restart: unless-stopped
     depends_on:
@@ -113,10 +111,8 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
-      - /root:/private
-      - ${PWD}/dist/ndn-python-repo:/config:ro
-    environment:
-      HOME: /private
+      - /root:/config
+      - ${PWD}/dist/ndn-python-repo/repo.conf:/config/repo.conf:ro
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
@@ -126,11 +122,10 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
-      - ${PWD}/dist/ndncert/private:/private
+      - ${PWD}/dist/ndncert:/config
       - ${PWD}/dist/ndncert/ndncert-mail.conf:/etc/ndncert/ndncert-mail.conf:ro
-      - ${PWD}/dist/ndncert:/config:ro
+      - ${PWD}/dist/ndncert/ndncert-ca.conf:/config/ndncert-ca.conf:ro
     environment:
-      HOME: /private
       NDN_LOG: '*=TRACE'
     restart: unless-stopped
     depends_on:
@@ -142,10 +137,8 @@ services:
     init: true
     tty: true
     volumes:
-      - /var/lib/ndn/ndncert-ca:/private
-      - ${PWD}/dist/root-ca:/config:ro
-    environment:
-      HOME: /private
+      - /var/lib/ndn/ndncert-ca:/config
+      - ${PWD}/dist/root-ca/http-ca-server.yml:/config/http-ca-server.yml:ro
     restart: unless-stopped
     depends_on:
       master: { condition: service_healthy }

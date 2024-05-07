@@ -10,7 +10,7 @@ general
   sync-protocol psync
   sync-interest-lifetime 60000
 
-  state-dir /private
+  state-dir /config/state
 }
 
 neighbors
@@ -216,6 +216,6 @@ security
     }
   }
 
-  cert-to-publish "/private/operator.cert"
-  cert-to-publish "/private/router.cert"
+  cert-to-publish "/config/operator.cert"
+  cert-to-publish "/config/router.cert"
 }

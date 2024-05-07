@@ -48,6 +48,6 @@ docker compose restart nlsr ndncert serve-certs
 To get the list of currently installed certificates, run
 
 ```bash
-docker compose exec -e HOME=/testbed/dist/ndncert/private master ndnsec list -c
-docker compose exec -e HOME=/testbed/dist/nlsr/private master ndnsec list -c
+docker compose exec -e HOME=/testbed/dist/ndncert master ndnsec list -c
+docker compose exec -e HOME=/testbed/dist/nlsr master ndnsec list -c
 ```
