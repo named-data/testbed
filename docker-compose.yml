@@ -32,7 +32,7 @@ services:
       - 443:443
       - 443:443/udp
     volumes:
-      - ${PWD}/dist/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ${PWD}/dist/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - ${PWD}/dist/caddy/data:/data
       - ${PWD}/dist/caddy/config:/config
     depends_on:
@@ -43,7 +43,7 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd
-      - ${PWD}/anchors:/keys/anchors
+      - ${PWD}/anchors:/keys/anchors:ro
       - ${PWD}/dist/nfd:/config
     ports:
       - 6363:6363
@@ -61,7 +61,7 @@ services:
     image: ghcr.io/named-data/nfd-status-http-server:20240420
     init: true
     volumes:
-      - /run/nfd:/run/nfd
+      - /run/nfd:/run/nfd:ro
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
@@ -71,10 +71,10 @@ services:
     tty: true
     init: true
     volumes:
-      - /run/nfd:/run/nfd
-      - ${PWD}/dist/ndnpingserver:/ndnpingserver
+      - /run/nfd:/run/nfd:ro
+      - ${PWD}/dist/ndnpingserver:/config
     entrypoint: /bin/bash
-    command: /ndnpingserver/entrypoint.sh
+    command: /config/entrypoint.sh
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
@@ -83,9 +83,9 @@ services:
     image: ghcr.io/yoursunny/ndn6-tools:20240505
     init: true
     volumes:
-      - /run/nfd:/run/nfd
-      - ${PWD}/dist/ndncert/private/site.ndncert:/certs/site.ndncert
-      - ${PWD}/anchors:/keys/anchors
+      - /run/nfd:/run/nfd:ro
+      - ${PWD}/dist/ndncert/private/site.ndncert:/certs/site.ndncert:ro
+      - ${PWD}/anchors:/keys/anchors:ro
     entrypoint: /bin/bash
     command: ['-c', 'ndn6-serve-certs /keys/anchors/*.base64  /certs/*.ndncert']
     restart: unless-stopped
@@ -96,10 +96,10 @@ services:
     image: ghcr.io/pulsejet/nlsr@sha256:567558e8ce37453f410cf2cdc612c1bf11252de0b935b8b7d5da41ce6381f5de
     init: true
     volumes:
-      - /run/nfd:/run/nfd
-      - ${PWD}/anchors:/keys/anchors
+      - /run/nfd:/run/nfd:ro
+      - ${PWD}/anchors:/keys/anchors:ro
       - ${PWD}/dist/nlsr/private:/private
-      - ${PWD}/dist/nlsr:/config
+      - ${PWD}/dist/nlsr:/config:ro
     environment:
       HOME: /private
       NDN_LOG: nlsr.*=DEBUG
@@ -112,9 +112,9 @@ services:
     image: ghcr.io/ucla-irl/ndn-python-repo:20240505
     init: true
     volumes:
-      - /run/nfd:/run/nfd
+      - /run/nfd:/run/nfd:ro
       - /root:/private
-      - ${PWD}/dist/ndn-python-repo:/config
+      - ${PWD}/dist/ndn-python-repo:/config:ro
     environment:
       HOME: /private
     restart: unless-stopped
@@ -125,10 +125,10 @@ services:
     image: ghcr.io/pulsejet/ndncert:20240506
     init: true
     volumes:
-      - /run/nfd:/run/nfd
+      - /run/nfd:/run/nfd:ro
       - ${PWD}/dist/ndncert/private:/private
-      - ${PWD}/dist/ndncert/ndncert-mail.conf:/etc/ndncert/ndncert-mail.conf
-      - ${PWD}/dist/ndncert:/config
+      - ${PWD}/dist/ndncert/ndncert-mail.conf:/etc/ndncert/ndncert-mail.conf:ro
+      - ${PWD}/dist/ndncert:/config:ro
     environment:
       HOME: /private
       NDN_LOG: '*=TRACE'
@@ -143,7 +143,7 @@ services:
     tty: true
     volumes:
       - /var/lib/ndn/ndncert-ca:/private
-      - ${PWD}/dist/root-ca:/config
+      - ${PWD}/dist/root-ca:/config:ro
     environment:
       HOME: /private
     restart: unless-stopped
