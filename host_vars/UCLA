@@ -36,3 +36,4 @@ neighbors:
 hr_angle: 2.99911
 hr_radius: 16.5866
 ethernet_device: eth0
+is_root_ca: true

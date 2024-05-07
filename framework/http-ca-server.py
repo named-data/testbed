@@ -6,16 +6,25 @@ import yaml
 import base64
 import subprocess
 import ndn
+import ipaddress
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-CONFIG_FILE = sys.argv[1]
-GLOBAL_PREFIX = '/ndn'
-SECRET = '<super-secret>'
-HOSTS = {}
-PORT = 8777
+CONFIG_FILE: str = sys.argv[1]
+
+GLOBAL_PREFIX: str = '<prefix>'
+SECRET: str = '<super-secret>'
+HOSTS: dict[str, dict] = {}
+PORT: int = 8777
 
 class MyHTTPRequestHandler(BaseHTTPRequestHandler):
+    def which_host_ip(self, address):
+        for _, host in HOSTS.items():
+            for subnet in host['subnets']:
+                if ipaddress.ip_address(address) in ipaddress.ip_network(subnet):
+                    return host
+        return None
+
     def sign(self, path, query, data):
         # Check if the secret is correct from query parameter
         if query != f'secret={SECRET}':
@@ -24,11 +33,7 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
 
         # Check if the host is allowed
         ip_address = self.get_client_ip()
-        host = None
-        for test in HOSTS.values():
-            if ip_address == test['ip_address']:
-                host = test
-                break
+        host = self.which_host_ip(ip_address)
         if not host:
             self.send_error(403, f"Host {ip_address} not allowed")
             return

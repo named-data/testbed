@@ -5,7 +5,12 @@ secret: "{{ ROOT_CA_SECRET }}"
 hosts:
   {% for name, data in hostvars.items() %}
   {{ name }}:
-    cert_file: "/config/cert-store/site-ca.{{ data['inventory_hostname'] }}.ndncert"
-    ip_address: "{{ data['host_ip'] }}"
-    prefix: "{{ data['default_prefix'] }}"
+    cert_file: /config/cert-store/site-ca.{{ data['inventory_hostname'] }}.ndncert
+    subnets:
+      - {{ data['host_ip'] }}/32
+      {% if data.get('is_root_ca', false) %}
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+      {% endif %}
+    prefix: {{ data['default_prefix'] }}
   {% endfor %}

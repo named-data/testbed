@@ -74,4 +74,4 @@ variables:
   hr_angle: number
   hr_radius: number
   ethernet_device: string
-  root_ca: ?boolean
+  is_root_ca: ?boolean
