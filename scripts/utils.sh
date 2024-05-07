@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Declare all command line flags here
-HAS_FORCE=$(echo $@ | grep -ow "\-\-force")
-
 # Allow call to fail and return exit code
 allow_fail_status=0
 function allow_fail {
@@ -10,6 +7,9 @@ function allow_fail {
     $@; allow_fail_status=$?;
     set -e;
 }
+
+# Declare all command line flags here
+HAS_FORCE=$(echo $@ | allow_fail grep -ow "\-\-force")
 
 # Get the directory of the script
 function script_dir {
