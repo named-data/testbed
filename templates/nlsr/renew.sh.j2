@@ -62,7 +62,7 @@ then
 fi
 
 ndnsec cert-gen -S 201802010000 -E 202802010000 -s "${OPERATOR_KEY}" \
-  -r "${PRIVATE_DIR}/unsigned_router.csr" > "${ROUTER_CERTFILE}"
+  -r "${ROUTER_CERTFILE}.csr" > "${ROUTER_CERTFILE}"
 
 ndnsec cert-install -f "${ROUTER_CERTFILE}"
 
