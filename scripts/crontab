@@ -1,3 +1,0 @@
-# Cron jobs for master container
-
-* * * * * /bin/bash /testbed/scripts/cron-1.sh
