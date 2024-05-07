@@ -43,7 +43,7 @@ docker compose exec master bash /testbed/dist/nlsr/renew.sh --force
 docker compose exec master bash /testbed/dist/ndn-python-repo/renew.sh --force
 
 # Restart containers
-docker compose restart nlsr ndncert serve-certs
+docker compose restart nlsr ndncert serve-certs ndn-python-repo
 ```
 
 To get the list of currently installed certificates, run
