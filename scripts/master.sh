@@ -19,6 +19,7 @@ python3 framework/main.py --dry
 # Check and reissue certificates
 bash dist/ndncert/renew.sh
 bash dist/nlsr/renew.sh
+bas dist/ndn-python-repo/renew.sh
 
 # End bootstrapping
 unset TESTBED_BOOTSTRAP
