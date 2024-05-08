@@ -138,7 +138,7 @@ services:
 
   http-ca-server:
     image: ghcr.io/ucla-irl/http-ca-server:latest
-    profiles: [root-ca]  # only run on Root CA
+    profiles: [root-ca]  # in .env
     init: true
     tty: true
     volumes:
@@ -149,3 +149,18 @@ services:
     restart: unless-stopped
     depends_on:
       master: { condition: service_healthy }
+
+  root-ndncert:
+    image: ghcr.io/named-data/ndncert-ca:20240507
+    profiles: [root-ca]  # in .env
+    init: true
+    volumes:
+      - /run/nfd:/run/nfd:ro
+      - /var/lib/ndn/ndncert-ca:/config
+      - ${PWD}/dist/root-ca/root-mail.conf:/etc/ndncert/ndncert-mail.conf:ro
+      - ${PWD}/dist/root-ca/root-ca.conf:/config/ndncert-ca.conf:ro
+    environment:
+      NDN_LOG: '*=TRACE'
+    restart: unless-stopped
+    depends_on:
+      nfd: { condition: service_healthy }
