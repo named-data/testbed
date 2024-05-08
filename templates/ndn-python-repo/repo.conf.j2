@@ -1,16 +1,14 @@
 repo_config:
-  repo_name: {{ default_prefix }}/python-repo
+  repo_name: {{ default_prefix }}/repo
   register_root: False
 
 db_config:
-  # choose one among sqlite3, leveldb, and mongodb
-  db_type: sqlite3
+  db_type: mongodb
 
-  sqlite3:
-    path: /config/repo-sqlite3.db
   mongodb:
-    db: {{ inventory_hostname }}_cert_repo
+    db: {{ inventory_hostname }}_python_repo
     collection: certs
+    uri: mongodb://mongodb:27017/
 
 tcp_bulk_insert:
   addr: 0.0.0.0

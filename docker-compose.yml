@@ -109,6 +109,17 @@ services:
       nfd: { condition: service_healthy }
       serve-certs: { condition: service_started }
 
+  mongodb:
+    image: mongo:7
+    volumes:
+      - ${PWD}/dist/mongodb:/data/db
+    depends_on:
+      master: { condition: service_healthy }
+    restart: unless-stopped
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh --quiet
+      interval: 5s
+
   ndn-python-repo:
     image: ghcr.io/ucla-irl/ndn-python-repo:20240505
     init: true
@@ -120,6 +131,7 @@ services:
       HOME: /config
     restart: unless-stopped
     depends_on:
+      mongodb: { condition: service_healthy }
       nfd: { condition: service_healthy }
 
   ndncert:

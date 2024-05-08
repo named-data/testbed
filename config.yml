@@ -28,6 +28,9 @@ services:
     template_path: templates/nlsr
     render_path: dist/nlsr
 
+  mongodb:
+    pass: on
+
   ndn-python-repo:
     template_path: templates/ndn-python-repo
     render_path: dist/ndn-python-repo
