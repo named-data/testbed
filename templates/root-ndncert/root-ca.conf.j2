@@ -19,7 +19,7 @@
   [
   {% for name, data in hostvars.items() %}
   {% set outer_loop = loop %}
-  {% set cert_path = "./dist/root-ca/cert-store/site-ca." + data.inventory_hostname + ".ndncert" %}
+  {% set cert_path = "./dist/root-http-ca/cert-store/site-ca." + data.inventory_hostname + ".ndncert" %}
 
   {%- if path_exists(cert_path) -%}
   {% set cert_oneline = oneline(read_file(cert_path)) %}

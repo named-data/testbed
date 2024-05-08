@@ -148,15 +148,15 @@ services:
     depends_on:
       nfd: { condition: service_healthy }
 
-  http-ca-server:
+  root-http-ca:
     image: ghcr.io/ucla-irl/http-ca-server:latest
     profiles: [root-ca]  # in .env
     init: true
     tty: true
     volumes:
       - /var/lib/ndn/ndncert-ca:/config
-      - ${PWD}/dist/root-ca/cert-store:/config/cert-store
-      - ${PWD}/dist/root-ca/http-ca-server.yml:/config/http-ca-server.yml:ro
+      - ${PWD}/dist/root-http-ca/cert-store:/config/cert-store
+      - ${PWD}/dist/root-http-ca/http-ca-server.yml:/config/http-ca-server.yml:ro
       - ${PWD}/framework/http-ca-server.py:/app/http-ca-server.py:ro
     restart: unless-stopped
     depends_on:
@@ -169,8 +169,8 @@ services:
     volumes:
       - /run/nfd:/run/nfd:ro
       - /var/lib/ndn/ndncert-ca:/config
-      - ${PWD}/dist/root-ca/root-mail.conf:/etc/ndncert/ndncert-mail.conf:ro
-      - ${PWD}/dist/root-ca/root-ca.conf:/config/ndncert-ca.conf:ro
+      - ${PWD}/dist/root-ndncert/root-mail.conf:/etc/ndncert/ndncert-mail.conf:ro
+      - ${PWD}/dist/root-ndncert/root-ca.conf:/config/ndncert-ca.conf:ro
     environment:
       NDN_LOG: '*=TRACE'
     restart: unless-stopped

@@ -39,9 +39,13 @@ services:
     template_path: templates/ndncert
     render_path: dist/ndncert
 
-  http-ca-server:
-    template_path: templates/root-ca
-    render_path: dist/root-ca
+  root-http-ca:
+    template_path: templates/root-http-ca
+    render_path: dist/root-http-ca
+
+  root-ndncert:
+    template_path: templates/root-ndncert
+    render_path: dist/root-ndncert
 
 # Global variables that are available in all templates
 globals:
