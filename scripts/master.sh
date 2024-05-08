@@ -38,5 +38,6 @@ date > dist/.master-ready
 sleep 120
 
 mkdir -p "/var/spool/cron/crontabs"
-ln -sf "$(pwd)/scripts/crontab-master" "/var/spool/cron/crontabs/$(whoami)"
+rm -f "/var/spool/cron/crontabs/$(whoami)"
+ln -s "$(pwd)/scripts/crontab-master" "/var/spool/cron/crontabs/$(whoami)"
 exec busybox crond -f -L /dev/stdout
