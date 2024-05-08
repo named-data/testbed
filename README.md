@@ -57,3 +57,50 @@ docker compose exec -e HOME=/testbed/dist/ndn-python-repo master ndnsec list -c
 ## Development
 
 For debugging and development, you can define `DEBUG=1` in your `.env` file. This will prevent the `dist` folder from auto-rendering and disable git polling. You can then use docker compose as usual to manage the containers.
+
+## Unattended Upgrades
+
+Set up unattended upgrades on the host to automatically install security updates.
+
+```bash
+sudo apt-get update && sudo apt-get install unattended-upgrades
+```
+
+The following configuration is recommended:
+
+```conf
+# /etc/apt/apt.conf.d/50unattended-upgrades
+
+Unattended-Upgrade::Allowed-Origins {
+        "${distro_id}:${distro_codename}";
+        "${distro_id}:${distro_codename}-security";
+        "${distro_id}ESMApps:${distro_codename}-apps-security";
+        "${distro_id}ESM:${distro_codename}-infra-security";
+        "${distro_id}:${distro_codename}-updates";
+        "${distro_id}:${distro_codename}-proposed";
+        "${distro_id}:${distro_codename}-backports";
+        "Docker:${distro_codename}";
+};
+
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+```
+
+Enable automatic updates in the following file:
+
+```conf
+# /etc/apt/apt.conf.d/20auto-upgrades
+
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+APT::Periodic::AutocleanInterval "7";
+```
+
+After this, enable the service and run the initial upgrade:
+
+```bash
+sudo systemctl enable unattended-upgrades
+sudo systemctl start unattended-upgrades
+sudo unattended-upgrades --debug
+```
