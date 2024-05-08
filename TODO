@@ -1,3 +1,4 @@
 * http-ca-server --> caddy
 * Switch to upstream NLSR
 * Switch repo to mongodb
+* Document first start on root ca

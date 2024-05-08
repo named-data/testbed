@@ -53,3 +53,7 @@ docker compose exec -e HOME=/testbed/dist/ndncert master ndnsec list -c
 docker compose exec -e HOME=/testbed/dist/nlsr master ndnsec list -c
 docker compose exec -e HOME=/testbed/dist/ndn-python-repo master ndnsec list -c
 ```
+
+## Development
+
+For debugging and development, you can define `DEBUG=1` in your `.env` file. This will prevent the `dist` folder from auto-rendering and disable git polling. You can then use docker compose as usual to manage the containers.
