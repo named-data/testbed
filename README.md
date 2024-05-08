@@ -52,6 +52,9 @@ To get the list of currently installed certificates, run
 docker compose exec -e HOME=/testbed/dist/ndncert master ndnsec list -c
 docker compose exec -e HOME=/testbed/dist/nlsr master ndnsec list -c
 docker compose exec -e HOME=/testbed/dist/ndn-python-repo master ndnsec list -c
+
+# For root CA only
+docker compose exec -e HOME=/testbed/root-ca-home master ndnsec list -c
 ```
 
 ## Development
