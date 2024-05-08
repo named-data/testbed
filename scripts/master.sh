@@ -46,4 +46,10 @@ chown "${USER}:${USER}" "${CRONTAB}"
 rm -rf "${CRON_DIR}" && mkdir -p "${CRON_DIR}"
 ln -s "${CRONTAB}" "${CRON_DIR}/${USER}"
 
-exec busybox crond -f -L /dev/stdout -l 0 -c "${CRON_DIR}"
+# Use verbose logging for debugging
+LOGLEVEL=8
+if [[ -n "$DEBUG" ]]; then
+    LOGLEVEL=0
+fi
+
+exec busybox crond -f -L /dev/stdout -l "${LOGLEVEL}" -c "${CRON_DIR}"
