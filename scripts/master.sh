@@ -37,7 +37,13 @@ date > dist/.master-ready
 # so that all services becomes healthy first.
 sleep 120
 
-mkdir -p "/var/spool/cron/crontabs"
-rm -f "/var/spool/cron/crontabs/$(whoami)"
-ln -s "$(pwd)/scripts/crontab-master" "/var/spool/cron/crontabs/$(whoami)"
-exec busybox crond -f -L /dev/stdout
+# Start crond
+USER=$(whoami)
+CRON_DIR="/var/spool/cron/crontabs"
+CRONTAB="$(pwd)/scripts/crontab-master"
+
+chown "${USER}:${USER}" "${CRONTAB}"
+rm -rf "${CRON_DIR}" && mkdir -p "${CRON_DIR}"
+ln -s "${CRONTAB}" "${CRON_DIR}/${USER}"
+
+exec busybox crond -f -L /dev/stdout -l 0 -c "${CRON_DIR}"
