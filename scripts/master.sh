@@ -38,7 +38,7 @@ date > dist/.master-ready
 sleep 120
 
 # Start crond
-USER=$(whoami)
+USER="$(whoami)"
 CRON_DIR="/var/spool/cron/crontabs"
 CRONTAB="$(pwd)/scripts/crontab-master"
 
