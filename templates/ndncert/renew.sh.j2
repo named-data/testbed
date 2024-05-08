@@ -7,7 +7,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 # Variables
 KEY_NAME="{{ default_prefix }}"
 ROOT_CA_HTTPS="{{ root_ca_https }}"
-ROOT_CA_SECRET="{{ ROOT_CA_SECRET }}"
+ROOT_CA_SECRET="{{ ROOT_CA_SECRET | trim }}"
 
 # Paths
 WORKING_DIR="$(pwd)"
