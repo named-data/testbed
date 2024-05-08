@@ -2,3 +2,4 @@ __pycache__/
 dist/
 secrets.yml
 .env
+root-ca-home/
