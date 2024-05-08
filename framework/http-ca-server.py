@@ -35,7 +35,7 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
             return
 
         # Check if the host is allowed
-        ip_address = self.get_client_ip()
+        ip_address = self.address_string()
         host = self.which_host_ip(ip_address)
         if not host:
             self.send_error(403, f"Host {ip_address} not allowed")
@@ -91,7 +91,8 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
 
         return self.send_error(404)
 
-    def get_client_ip(self) -> str:
+    def address_string(self) -> str:
+        """Override base class function to use header"""
         forwarded_for = self.headers.get('X-Forwarded-For')
         if forwarded_for:
             return forwarded_for.split(',')[0].strip()
