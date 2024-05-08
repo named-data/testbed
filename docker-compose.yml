@@ -121,7 +121,7 @@ services:
       interval: 5s
 
   ndn-python-repo:
-    image: ghcr.io/ucla-irl/ndn-python-repo:20240505
+    image: ghcr.io/ucla-irl/ndn-python-repo:20240508
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
