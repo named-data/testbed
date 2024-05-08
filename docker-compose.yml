@@ -154,7 +154,7 @@ services:
     init: true
     tty: true
     volumes:
-      - /var/lib/ndn/ndncert-ca:/config
+      - ${ROOT_CA_HOME}:/config
       - ${PWD}/dist/root-http-ca/cert-store:/config/cert-store
       - ${PWD}/dist/root-http-ca/http-ca-server.yml:/config/http-ca-server.yml:ro
       - ${PWD}/framework/http-ca-server.py:/app/http-ca-server.py:ro
@@ -168,7 +168,7 @@ services:
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
-      - /var/lib/ndn/ndncert-ca:/config
+      - ${ROOT_CA_HOME}:/config
       - ${PWD}/dist/root-ndncert/root-mail.conf:/etc/ndncert/ndncert-mail.conf:ro
       - ${PWD}/dist/root-ndncert/root-ca.conf:/config/ndncert-ca.conf:ro
     environment:
