@@ -4,5 +4,7 @@ reverse_proxy http://nfd-http-status-server:8080
 reverse_proxy /ws* http://nfd:9696
 
 {% if is_root_ca is defined %}
-reverse_proxy /root-ca* http://root-http-ca:8777
+handle_path /root-ca {
+  reverse_proxy http://root-http-ca:8777
+}
 {% endif %}
