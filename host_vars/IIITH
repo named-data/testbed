@@ -24,6 +24,9 @@ neighbors:
     link_cost: 122
   AFA:
     link_cost: 72
+position:
+- 17.4456
+- 78.3497
 hr_angle: 3.00582605076987
 hr_radius: 15.9760646783892
 ethernet_device: ens3

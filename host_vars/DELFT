@@ -26,6 +26,9 @@ neighbors:
     link_cost: 60
   MML2:
     link_cost: 26
+position:
+- 52.0
+- 4.4
 hr_angle: 2.46092086856031
 hr_radius: 19.4725378752518
 ethernet_device: enp0s3

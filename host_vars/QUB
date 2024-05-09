@@ -26,6 +26,9 @@ neighbors:
     link_cost: 60
   TNO:
     link_cost: 15
+position:
+- 54.5973
+- -5.9301
 hr_angle: 2.42743127401714
 hr_radius: 17.8582321576696
 ethernet_device: ens160

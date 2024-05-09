@@ -1,0 +1,13 @@
+{
+    {% for name, data in hostvars.items() %}
+    "{{ name }}": {
+        "name": "{{ data['site_name'] }}",
+        "ip_addresses": ["{{ data['host_ip'] }}"],
+        "host": "{{ data['ansible_host'] }}",
+        "prefix": "{{ data['default_prefix'] }}",
+        "shortname": "{{ name }}",
+        "position": {{ data['position'] }}
+    }
+    {%- if not loop.last -%},{% endif %}
+    {% endfor %}
+}

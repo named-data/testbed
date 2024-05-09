@@ -23,6 +23,9 @@ neighbors:
     link_cost: 40
   NEU:
     link_cost: 15
+position:
+- 43.6
+- -79.4
 hr_angle: 4.04925
 hr_radius: 19.5605
 ethernet_device: eth0

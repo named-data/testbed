@@ -24,6 +24,9 @@ neighbors:
     link_cost: 57
   OSAKA:
     link_cost: 67
+position:
+- 15.3
+- 103.7
 hr_angle: 3.63761
 hr_radius: 12.8769
 ethernet_device: eth0

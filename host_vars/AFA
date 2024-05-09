@@ -24,6 +24,9 @@ neighbors:
     link_cost: 72
   BERN:
     link_cost: 15
+position:
+- 42.1
+- 14.5
 hr_angle: 1.1264
 hr_radius: 10.3354
 ethernet_device: eth0

@@ -27,6 +27,9 @@ neighbors:
     link_cost: 13
   WU:
     link_cost: 86
+position:
+- 41.3359
+- -3.8732
 hr_angle: 1.17169
 hr_radius: 13.6888
 ethernet_device: eth0:0

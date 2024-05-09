@@ -22,6 +22,9 @@ neighbors:
     link_cost: 25
   DELFT:
     link_cost: 26
+position:
+- 37.9942
+- 23.7326
 hr_angle: 3.01597
 hr_radius: 14.1226
 ethernet_device: enp0s3

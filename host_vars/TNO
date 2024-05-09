@@ -24,6 +24,9 @@ neighbors:
     link_cost: 25
   QUB:
     link_cost: 15
+position:
+- 52.05858
+- 4.0
 hr_angle: 2.46031
 hr_radius: 12.0148
 ethernet_device: eth0

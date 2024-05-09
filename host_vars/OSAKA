@@ -26,6 +26,9 @@ neighbors:
     link_cost: 5
   ARIZONA:
     link_cost: 100
+position:
+- 34.3
+- 135.7193
 hr_angle: 3.53687
 hr_radius: 19.3573
 ethernet_device: eth2

@@ -25,6 +25,9 @@ neighbors:
     link_cost: 40
   ARIZONA:
     link_cost: 75
+position:
+- 35.8092
+- 139.7193
 hr_angle: 2.99935
 hr_radius: 19.3583
 ethernet_device: eno1

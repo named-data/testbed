@@ -24,6 +24,9 @@ neighbors:
     link_cost: 15
   MEMPHIS:
     link_cost: 21
+position:
+- 42.7
+- -71.0887358
 hr_angle: 2.13894
 hr_radius: 19.9001
 ethernet_device: eth0

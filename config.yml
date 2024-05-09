@@ -82,6 +82,7 @@ variables:
   http_access: string
   memsize: number
   neighbors: dict
+  position: list
   hr_angle: number
   hr_radius: number
   ethernet_device: string
