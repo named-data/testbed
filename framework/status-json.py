@@ -4,6 +4,7 @@ import sys
 import yaml
 import json
 import time
+import subprocess
 
 from internal.utils import get_files, run_safe
 import internal.compose as compose
@@ -11,6 +12,10 @@ import internal.conf as conf
 
 def get_timestamp():
     return int(time.time())
+
+def get_revision():
+    cmd = ['git', 'describe', '--dirty' '--always']
+    return subprocess.check_output(cmd, timeout=5).decode('utf-8').strip()
 
 def get_services():
     services = {}
@@ -64,6 +69,7 @@ def get_ndnping():
 if __name__ == '__main__':
     status = {
         'timestamp': run_safe(get_timestamp),
+        'revision': run_safe(get_revision),
         'services': run_safe(get_services),
         'nfd': run_safe(get_nfd),
         'nlsr': run_safe(get_nlsr),

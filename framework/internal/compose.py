@@ -43,7 +43,7 @@ def exec(service: str, command: list[str], timeout: int = 120) -> tuple[int, byt
         STATUS_CACHE.update({service: status(service)})
     container = STATUS_CACHE.get(service, {}).get('Name', None)
     if container is None:
-        print(f"Service {service} not found", file=sys.stderr)
+        print(f"Container for {service} not found", file=sys.stderr)
         return 1, b''
 
     cmd = ['docker', 'exec', container] + command
