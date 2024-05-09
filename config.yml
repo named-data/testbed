@@ -47,6 +47,10 @@ services:
     template_path: templates/root-ndncert
     render_path: dist/root-ndncert
 
+  file-server:
+    template_path: templates/file-server
+    render_path: dist/file-server
+
 # Global variables that are available in all templates
 globals:
   ndnNetwork: /ndn

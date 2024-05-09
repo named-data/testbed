@@ -180,3 +180,15 @@ services:
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
+
+  file-server:
+    image: ghcr.io/yoursunny/ndn6-tools:20240505
+    init: true
+    volumes:
+      - ${PWD}/dist/file-server:/app:ro
+      - ${PWD}/dist/nlsr:/config
+    entrypoint: /bin/bash
+    command: /app/entrypoint.sh
+    restart: unless-stopped
+    depends_on:
+      nfd: { condition: service_healthy }

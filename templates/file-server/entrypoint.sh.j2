@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -eu
+
+# Change directory to script
+cd "$(dirname "${BASH_SOURCE[0]}")"/..
+
+# Run the file server
+ndn6-file-server {{ default_prefix }}/file-server $(pwd)
