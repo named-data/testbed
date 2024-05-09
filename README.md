@@ -3,6 +3,7 @@
 Container orchestration for the Global Named Data Networking Testbed.
 
 [![Lint](https://github.com/UCLA-IRL/testbed/actions/workflows/lint.yml/badge.svg)](https://github.com/UCLA-IRL/testbed/actions/workflows/lint.yml)
+[![Docker](https://github.com/UCLA-IRL/testbed/actions/workflows/docker.yml/badge.svg)](https://github.com/UCLA-IRL/testbed/actions/workflows/docker.yml)
 
 ## Overview
 
