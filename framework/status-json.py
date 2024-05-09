@@ -51,7 +51,7 @@ def get_ndnping():
 
         if ping_prefix:
             print(f'ndnping {host_name} with prefix {ping_prefix}', file=sys.stderr)
-            code, stdout = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '10', ping_prefix])
+            code, _ = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '10', ping_prefix])
             result[host_name] = code == 0
 
     return result
