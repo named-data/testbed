@@ -79,7 +79,7 @@ ndnpeek /ndn/edu/ucla/ping/test | ndn-dissect
 Set up unattended upgrades on the host to automatically install security updates.
 
 ```bash
-sudo apt-get update && sudo apt-get install unattended-upgrades
+sudo apt-get update && sudo apt-get install -y unattended-upgrades
 ```
 
 The following configuration is recommended:

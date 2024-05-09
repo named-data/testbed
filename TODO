@@ -1,3 +1,5 @@
 * Switch to upstream NLSR
 * Document first start on root ca
+* Status page
 * Status page caddy routing
+* Global cron jobs
