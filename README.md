@@ -68,7 +68,6 @@ Some helpful bash aliases are provided in `bash_aliases.sh` for executing ndn to
 ```bash
 source bash_aliases.sh
 echo -e "\nsource $(pwd)/bash_aliases.sh\n" >> ~/.bashrc  # make it permanent
-```
 
 # Now you can use nfdc or ndn-tools for debugging
 nfdc status report
@@ -85,7 +84,7 @@ sudo apt-get update && sudo apt-get install unattended-upgrades
 
 The following configuration is recommended:
 
-```conf
+```aptconf
 # /etc/apt/apt.conf.d/50unattended-upgrades
 
 Unattended-Upgrade::Allowed-Origins {
@@ -106,7 +105,7 @@ Unattended-Upgrade::Remove-Unused-Dependencies "true";
 
 Enable automatic updates in the following file:
 
-```conf
+```aptconf
 # /etc/apt/apt.conf.d/20auto-upgrades
 
 APT::Periodic::Update-Package-Lists "1";
