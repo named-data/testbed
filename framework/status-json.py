@@ -5,6 +5,7 @@ import yaml
 import json
 import time
 import subprocess
+import re
 
 from internal.utils import get_files, run_safe
 import internal.compose as compose
@@ -61,13 +62,23 @@ def get_ndnping():
         if ping_prefix:
             print(f'ndnping {host_name} with prefix {ping_prefix} -> ', file=sys.stderr, end='', flush=True)
 
-            # TODO: This doesn't measure the network time but the execution time
-            t_start = time.time()
-            code, _ = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '10', ping_prefix], timeout=10)
+            code, stdout = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '10', ping_prefix], timeout=10)
             success = code == 0
-            duration = (time.time() - t_start) * 1000
-            result[host_name] = duration if success else None
-            print(duration if success else 'fail', file=sys.stderr)
+            if success:
+                # Parse duration from ndnping output
+                # content from /ndn/ca/utoronto: seq=4544900493281171156 time=91.6838 ms
+                durations = []
+                for line in stdout.decode('utf-8').splitlines():
+                    match = re.search(r'time=([\d.]+)', line)
+                    if match:
+                        durations.append(float(match.group(1)))
+
+                duration = round(sum(durations) / len(durations), 3) if durations else -1
+                result[host_name] = duration
+                print(duration, file=sys.stderr)
+            else:
+                result[host_name] = None
+                print('fail', file=sys.stderr)
 
     return result
 
