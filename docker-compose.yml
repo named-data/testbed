@@ -149,7 +149,7 @@ services:
       nfd: { condition: service_healthy }
 
   root-http-ca:
-    image: ghcr.io/ucla-irl/http-ca-server:latest
+    image: ghcr.io/ucla-irl/testbed-master:latest
     profiles: [root-ca]  # in .env
     init: true
     tty: true
@@ -158,6 +158,10 @@ services:
       - ${PWD}/dist/root-http-ca/cert-store:/config/cert-store
       - ${PWD}/dist/root-http-ca/http-ca-server.yml:/config/http-ca-server.yml:ro
       - ${PWD}/framework/http-ca-server.py:/app/http-ca-server.py:ro
+    environment:
+      HOME: /config
+    entrypoint: /app/http-ca-server.py
+    command: /config/http-ca-server.yml
     restart: unless-stopped
     depends_on:
       master: { condition: service_healthy }
