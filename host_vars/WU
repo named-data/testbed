@@ -38,6 +38,8 @@ neighbors:
     link_cost: 33
   MEMPHIS:
     link_cost: 17
+  BERN:
+    link_cost: 60
 hr_angle: 4.31067
 hr_radius: 19.4268
 ethernet_device: eth0
