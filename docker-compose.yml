@@ -185,6 +185,7 @@ services:
     image: ghcr.io/yoursunny/ndn6-tools:20240505
     init: true
     volumes:
+      - /run/nfd:/run/nfd:ro
       - ${PWD}/dist/file-server:/app:ro
       - ${PWD}/dist/nlsr:/config
     entrypoint: /bin/bash
