@@ -1,4 +1,4 @@
 # Cron jobs for master container
 
 */5 * * * * /bin/bash /testbed/scripts/cron-master.sh
-*/8 * * * * /bin/bash -c "python3 /testbed/framework/status-json.py > /testbed/dist/file-server/status.json"
+*/8 * * * * /bin/bash /testbed/scripts/cron-status.sh

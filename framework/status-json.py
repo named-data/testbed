@@ -3,10 +3,14 @@
 import sys
 import yaml
 import json
+import time
 
 from internal.utils import get_files, run_safe
 import internal.compose as compose
 import internal.conf as conf
+
+def get_timestamp():
+    return int(time.time())
 
 def get_services():
     services = {}
@@ -59,6 +63,7 @@ def get_ndnping():
 
 if __name__ == '__main__':
     status = {
+        'timestamp': run_safe(get_timestamp),
         'services': run_safe(get_services),
         'nfd': run_safe(get_nfd),
         'nlsr': run_safe(get_nlsr),
