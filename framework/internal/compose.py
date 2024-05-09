@@ -1,5 +1,8 @@
 import json
 import subprocess
+import sys
+
+STATUS_CACHE = {}
 
 def config() -> dict:
     """
@@ -14,7 +17,7 @@ def status(service: str) -> dict:
     Get the status JSON for a docker compose service
     """
     cmd = ['docker', 'compose', 'ps', '--format', 'json', service]
-    result = subprocess.run(cmd, stdout=subprocess.PIPE)
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, timeout=5)
 
     try:
         return json.loads(result.stdout)
@@ -34,7 +37,16 @@ def exec(service: str, command: list[str], timeout: int = 120) -> tuple[int, byt
     Execute a command in a docker compose service
     """
 
-    cmd = ['docker', 'compose', 'exec', service] + command
+    # Due to a bug in docker compose, we need to use docker exec in cron jobs
+    # So we need to get the name of the container first
+    if not STATUS_CACHE.get(service, None):
+        STATUS_CACHE.update({service: status(service)})
+    container = STATUS_CACHE.get(service, {}).get('Name', None)
+    if container is None:
+        print(f"Service {service} not found", file=sys.stderr)
+        return 1, b''
+
+    cmd = ['docker', 'exec', container] + command
     result = subprocess.run(cmd, stdout=subprocess.PIPE, timeout=timeout)
     return result.returncode, result.stdout
 
@@ -44,7 +56,7 @@ def up(service: str):
     """
 
     cmd = ['docker', 'compose', 'up', '-d', service]
-    subprocess.call(cmd, stdout=subprocess.PIPE)
+    subprocess.call(cmd, stdout=subprocess.PIPE, timeout=300)
     print(f"Started service {service}")
 
 def restart(service: str):
@@ -53,5 +65,5 @@ def restart(service: str):
     """
 
     cmd = ['docker', 'compose', 'restart', service]
-    subprocess.call(cmd, stdout=subprocess.PIPE)
+    subprocess.call(cmd, stdout=subprocess.PIPE, timeout=300)
     print(f"Restarted service {service}")
