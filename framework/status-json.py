@@ -14,7 +14,7 @@ def get_timestamp():
     return int(time.time())
 
 def get_revision():
-    cmd = ['git', 'describe', '--dirty' '--always']
+    cmd = ['git', 'describe', '--dirty', '--always']
     return subprocess.check_output(cmd, timeout=5).decode('utf-8').strip()
 
 def get_services():
@@ -59,9 +59,11 @@ def get_ndnping():
             ping_prefix = host['default_prefix']
 
         if ping_prefix:
-            print(f'ndnping {host_name} with prefix {ping_prefix}', file=sys.stderr)
+            print(f'ndnping {host_name} with prefix {ping_prefix} -> ', file=sys.stderr, end='', flush=True)
             code, _ = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '10', ping_prefix], timeout=10)
-            result[host_name] = code == 0
+            success = code == 0
+            result[host_name] = success
+            print('success' if success else 'fail', file=sys.stderr)
 
     return result
 
