@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
+import sys
 import yaml
+import json
+
 from internal.utils import get_files, run_safe
 import internal.compose as compose
 import internal.conf as conf
@@ -8,6 +11,7 @@ import internal.conf as conf
 def get_services():
     services = {}
     for service in compose.config().get('services', {}):
+        print(f"Getting status for {service}", file=sys.stderr)
         compose_status = compose.status(service)
         services[service] = {
             'image': compose_status.get('Image', 'N/A'),
@@ -16,6 +20,7 @@ def get_services():
     return services
 
 def get_nfd():
+    print('Getting NFD status', file=sys.stderr)
     nfd = {}
     _, stdout = compose.exec('nfd', ['nfdc', 'status'])
     for line in stdout.decode('utf-8').splitlines():
@@ -26,6 +31,7 @@ def get_nfd():
     return nfd
 
 def get_nlsr():
+    print('Getting NLSR status', file=sys.stderr)
     nlsr = {}
     _, stdout = compose.exec('nlsr', ['nlsr', '-V'])
     nlsr['version'] = stdout.decode('utf-8').strip()
@@ -44,8 +50,8 @@ def get_ndnping():
             ping_prefix = host['default_prefix']
 
         if ping_prefix:
+            print(f'Pinging {host_name} with prefix {ping_prefix}', file=sys.stderr)
             code, stdout = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '10', ping_prefix])
-            print(stdout.decode('utf-8'))
             result[host_name] = code == 0
 
     return result
@@ -59,4 +65,4 @@ if __name__ == '__main__':
         'ndnping': run_safe(get_ndnping),
     }
 
-    print(status)
+    print(json.dump(status, indent=4))
