@@ -2,6 +2,8 @@
 
 Container orchestration for the Global Named Data Networking Testbed.
 
+[![Lint](https://github.com/UCLA-IRL/testbed/actions/workflows/lint.yml/badge.svg)](https://github.com/UCLA-IRL/testbed/actions/workflows/lint.yml)
+
 ## Overview
 
 All services are run with Docker Compose and pull automatically built images from upstream repositories. A cron job in the `master` container polls this Git repository and deploys changes automatically.
