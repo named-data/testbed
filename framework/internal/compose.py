@@ -29,13 +29,13 @@ def is_running(status: dict):
 
     return 'State' in status and status['State'] == "running"
 
-def exec(service: str, command: list[str]) -> tuple[int, bytes]:
+def exec(service: str, command: list[str], timeout: int = 120) -> tuple[int, bytes]:
     """
     Execute a command in a docker compose service
     """
 
     cmd = ['docker', 'compose', 'exec', service] + command
-    result = subprocess.run(cmd, stdout=subprocess.PIPE)
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, timeout=timeout)
     return result.returncode, result.stdout
 
 def up(service: str):

@@ -26,7 +26,7 @@ def get_services():
 def get_nfd():
     print('Getting NFD status', file=sys.stderr)
     nfd = {}
-    _, stdout = compose.exec('nfd', ['nfdc', 'status'])
+    _, stdout = compose.exec('nfd', ['nfdc', 'status'], timeout=5)
     for line in stdout.decode('utf-8').splitlines():
         line = line.strip()
         if '=' in line:
@@ -37,7 +37,7 @@ def get_nfd():
 def get_nlsr():
     print('Getting NLSR status', file=sys.stderr)
     nlsr = {}
-    _, stdout = compose.exec('nlsr', ['nlsr', '-V'])
+    _, stdout = compose.exec('nlsr', ['nlsr', '-V'], timeout=5)
     nlsr['version'] = stdout.decode('utf-8').strip()
     return nlsr
 
@@ -55,7 +55,7 @@ def get_ndnping():
 
         if ping_prefix:
             print(f'ndnping {host_name} with prefix {ping_prefix}', file=sys.stderr)
-            code, _ = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '10', ping_prefix])
+            code, _ = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '10', ping_prefix], timeout=10)
             result[host_name] = code == 0
 
     return result
