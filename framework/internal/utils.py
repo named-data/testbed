@@ -1,5 +1,6 @@
 import os
 import hashlib
+import sys
 
 def get_files(path: str, recursive: bool = False):
     """
@@ -43,3 +44,12 @@ def read_dotenv(file='.env') -> dict[str, str]:
             key, value = line.strip().split('=', 1)
             dotenv[key] = value
     return dotenv
+
+def run_safe(func, *args, **kwargs):
+    """Run a function and catch any exceptions that occur"""
+
+    try:
+        return func()
+    except Exception as e:
+        print(f"Error running status function: {e}", file=sys.stderr)
+        return None
