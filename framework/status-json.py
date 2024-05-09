@@ -77,7 +77,7 @@ def get_ndnping():
                 result[host_name] = duration
                 print(duration, file=sys.stderr)
             else:
-                result[host_name] = None
+                result[host_name] = False
                 print('fail', file=sys.stderr)
 
     return result
