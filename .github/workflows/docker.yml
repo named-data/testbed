@@ -10,12 +10,6 @@ permissions:
   id-token: write
 
 jobs:
-  http-ca-server:
-    uses: named-data/actions/.github/workflows/docker-image.yml@v1
-    with:
-      name: http-ca-server
-      target: http-ca-server
-
   testbed-master:
     uses: named-data/actions/.github/workflows/docker-image.yml@v1
     with:
