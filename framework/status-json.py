@@ -50,7 +50,7 @@ def get_ndnping():
             ping_prefix = host['default_prefix']
 
         if ping_prefix:
-            print(f'Pinging {host_name} with prefix {ping_prefix}', file=sys.stderr)
+            print(f'ndnping {host_name} with prefix {ping_prefix}', file=sys.stderr)
             code, stdout = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '10', ping_prefix])
             result[host_name] = code == 0
 
@@ -65,4 +65,4 @@ if __name__ == '__main__':
         'ndnping': run_safe(get_ndnping),
     }
 
-    print(json.dump(status, indent=4))
+    print(json.dumps(status, indent=4))
