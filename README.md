@@ -63,6 +63,18 @@ docker compose exec -e HOME=/testbed/root-ca-home master ndnsec list -c
 
 For debugging and development, you can define `DEBUG=1` in your `.env` file. This will prevent the `dist` folder from auto-rendering and disable git polling. You can then use docker compose as usual to manage the containers.
 
+Some helpful bash aliases are provided in `bash_aliases.sh` for executing ndn tools inside the running containers.
+
+```bash
+source bash_aliases.sh
+echo -e "\nsource $(pwd)/bash_aliases.sh\n" >> ~/.bashrc  # make it permanent
+```
+
+# Now you can use nfdc or ndn-tools for debugging
+nfdc status report
+ndnpeek /ndn/edu/ucla/ping/test | ndn-dissect
+```
+
 ## Unattended Upgrades
 
 Set up unattended upgrades on the host to automatically install security updates.
