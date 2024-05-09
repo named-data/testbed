@@ -32,6 +32,9 @@ def read_dotenv(file='.env') -> dict[str, str]:
     This function reads a .env file and returns a dictionary of the key-value
     """
 
+    if not os.path.exists(file):
+        return {}
+
     dotenv = {}
     with open(file) as f:
         for line in f:
