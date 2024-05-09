@@ -101,6 +101,7 @@ def lint(path: str):
 
 if __name__ == '__main__':
     for file in utils.get_files(config.host_vars_path):
+        print(f"Validating file: {file}", file=sys.stderr)
         lint(file)
 
     # Any entries that remain are incomplete
