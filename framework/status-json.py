@@ -60,10 +60,14 @@ def get_ndnping():
 
         if ping_prefix:
             print(f'ndnping {host_name} with prefix {ping_prefix} -> ', file=sys.stderr, end='', flush=True)
+
+            # TODO: This doesn't measure the network time but the execution time
+            t_start = time.time()
             code, _ = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '10', ping_prefix], timeout=10)
             success = code == 0
-            result[host_name] = success
-            print('success' if success else 'fail', file=sys.stderr)
+            duration = (time.time() - t_start) * 1000
+            result[host_name] = duration if success else None
+            print(duration if success else 'fail', file=sys.stderr)
 
     return result
 
