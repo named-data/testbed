@@ -8,6 +8,8 @@
           <th>HTTPS</th>
 
           <th>Revision</th>
+          <th>Status</th>
+
           <th>NFD Version</th>
           <th>NLSR Version</th>
 
@@ -37,6 +39,8 @@
                 {{ router.status?.revision }}
             </a>
           </td>
+          <td>{{ getFromNow(router.status?.timestamp)  }}</td>
+
           <td>{{ router.status?.nfd?.version }}</td>
           <td>{{ router.status?.nlsr?.version }}</td>
 
@@ -171,6 +175,13 @@ export default defineComponent({
 
     getRevUrl(router: IRouter) {
       return `${TESTBED_REPO}/commit/${router.status!.revision}`;
+    },
+
+    getFromNow(timestamp: number | undefined) {
+      if (!timestamp) return String();
+
+      const diff = Math.round(Date.now() / 1000 - timestamp);
+      return `${diff}s`;
     },
   },
 });
