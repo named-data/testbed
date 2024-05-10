@@ -129,6 +129,11 @@ export default defineComponent({
       // Get router list
       this.routers = JSON.parse(await this.cat(ROUTERS_JSON));
 
+      // Sort routers by name
+      this.routers = Object.fromEntries(
+        Object.entries(this.routers).sort(([a], [b]) => a.localeCompare(b))
+      );
+
       // Get each router's status
       for (const [name, router] of Object.entries(this.routers)) {
         this.refreshRouter(router);
