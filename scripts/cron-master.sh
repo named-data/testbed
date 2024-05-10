@@ -15,6 +15,6 @@ fi
 
 git pull
 
-PWD=$ROOT_DIR python3 framework/main.py
+PWD="${ROOT_DIR}" python3 framework/main.py
 
 echo -e "Finished cron-master at $(date)"

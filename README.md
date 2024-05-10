@@ -76,6 +76,16 @@ nfdc status report
 ndnpeek /ndn/edu/ucla/ping/test | ndn-dissect
 ```
 
+The master service runs internal cron jobs for polling. You can trigger these manually during debugging (only when not in DEBUG mode).
+
+```bash
+# cron-master pulls the git repo and restarts containers if required
+docker compose exec master bash /testbed/scripts/cron-master.sh
+
+# cron-status regenerates status json
+docker compose exec master bash /testbed/scripts/cron-status.sh
+```
+
 ## Unattended Upgrades
 
 Set up unattended upgrades on the host to automatically install security updates.
