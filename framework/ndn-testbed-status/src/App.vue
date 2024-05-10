@@ -10,6 +10,11 @@
           <th>Revision</th>
           <th>Status</th>
 
+          <th>Host OS</th>
+          <th>Kernel</th>
+          <th>Arch</th>
+          <th>Docker</th>
+
           <th>NFD Version</th>
           <th>NLSR Version</th>
 
@@ -40,6 +45,11 @@
             </a>
           </td>
           <td>{{ getFromNow(router.status?.timestamp)  }}</td>
+
+          <td>{{ router.status?.host_info?.os }}</td>
+          <td>{{ router.status?.host_info?.kernel }}</td>
+          <td>{{ router.status?.host_info?.arch }}</td>
+          <td>{{ router.status?.host_info?.docker_version }}</td>
 
           <td>{{ router.status?.nfd?.version }}</td>
           <td>{{ router.status?.nlsr?.version }}</td>
@@ -91,6 +101,12 @@ interface IRouter {
 interface IStatus {
   timestamp: number;
   revision: string;
+  host_info?: {
+    kernel: string;
+    os: string;
+    arch: string;
+    docker_version: string;
+  },
   services: Record<string, {
     image: string;
     status: string;
