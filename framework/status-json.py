@@ -65,15 +65,11 @@ def get_nlsr():
     nlsr['version'] = stdout.decode('utf-8').strip()
     return nlsr
 
-def get_ndnping(config: conf.Config):
+def get_ndnping(routers: dict[str, dict]):
     result = {}
-    for host_path in get_files(config.host_vars_path):
-        host_name = os.path.basename(host_path)
-        ping_prefix: str | None = None
-
-        with open(host_path) as stream:
-            host = yaml.safe_load(stream)
-            ping_prefix = host['default_prefix']
+    for host in routers.values():
+        host_name: str = host['shortname']
+        ping_prefix: str = host['prefix']
 
         if ping_prefix:
             print(f'ndnping {host_name} with prefix {ping_prefix} -> ', file=sys.stderr, end='', flush=True)
@@ -133,6 +129,11 @@ if __name__ == '__main__':
     with open(os.path.join(config.host_vars_path, os.getenv('MANAGED_HOST'))) as stream:
         host = yaml.safe_load(stream)
 
+    # Read routers.json
+    routers: dict[str, dict] = None
+    with open(os.path.join(config.environment_path, 'dist', 'file-server', 'routers.json')) as stream:
+        routers = json.load(stream)
+
     # Construct status
     status = {
         'timestamp': run_safe(get_timestamp),
@@ -143,7 +144,7 @@ if __name__ == '__main__':
         'services': run_safe(get_services),
         'nfd': run_safe(get_nfd),
         'nlsr': run_safe(get_nlsr),
-        'ndnping': run_safe(get_ndnping, config),
+        'ndnping': run_safe(get_ndnping, routers),
     }
 
     print(json.dumps(status, indent=4), file=sys.stdout)
