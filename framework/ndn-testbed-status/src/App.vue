@@ -130,7 +130,6 @@ export default defineComponent({
 
       // Get each router's status
       for (const [name, router] of Object.entries(this.routers)) {
-        if (!['SAVI', 'UCLA', "WU"].includes(name)) continue;
         this.refreshRouter(router);
       }
     },
@@ -157,9 +156,9 @@ export default defineComponent({
     },
 
     async cat(name: string) {
-      const metadata = await retrieveMetadata(name, { retx: 2 });
+      const metadata = await retrieveMetadata(name, { retx: 3 });
       const bytes = await fetch(metadata.name, {
-        cOpts: { retx: 2 }
+        cOpts: { retx: 3 }
       });
       return new TextDecoder().decode(bytes);
     },
