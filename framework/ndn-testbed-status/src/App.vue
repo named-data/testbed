@@ -50,7 +50,8 @@
 
           <td v-for="node in routers" :class="{
               error: !router.status?.ndnping[node.shortname],
-              okay: router.status?.ndnping[node.shortname] ?? 0 > 0,
+              okay: (router.shortname != node.shortname) && (router.status?.ndnping[node.shortname] ?? 0 > 0),
+              warning: (router.shortname == node.shortname),
             }">
               {{ router.status?.ndnping[node.shortname] || '' }}
           </td>
@@ -189,7 +190,7 @@ table {
 
 th, td {
   border: 1px solid #888;
-  padding: 6px 10px;
+  padding: 6px 8px;
 }
 
 table thead th:first-child, table tbody td:first-child {
