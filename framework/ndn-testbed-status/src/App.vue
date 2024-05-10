@@ -10,6 +10,9 @@
           <th>Revision</th>
           <th>Status</th>
 
+          <th>TLS Expiry</th>
+          <th>WSS</th>
+
           <th>Host OS</th>
           <th>Kernel</th>
           <th>Arch</th>
@@ -44,7 +47,17 @@
                 {{ router.status?.revision }}
             </a>
           </td>
-          <td>{{ getFromNow(router.status?.timestamp)  }}</td>
+          <td :class="{
+            warning: getFromNow(router.status?.timestamp ?? 0) < -1800,
+          }">{{ getFromNowStr(router.status?.timestamp, 'seconds')  }}</td>
+
+          <td :class="{
+            warning: (router.status?.tls?.expiry ?? -1) < 0,
+            okay: getFromNow(router.status?.tls?.expiry ?? -1) > 7 * 86400,
+          }">{{ getFromNowStr(router.status?.tls?.expiry, 'days') || router.status?.tls?.error }}</td>
+          <td :class="{ okay: router.status?.['ws-tls']}">
+            {{ router.status?.['ws-tls'] ? 'OK' : '' }}
+          </td>
 
           <td>{{ router.status?.host_info?.os }}</td>
           <td>{{ router.status?.host_info?.kernel }}</td>
@@ -65,7 +78,7 @@
           <td v-for="node in routers" :class="{
               error: !router.status?.ndnping[node.shortname],
               okay: (router.shortname != node.shortname) && (router.status?.ndnping[node.shortname] ?? 0 > 0),
-              warning: (router.shortname == node.shortname),
+              blue: (router.shortname == node.shortname),
             }">
               {{ router.status?.ndnping[node.shortname] || '' }}
           </td>
@@ -85,42 +98,6 @@ import { retrieveMetadata } from "@ndn/rdr";
 const ROUTERS_JSON = '/ndn/edu/ucla/file-server/routers.json';
 const STATUS_SFX = '/file-server/status.json';
 const TESTBED_REPO = 'https://github.com/UCLA-IRL/testbed';
-
-interface IRouter {
-  host: string;
-  ip_addresses: string[];
-  name: string;
-  position: [number, number];
-  prefix: string;
-  shortname: string;
-  fetching?: boolean;
-  error?: boolean;
-  status?: IStatus;
-};
-
-interface IStatus {
-  timestamp: number;
-  revision: string;
-  host_info?: {
-    kernel: string;
-    os: string;
-    arch: string;
-    docker_version: string;
-  },
-  services: Record<string, {
-    image: string;
-    status: string;
-    running: boolean;
-  }>;
-  nfd: {
-    version: string;
-    uptime: string;
-  },
-  nlsr: {
-    version: string;
-  },
-  ndnping: Record<string, number | null>,
-};
 
 export default defineComponent({
   name: 'App',
@@ -193,11 +170,24 @@ export default defineComponent({
       return `${TESTBED_REPO}/commit/${router.status!.revision}`;
     },
 
-    getFromNow(timestamp: number | undefined) {
+    getFromNow<T extends number>(timestamp: T) {
+      if (!timestamp) return timestamp;
+
+      return timestamp - Date.now() / 1000;
+    },
+
+    getFromNowStr(timestamp: number | undefined | null, unit: Intl.RelativeTimeFormatUnit) {
       if (!timestamp) return String();
 
-      const diff = Math.round(Date.now() / 1000 - timestamp);
-      return `${diff}s`;
+      let diff = this.getFromNow(timestamp);
+      switch (unit) {
+        case 'days':
+          diff /= 60 * 60 * 24;
+          break;
+      }
+
+      const rtf = new Intl.RelativeTimeFormat('en', { style: 'short' });
+      return rtf.format(Math.round(diff), unit);
     },
   },
 });
@@ -240,6 +230,9 @@ table thead th {
 
 td {
   background-color: white;
+  max-width: 360px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 td.error, td:has(.error) {
   background-color: #ffaaaa !important;
@@ -249,6 +242,9 @@ td.okay {
 }
 td.warning {
   background-color: #ffffaa;
+}
+td.blue {
+  background-color: #aaaaff;
 }
 
 a {

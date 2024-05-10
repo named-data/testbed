@@ -108,6 +108,7 @@ def get_tls_expiry(hostname: str, port: int) -> int:
             return int(expiry_date.timestamp())
 
 def get_tls_status(host: dict):
+    print('Getting TLS status', file=sys.stderr)
     result = { 'expiry': None, 'error': None }
     try:
         result['expiry'] = get_tls_expiry(host['ansible_host'], 443)
@@ -116,6 +117,7 @@ def get_tls_status(host: dict):
     return result
 
 def get_ws_tls_status(host: dict) -> bool:
+    print('Getting websocket status', file=sys.stderr)
     url = f"https://{host['ansible_host']}/ws/"
     try:
         with urllib.request.urlopen(url, timeout=3):
