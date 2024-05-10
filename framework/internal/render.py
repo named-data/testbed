@@ -11,6 +11,7 @@ JINJA_FUNCTIONS = {
     'path_exists': lambda path: os.path.exists(path),
     'read_file': lambda path: open(path).read(),
     'oneline': lambda text: ''.join(text.splitlines()),
+    'list': lambda iter: list(iter),
 }
 
 def render(node_name: str, dry: bool = False) -> None:
