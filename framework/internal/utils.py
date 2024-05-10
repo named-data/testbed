@@ -49,7 +49,7 @@ def run_safe(func, *args, **kwargs):
     """Run a function and catch any exceptions that occur"""
 
     try:
-        return func()
+        return func(*args, **kwargs)
     except Exception as e:
-        print(f"Error running status function: {e}", file=sys.stderr)
+        print(f"Error running status function {func.__name__}: {e}", file=sys.stderr)
         return None

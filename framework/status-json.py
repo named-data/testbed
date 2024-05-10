@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 
+import datetime
 import sys
+import urllib.request
 import yaml
 import json
 import time
 import subprocess
 import re
+import ssl
+import socket
+import os
 
 from internal.utils import get_files, run_safe
 import internal.compose as compose
@@ -60,12 +65,10 @@ def get_nlsr():
     nlsr['version'] = stdout.decode('utf-8').strip()
     return nlsr
 
-def get_ndnping():
-    config = conf.get()
+def get_ndnping(config: conf.Config):
     result = {}
-
     for host_path in get_files(config.host_vars_path):
-        host_name = host_path.split('/')[-1]
+        host_name = os.path.basename(host_path)
         ping_prefix: str | None = None
 
         with open(host_path) as stream:
@@ -95,16 +98,50 @@ def get_ndnping():
 
     return result
 
+def get_tls_expiry(hostname: str, port: int) -> int:
+    context = ssl.create_default_context()
+    with socket.create_connection((hostname, port), timeout=5) as sock:
+        with context.wrap_socket(sock, server_hostname=hostname) as ssock:
+            cert = ssock.getpeercert()
+            expiry_date_str = cert['notAfter']
+            expiry_date = datetime.datetime.strptime(expiry_date_str, '%b %d %H:%M:%S %Y %Z')
+            return int(expiry_date.timestamp())
+
+def get_tls_status(host: dict):
+    result = { 'expiry': None, 'error': None }
+    try:
+        result['expiry'] = get_tls_expiry(host['ansible_host'], 443)
+    except Exception as e:
+        result['error'] = str(e)
+    return result
+
+def get_ws_tls_status(host: dict) -> bool:
+    url = f"https://{host['ansible_host']}/ws/"
+    try:
+        with urllib.request.urlopen(url, timeout=3):
+            return False # got 2xx
+    except urllib.request.HTTPError as response:
+        return response.code == 426
 
 if __name__ == '__main__':
+    config = conf.get()
+
+    # Read host_vars YAML for current host
+    host = None
+    with open(os.path.join(config.host_vars_path, os.getenv('MANAGED_HOST'))) as stream:
+        host = yaml.safe_load(stream)
+
+    # Construct status
     status = {
         'timestamp': run_safe(get_timestamp),
         'revision': run_safe(get_revision),
         'host_info': run_safe(get_host_info),
+        'tls': run_safe(get_tls_status, host),
+        'ws-tls': run_safe(get_ws_tls_status, host),
         'services': run_safe(get_services),
         'nfd': run_safe(get_nfd),
         'nlsr': run_safe(get_nlsr),
-        'ndnping': run_safe(get_ndnping),
+        'ndnping': run_safe(get_ndnping, config),
     }
 
-    print(json.dumps(status, indent=4))
+    print(json.dumps(status, indent=4), file=sys.stdout)
