@@ -6,7 +6,6 @@ name: testbed
 services:
   master:
     image: ghcr.io/ucla-irl/testbed-master:latest
-    restart: unless-stopped
     init: true
     tty: true
     dns: # prevent resolving to 127.0.0.1
@@ -21,13 +20,13 @@ services:
     entrypoint: /bin/bash
     command: [scripts/master.sh]
     working_dir: /testbed
+    restart: unless-stopped
     healthcheck:
       test: [CMD, stat, /testbed/dist/.master-ready]
       interval: 3s
 
   caddy:
-    image: caddy:2
-    restart: unless-stopped
+    image: ghcr.io/ucla-irl/testbed-caddy:latest
     cap_add:
       - NET_ADMIN
     ports:
@@ -38,6 +37,7 @@ services:
       - ${PWD}/dist/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - ${PWD}/dist/caddy/data:/data
       - ${PWD}/dist/caddy/config:/config
+    restart: unless-stopped
     depends_on:
       master: { condition: service_healthy }
 
