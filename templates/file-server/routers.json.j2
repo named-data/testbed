@@ -6,8 +6,14 @@
         'ip_addresses': [data['host_ip']],
         'host': data['ansible_host'],
         'prefix': data['default_prefix'],
+
         'neighbors': list(neighbors.keys()),
         'position': data['position'],
+        '_real_position': data['position'],
+
+        'backbone': true,
+        'memsize': data['memsize'],
+        'fch-enabled': true,
     } | tojson }}
     {% if not loop.last %},{% endif %}
     {% endfor %}
