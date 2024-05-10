@@ -8,3 +8,10 @@ python3 framework/status-json.py > dist/file-server/status.json
 
 # Done
 echo -e "Status updated at $(date)"
+
+# Collect all statuses if enabled
+if [[ -n "$COLLECT_STATUS_GLOBAL" ]]; then
+    echo -e "Waiting before starting global status job ..."
+    sleep 60
+    python3 framework/status-global.py > dist/file-server/status-global.json
+fi
