@@ -33,7 +33,7 @@ The master node starts first and renders the templates. After this, the master r
 A cron job is required on the host for some tasks. Make sure the cron user is present in the `docker` group.
 
 ```cron
-*/5 * * * * /bin/bash /home/ndnops/testbed/scripts/cron-host.sh
+*/6 * * * * /bin/bash /home/ndnops/testbed/scripts/cron-host.sh
 ```
 
 ## Certificate Management
