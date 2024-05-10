@@ -1,0 +1,33 @@
+name: build
+on:
+  push:
+    paths:
+      - 'framework/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  status-page:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build status page
+        run: |
+          cd framework/ndn-testbed-status
+          npm install
+          npm run build
+
+      - uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./framework/ndn-testbed-status/dist
+          publish_branch: gh-pages
+          force_orphan: true
