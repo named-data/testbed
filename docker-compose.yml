@@ -37,6 +37,7 @@ services:
       - ${PWD}/dist/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
       - ${PWD}/dist/caddy/data:/data
       - ${PWD}/dist/caddy/config:/config
+      - ${PWD}/dist/file-server:/srv/file-server:ro
     restart: unless-stopped
     depends_on:
       master: { condition: service_healthy }
