@@ -16,3 +16,9 @@ jobs:
     with:
       name: testbed-master
       target: testbed-master
+
+  testbed-caddy:
+    uses: named-data/actions/.github/workflows/docker-image.yml@v1
+    with:
+      name: testbed-caddy
+      target: testbed-caddy
