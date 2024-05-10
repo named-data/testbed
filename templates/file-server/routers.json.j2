@@ -11,8 +11,8 @@
         'position': data['position'],
         '_real_position': data['position'],
 
+        'memsize': str(data['memsize']) + 'G',
         'backbone': true,
-        'memsize': data['memsize'],
         'fch-enabled': true,
     } | tojson }}
     {% if not loop.last %},{% endif %}
