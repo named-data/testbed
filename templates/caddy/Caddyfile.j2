@@ -1,19 +1,16 @@
 {{ ansible_host }}
 
-@nfdstatus {
-  path /
-  path /nfd-status.xsl
-  path /*.css
-}
-
+@nfdstatus path / /nfd-status.xsl /*.css
 reverse_proxy @nfdstatus http://nfd-http-status-server:8080
-reverse_proxy /ws* http://nfd:9696
+
+@ws path /ws /ws/*
+reverse_proxy @ws http://nfd:9696
 
 root * /srv
 file_server
 
 {% if is_root_ca is defined %}
-handle_path /root-ca* {
+handle_path /root-ca/* {
   reverse_proxy http://root-http-ca:8777
 }
 {% endif %}
