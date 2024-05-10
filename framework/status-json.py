@@ -26,6 +26,7 @@ def get_services():
         services[service] = {
             'image': compose_status.get('Image', 'N/A'),
             'status': compose_status.get('Status', 'N/A'),
+            'running': compose_status.get('State', False) == 'running',
         }
     return services
 
