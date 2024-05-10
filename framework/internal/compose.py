@@ -66,3 +66,15 @@ def restart(service: str):
     cmd = ['docker', 'compose', 'restart', service]
     subprocess.call(cmd, stdout=subprocess.PIPE, timeout=300)
     print(f"Restarted service {service}")
+
+def info() -> dict:
+    """
+    Get information about host and docker
+    """
+    cmd = ['docker', 'info', '-f', 'json']
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, timeout=5)
+
+    try:
+        return json.loads(result.stdout)
+    except json.decoder.JSONDecodeError:
+        return {}
