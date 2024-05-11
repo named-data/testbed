@@ -8,9 +8,6 @@ services:
     image: ghcr.io/ucla-irl/testbed-master:latest
     init: true
     tty: true
-    dns: # prevent resolving to 127.0.0.1
-      - 1.1.1.1
-      - 8.8.8.8
     volumes:
       - ${PWD}:/testbed
       - /var/run/docker.sock:/var/run/docker.sock
