@@ -5,6 +5,8 @@ operator_email: quevedo@av.it.pt
 ansible_host: selficn.av.it.pt
 host_ip: 193.136.92.155
 local_ip: 10.0.12.127
+outgoing_subnets:
+- 193.136.80.0/20
 site_email_domain:
 - av.it.pt
 default_prefix: /ndn/pt/it/av

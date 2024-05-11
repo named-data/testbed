@@ -73,6 +73,7 @@ variables:
   ansible_host: string
   host_ip: string
   local_ip: string
+  outgoing_subnets: "?list"
   site_email_domain: list
   default_prefix: string
   advertised_prefixes: list
@@ -86,4 +87,4 @@ variables:
   hr_angle: number
   hr_radius: number
   ethernet_device: string
-  is_root_ca: ?boolean
+  is_root_ca: "?boolean"

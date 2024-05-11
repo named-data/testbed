@@ -8,6 +8,9 @@ hosts:
     cert_file: /config/cert-store/site-ca.{{ data['inventory_hostname'] }}.ndncert
     subnets:
       - {{ data['host_ip'] }}/32
+      {% for subnet in data.get('outgoing_subnets', []) %}
+      - {{ subnet }}
+      {% endfor %}
       {% if data.get('is_root_ca', false) %}
       - 172.16.0.0/12
       - 192.168.0.0/16
