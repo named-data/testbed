@@ -13,6 +13,11 @@ if [[ -n "$DEBUG" ]]; then
     exit 0
 fi
 
+# Prevent a thundering herd
+WAIT="$((RANDOM % 120))"
+echo "Random wait for ${WAIT} seconds ..."
+sleep "${WAIT}"
+
 git pull
 
 PWD="${ROOT_DIR}" python3 framework/main.py
