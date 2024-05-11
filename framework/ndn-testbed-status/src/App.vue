@@ -46,7 +46,10 @@
             warning: (router.status?.tls?.expiry ?? -1) < 0,
             okay: getFromNow(router.status?.tls?.expiry ?? -1) > 7 * 86400,
           }">{{ getFromNowStr(router.status?.tls?.expiry, 'days') || router.status?.tls?.error }}</td>
-          <td :class="{ okay: router.status?.['ws-tls']}">
+          <td :class="{
+            okay: !!router.status?.['ws-tls'],
+            warning: !router.status?.['ws-tls'],
+          }">
             {{ router.status?.['ws-tls'] ? 'OK' : '' }}
           </td>
           <td>
