@@ -1,16 +1,33 @@
-{{ ansible_host }}
+{{ ansible_host }} {
+  @nfdstatus path / /nfd-status.xsl /*.css
+  reverse_proxy @nfdstatus http://nfd-http-status-server:8080
 
-@nfdstatus path / /nfd-status.xsl /*.css
-reverse_proxy @nfdstatus http://nfd-http-status-server:8080
+  @ws path /ws /ws/*
+  reverse_proxy @ws http://nfd:9696
 
-@ws path /ws /ws/*
-reverse_proxy @ws http://nfd:9696
+  root * /srv
+  file_server
 
-root * /srv
-file_server
+  {% if is_root_ca is defined %}
+  handle_path /root-ca/* {
+    reverse_proxy http://root-http-ca:8777
+  }
+  {% endif %}
+}
 
-{% if is_root_ca is defined %}
-handle_path /root-ca/* {
-  reverse_proxy http://root-http-ca:8777
+{% if is_status_page is defined %}
+testbed-status.named-data.net {
+  header {
+    Access-Control-Allow-Origin *
+    Access-Control-Allow-Methods "GET"
+  }
+
+  redir / https://ucla-irl.github.io/testbed/
+
+  handle /testbed-nodes.json {
+    rewrite /testbed-nodes.json /file-server/status-global.json
+    root * /srv
+    file_server
+  }
 }
 {% endif %}
