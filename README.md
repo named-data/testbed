@@ -81,10 +81,10 @@ The master service runs internal cron jobs for polling. You can trigger these ma
 
 ```bash
 # cron-master pulls the git repo and restarts containers if required
-docker compose exec master bash /testbed/scripts/cron-master.sh
+docker compose exec master -e "SKIP_SLEEP=1" bash /testbed/scripts/cron-master.sh
 
 # cron-status regenerates status json
-docker compose exec master bash /testbed/scripts/cron-status.sh
+docker compose exec master -e "SKIP_SLEEP=1" bash /testbed/scripts/cron-status.sh
 ```
 
 ## Unattended Upgrades

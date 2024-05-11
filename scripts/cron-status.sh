@@ -13,11 +13,11 @@ STATUS=$(python3 framework/status-json.py)
 echo -e "$STATUS" > dist/file-server/status.json
 
 # Done
-echo -e "Status updated at $(date)"
+echo -e "Status updated at $(date)" >&2
 
 # Collect all statuses if enabled
 if [[ -n "$COLLECT_STATUS_GLOBAL" ]]; then
-    echo -e "Waiting before starting global status job ..."
+    echo -e "Waiting 60s before starting global status job ..." >&2
     sleep 60
 
     GLOBAL_STATUS=$(python3 framework/status-global.py)

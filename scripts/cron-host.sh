@@ -9,13 +9,17 @@ source "$(pwd)/scripts/utils.sh"
 # Check if debug mode is enabled
 source .env
 if [[ -n "$DEBUG" ]]; then
-    echo "Skipping job because DEBUG is enabled"
+    echo -e "Skipping job because DEBUG is enabled" >&2
     exit 0
 fi
 
 # Sleep for random time
-sleep 10
-random_sleep 60
+if [[ -z "$SKIP_SLEEP" ]]; then
+    sleep 10
+    random_sleep 60
+fi
 
 # Ensure services are running
 docker compose up -d --remove-orphans
+
+echo -e "Finished cron-host at $(date)" >&2

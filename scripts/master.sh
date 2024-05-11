@@ -5,7 +5,7 @@
 
 set -e
 
-echo -e "Starting master service at $(date)"
+echo -e "Starting master service at $(date)" >&2
 
 # Change directory to the root of the project
 cd "$(dirname "${BASH_SOURCE[0]}")"/..
@@ -27,7 +27,7 @@ if [[ -z "$DEBUG" ]]; then
     bash dist/nlsr/renew.sh
     bash dist/ndn-python-repo/renew.sh
 else
-    echo -e "Skipping initial repo pull and bootstrap because DEBUG=1"
+    echo -e "Skipping initial repo pull and bootstrap because DEBUG=1" >&2
 fi
 
 # End bootstrapping
