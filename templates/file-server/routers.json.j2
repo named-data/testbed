@@ -4,9 +4,11 @@
         'shortname': name,
         'name': data['site_name'],
         'ip_addresses': [data['host_ip']],
-        'host': data['ansible_host'],
-        'https': 'https://' + data['ansible_host'],
         'prefix': data['default_prefix'],
+
+        'host': data['ansible_host'],
+        'site': 'http://' + data['ansible_host'] + ':80/',
+        'https': 'https://' + data['ansible_host'] + ':443/',
 
         'neighbors': list(data['neighbors'].keys()),
         'position': data['position'],
