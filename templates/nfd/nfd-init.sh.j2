@@ -9,25 +9,25 @@ sleep 10
 
 # set default strategy to best-route (bestroute2)
 {% if hyperbolic_state == "on" %}
-/usr/bin/nfdc strategy set /               /localhost/nfd/strategy/asf/%FD%04/max-timeouts~3
-/usr/bin/nfdc strategy set /ndn/web        /localhost/nfd/strategy/asf/%FD%04/max-timeouts~5
-/usr/bin/nfdc strategy set /ndn/web/stats  /localhost/nfd/strategy/best-route
+nfdc strategy set  /               /localhost/nfd/strategy/asf/%FD%04/max-timeouts~3
+nfdc strategy set  /ndn/web        /localhost/nfd/strategy/asf/%FD%04/max-timeouts~5
+nfdc strategy set  /ndn/web/stats  /localhost/nfd/strategy/best-route
 {% else %}
-/usr/bin/nfdc strategy set  ndn:/ ndn:/localhost/nfd/strategy/best-route
+nfdc strategy set  /  /localhost/nfd/strategy/best-route
 {% endif %}
 
 # Set multicast strategy
-/usr/bin/nfdc strategy set  /ndn/multicast /localhost/nfd/strategy/multicast
-/usr/bin/nfdc strategy set  /ndn/broadcast /localhost/nfd/strategy/multicast
-/usr/bin/nfdc strategy set  /localhost     /localhost/nfd/strategy/multicast
+nfdc strategy set  /ndn/multicast  /localhost/nfd/strategy/multicast
+nfdc strategy set  /ndn/broadcast  /localhost/nfd/strategy/multicast
+nfdc strategy set  /localhost      /localhost/nfd/strategy/multicast
 
 # Workspace strategies
-/usr/bin/nfdc strategy set  /ndn/irl-workspace/32=sync  /localhost/nfd/strategy/multicast
-/usr/bin/nfdc strategy set  /ndn/ndncomm2024/32=sync  /localhost/nfd/strategy/multicast
-/usr/bin/nfdc strategy set  /ndn/localfirst/meetingnotes/32=sync /localhost/nfd/strategy/multicast
+nfdc strategy set  /ndn/irl-workspace/32=sync            /localhost/nfd/strategy/multicast
+nfdc strategy set  /ndn/ndncomm2024/32=sync              /localhost/nfd/strategy/multicast
+nfdc strategy set  /ndn/localfirst/meetingnotes/32=sync  /localhost/nfd/strategy/multicast
 
 # Default local access strategy
-nfdc strategy set ndn:{{ default_prefix }} ndn:/localhost/nfd/strategy/access
+nfdc strategy set {{ default_prefix }} /localhost/nfd/strategy/access
 
 # Just in case an on-demand face was created since NFD started, destroy it.
 # This is a temporary fix because an update of a face with mtu change does not currently work.
