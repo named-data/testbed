@@ -61,9 +61,9 @@
           </td>
 
           <td v-for="node in routers" :class="{
-              error: !router.fetching && !router.status?.ndnping[node.shortname],
-              okay: (router.shortname != node.shortname) && (router.status?.ndnping[node.shortname] ?? 0 > 0),
-              blue: (router.shortname == node.shortname),
+              error: router.status && !router.status?.ndnping[node.shortname],
+              okay: router.status && (router.shortname != node.shortname) && (router.status?.ndnping[node.shortname] ?? 0 > 0),
+              blue: router.status && (router.shortname == node.shortname),
             }">
               {{ router.status?.ndnping[node.shortname] || '' }}
           </td>
