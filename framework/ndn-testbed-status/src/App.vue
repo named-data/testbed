@@ -7,11 +7,12 @@
           <th>Prefix</th>
           <th>HTTPS</th>
 
-          <th>Revision</th>
           <th>Status</th>
-
           <th>TLS Expiry</th>
           <th>WSS</th>
+          <th>Revision</th>
+
+          <th v-for="node in routers">{{ node.shortname }}</th>
 
           <th>Host OS</th>
           <th>Kernel</th>
@@ -22,8 +23,6 @@
           <th>NLSR Version</th>
 
           <th v-for="service in services">{{ service }}</th>
-
-          <th v-for="node in routers"> {{ node.shortname }} </th>
         </tr>
       </thead>
 
@@ -40,6 +39,16 @@
           <td>{{ router.prefix }}</td>
           <td><a :href="`https://${router.host}`" target="_blank">{{ router.host }}</a></td>
 
+          <td :class="{
+            warning: getFromNow(router.status?.timestamp ?? 0) < -1800,
+          }">{{ getFromNowStr(router.status?.timestamp, 'seconds')  }}</td>
+          <td :class="{
+            warning: (router.status?.tls?.expiry ?? -1) < 0,
+            okay: getFromNow(router.status?.tls?.expiry ?? -1) > 7 * 86400,
+          }">{{ getFromNowStr(router.status?.tls?.expiry, 'days') || router.status?.tls?.error }}</td>
+          <td :class="{ okay: router.status?.['ws-tls']}">
+            {{ router.status?.['ws-tls'] ? 'OK' : '' }}
+          </td>
           <td>
             <a v-if="router.status?.revision"
                 :href="getRevUrl(router)"
@@ -47,16 +56,13 @@
                 {{ router.status?.revision }}
             </a>
           </td>
-          <td :class="{
-            warning: getFromNow(router.status?.timestamp ?? 0) < -1800,
-          }">{{ getFromNowStr(router.status?.timestamp, 'seconds')  }}</td>
 
-          <td :class="{
-            warning: (router.status?.tls?.expiry ?? -1) < 0,
-            okay: getFromNow(router.status?.tls?.expiry ?? -1) > 7 * 86400,
-          }">{{ getFromNowStr(router.status?.tls?.expiry, 'days') || router.status?.tls?.error }}</td>
-          <td :class="{ okay: router.status?.['ws-tls']}">
-            {{ router.status?.['ws-tls'] ? 'OK' : '' }}
+          <td v-for="node in routers" :class="{
+              error: !router.status?.ndnping[node.shortname],
+              okay: (router.shortname != node.shortname) && (router.status?.ndnping[node.shortname] ?? 0 > 0),
+              blue: (router.shortname == node.shortname),
+            }">
+              {{ router.status?.ndnping[node.shortname] || '' }}
           </td>
 
           <td>{{ router.status?.host_info?.os }}</td>
@@ -73,14 +79,6 @@
             }">
               {{ router.status.services[service].status }}
             </span>
-          </td>
-
-          <td v-for="node in routers" :class="{
-              error: !router.status?.ndnping[node.shortname],
-              okay: (router.shortname != node.shortname) && (router.status?.ndnping[node.shortname] ?? 0 > 0),
-              blue: (router.shortname == node.shortname),
-            }">
-              {{ router.status?.ndnping[node.shortname] || '' }}
           </td>
         </tr>
       </tbody>
