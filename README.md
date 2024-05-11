@@ -5,6 +5,7 @@ Container orchestration for the Global Named Data Networking Testbed.
 [![Lint](https://github.com/UCLA-IRL/testbed/actions/workflows/lint.yml/badge.svg)](https://github.com/UCLA-IRL/testbed/actions/workflows/lint.yml)
 [![Docker](https://github.com/UCLA-IRL/testbed/actions/workflows/docker.yml/badge.svg)](https://github.com/UCLA-IRL/testbed/actions/workflows/docker.yml)
 [![Status Page](https://img.shields.io/website?down_color=red&down_message=offline&label=status%20page&up_color=brightgreen&up_message=online&url=https%3A%2F%2Fdemo.memories.gallery)](https://ucla-irl.github.io/testbed/)
+[![Map](https://img.shields.io/badge/map-live-brightgreen)](https://play.ndn.today/?testbed=1)
 
 ## Overview
 
