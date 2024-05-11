@@ -8,7 +8,7 @@ echo -e "Starting NFD initialization script"
 sleep 10
 
 # set default strategy to best-route (bestroute2)
-{% if hyperbolic_state == "on" %}
+{% if hyperbolic_state == 'on' %}
 nfdc strategy set  /               /localhost/nfd/strategy/asf/%FD%04/max-timeouts~3
 nfdc strategy set  /ndn/web        /localhost/nfd/strategy/asf/%FD%04/max-timeouts~5
 nfdc strategy set  /ndn/web/stats  /localhost/nfd/strategy/best-route
@@ -25,6 +25,10 @@ nfdc strategy set  /localhost      /localhost/nfd/strategy/multicast
 nfdc strategy set  /ndn/irl-workspace/32=sync            /localhost/nfd/strategy/multicast
 nfdc strategy set  /ndn/ndncomm2024/32=sync              /localhost/nfd/strategy/multicast
 nfdc strategy set  /ndn/localfirst/meetingnotes/32=sync  /localhost/nfd/strategy/multicast
+
+{% if inventory_hostname in ['UCLA'] %}
+nfdc strategy set  /ndn/irl-workspace                    /localhost/nfd/strategy/multicast
+{% endif %}
 
 # Default local access strategy
 nfdc strategy set {{ default_prefix }} /localhost/nfd/strategy/access
