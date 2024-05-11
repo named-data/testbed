@@ -25,6 +25,11 @@ def get_revision():
     cmd = ['git', 'describe', '--dirty', '--always']
     return subprocess.check_output(cmd, timeout=5).decode('utf-8').strip()
 
+def get_revision_commit():
+    print('Getting git revision commit', file=sys.stderr)
+    cmd = ['git', 'rev-parse', 'HEAD']
+    return subprocess.check_output(cmd, timeout=5).decode('utf-8').strip()
+
 def get_host_info():
     print('Getting host info', file=sys.stderr)
     info = compose.info()
@@ -138,6 +143,7 @@ if __name__ == '__main__':
     status = {
         'timestamp': run_safe(get_timestamp),
         'revision': run_safe(get_revision),
+        'revision_commit': run_safe(get_revision_commit),
         'host_info': run_safe(get_host_info),
         'tls': run_safe(get_tls_status, host),
         'ws-tls': run_safe(get_ws_tls_status, host),

@@ -14,6 +14,7 @@ interface IRouter {
 interface IStatus {
     timestamp: number;
     revision: string;
+    revision_commit: string;
     host_info?: {
         kernel: string;
         os: string;

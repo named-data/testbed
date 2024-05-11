@@ -174,7 +174,8 @@ export default defineComponent({
     },
 
     getRevUrl(router: IRouter) {
-      return `${TESTBED_REPO}/commit/${router.status!.revision}`;
+      const ref = router.status?.revision_commit ?? router.status?.revision;
+      return `${TESTBED_REPO}/commit/${ref}`;
     },
 
     getFromNow<T extends number>(timestamp: T) {
