@@ -104,9 +104,21 @@ export default defineComponent({
 
   data: () => ({
     connectedFace: String(),
-    routers: {} as Record<string, IRouter>,
+    unsortedRouters: {} as Record<string, IRouter>,
     services: [] as string[],
   }),
+
+  computed: {
+    routers() {
+      const entries = Object.entries(this.unsortedRouters);
+      entries.sort(([a, a_o], [b, b_o]) => {
+        const err_c = (a_o.error ? 1 : 0) - (b_o.error ? 1 : 0);
+        const name_c = a.localeCompare(b)
+        return err_c || name_c;
+      })
+      return Object.fromEntries(entries);
+    },
+  },
 
   async mounted() {
     // Connect to testbed
@@ -124,15 +136,10 @@ export default defineComponent({
   methods: {
     async start() {
       // Get router list
-      this.routers = JSON.parse(await this.cat(ROUTERS_JSON));
-
-      // Sort routers by name
-      this.routers = Object.fromEntries(
-        Object.entries(this.routers).sort(([a], [b]) => a.localeCompare(b))
-      );
+      this.unsortedRouters = JSON.parse(await this.cat(ROUTERS_JSON));
 
       // Get each router's status
-      for (const [name, router] of Object.entries(this.routers)) {
+      for (const [name, router] of Object.entries(this.unsortedRouters)) {
         this.refreshRouter(router);
       }
     },
