@@ -5,6 +5,7 @@
         'name': data['site_name'],
         'ip_addresses': [data['host_ip']],
         'host': data['ansible_host'],
+        'https': 'https://' + data['ansible_host'],
         'prefix': data['default_prefix'],
 
         'neighbors': list(data['neighbors'].keys()),
