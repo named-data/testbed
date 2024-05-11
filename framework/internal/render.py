@@ -1,5 +1,6 @@
 import os
 import pathlib
+import sys
 import yaml
 import jinja2
 
@@ -53,7 +54,7 @@ def render(node_name: str, dry: bool = False) -> None:
                 all_host_vars[host_name]['inventory_hostname'] = host_name
                 all_host_vars[host_name].update(config.globals)
             except yaml.YAMLError as exc:
-                print("Error reading host vars file: ", host_path, exc)
+                print("Error reading host vars file: ", host_path, exc, file=sys.stderr)
 
     # Rendering variables for this node
     render_vars = all_host_vars[node_name].copy()
@@ -114,7 +115,7 @@ def render(node_name: str, dry: bool = False) -> None:
 
             # Check if the content has changed
             if existing_content != output_content:
-                print(f"File {output_path} has changed.")
+                print(f"File {output_path} has changed.", file=sys.stderr)
                 service_changed = True
                 with open(output_path, 'w') as f:
                     f.write(output_content)
@@ -130,9 +131,9 @@ def render(node_name: str, dry: bool = False) -> None:
         if not service_running:
             # We don't start the service, instead a subsequent
             # docker compose up will start everything in the right order
-            print(f"Service {service} is not running.")
+            print(f"Service {service} is not running.", file=sys.stderr)
         elif service_changed:
-            print(f"Service {service} has changed. Restarting.")
+            print(f"Service {service} has changed. Restarting.", file=sys.stderr)
             compose.restart(service)
 
         # Run init script if status change
