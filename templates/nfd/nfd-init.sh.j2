@@ -9,9 +9,9 @@ sleep 10
 
 # set default strategy to best-route (bestroute2)
 {% if hyperbolic_state == "on" %}
-/usr/bin/nfdc strategy set ndn:/ ndn:/localhost/nfd/strategy/asf/%FD%04/max-timeouts~3
-/usr/bin/nfdc strategy set /ndn/web ndn:/localhost/nfd/strategy/asf/%FD%04/max-timeouts~5
-nfdc strategy set  ndn:/ndn/web/stats  ndn:/localhost/nfd/strategy/best-route
+/usr/bin/nfdc strategy set /               /localhost/nfd/strategy/asf/%FD%04/max-timeouts~3
+/usr/bin/nfdc strategy set /ndn/web        /localhost/nfd/strategy/asf/%FD%04/max-timeouts~5
+/usr/bin/nfdc strategy set /ndn/web/stats  /localhost/nfd/strategy/best-route
 {% else %}
 /usr/bin/nfdc strategy set  ndn:/ ndn:/localhost/nfd/strategy/best-route
 {% endif %}
