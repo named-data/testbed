@@ -5,6 +5,7 @@ set +e
 
 # Change directory to the root of the project
 cd "$(dirname "${BASH_SOURCE[0]}")"/..
+source "$(pwd)/scripts/utils.sh"
 
 # Check if debug mode is enabled
 source .env
@@ -14,9 +15,7 @@ if [[ -n "$DEBUG" ]]; then
 fi
 
 # Prevent a thundering herd
-WAIT="$((RANDOM % 120))"
-echo "Random wait for ${WAIT} seconds ..."
-sleep "${WAIT}"
+random_sleep 120
 
 git pull
 

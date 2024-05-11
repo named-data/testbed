@@ -37,3 +37,11 @@ function needs_renewal {
 function renew_cleanup {
     rm -f ${WORKING_DIR}/*.csr
 }
+
+# Wait for random amount of time
+function random_sleep {
+    local max_wait=$1
+    wait="$((RANDOM % $max_wait))"
+    echo "Random sleep for ${wait} seconds ..."
+    sleep "${wait}"
+}
