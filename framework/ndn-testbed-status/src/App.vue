@@ -98,7 +98,7 @@ import { retrieveMetadata } from "@ndn/rdr";
 
 const ROUTERS_JSON = '/ndn/edu/ucla/file-server/routers.json';
 const STATUS_SFX = '/file-server/status.json';
-const TESTBED_REPO = 'https://github.com/UCLA-IRL/testbed';
+const TESTBED_REPO = 'https://github.com/named-data/testbed';
 
 export default defineComponent({
   name: 'App',
