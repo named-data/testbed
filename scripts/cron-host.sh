@@ -19,6 +19,11 @@ if [[ -z "$SKIP_SLEEP" ]]; then
     random_sleep 60
 fi
 
+# Recreate the master container separately first
+# Even when all others depend on master, we don't want
+# to recreate everything when master is updated
+docker compose up -d master --no-deps
+
 # Ensure services are running
 docker compose up -d --remove-orphans
 
