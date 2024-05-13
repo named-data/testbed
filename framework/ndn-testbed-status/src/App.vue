@@ -43,9 +43,11 @@
             warning: getFromNow(router.status?.timestamp ?? 0) < -1800,
           }">{{ getFromNowStr(router.status?.timestamp, 'seconds')  }}</td>
           <td :class="{
+            forceshort: true,
             warning: (router.status?.tls?.expiry ?? -1) < 0,
             okay: getFromNow(router.status?.tls?.expiry ?? -1) > 7 * 86400,
-          }">{{ getFromNowStr(router.status?.tls?.expiry, 'days') || router.status?.tls?.error }}</td>
+          }" :title="router.status?.tls?.error ?? ''"
+          >{{ getFromNowStr(router.status?.tls?.expiry, 'days') || router.status?.tls?.error }}</td>
           <td :class="{
             okay: !!router.status?.['ws-tls'],
             warning: !router.status?.['ws-tls'],
@@ -254,6 +256,9 @@ td.warning {
 }
 td.blue {
   background-color: #aaaaff;
+}
+td.forceshort {
+  max-width: 80px;
 }
 
 a {
