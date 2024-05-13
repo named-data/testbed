@@ -25,7 +25,7 @@ neighbors:
   MEMPHIS:
     link_cost: 21
 position:
-- 42.7
+- 42.3398783
 - -71.0887358
 hr_angle: 2.13894
 hr_radius: 19.9001

@@ -34,8 +34,8 @@ neighbors:
   ANYANG:
     link_cost: 100
 position:
-- 36.5
-- -130
+- 34.0728225
+- -118.4387398
 hr_angle: 2.99911
 hr_radius: 16.5866
 ethernet_device: eth0

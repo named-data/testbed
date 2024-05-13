@@ -41,7 +41,7 @@ neighbors:
   BERN:
     link_cost: 60
 position:
-- 38.1490701
+- 38.6490701
 - -90.3033471
 hr_angle: 4.31067
 hr_radius: 19.4268
