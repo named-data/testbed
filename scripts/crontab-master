@@ -2,3 +2,4 @@
 
 */5 * * * * /bin/bash /testbed/scripts/cron-master.sh
 */8 * * * * /bin/bash /testbed/scripts/cron-status.sh
+10 1 * * * /bin/bash /testbed/scripts/cron-cleanup.sh
