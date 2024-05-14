@@ -1,0 +1,27 @@
+site: /tencent/frankfurt
+site_name: Tencent Frankfurt
+operator_name: Unknown
+operator_email: unknown@unknown.com
+ansible_host: frankfurt.testbed.named-data.net
+host_ip: 49.51.163.56
+local_ip: 49.51.163.56
+site_email_domain: []
+default_prefix: /ndn/tencent/frankfurt
+advertised_prefixes:
+- /ndn/tencent/frankfurt
+routable_prefixes:
+- /ndn/tencent/frankfurt
+network_regions:
+- /ndn/tencent/frankfurt
+router_name: vm
+http_access: https
+memsize: 8
+neighbors:
+  UCLA:
+    link_cost: 100
+position:
+- 50.1187
+- 8.6842
+hr_angle: 0
+hr_radius: 0
+ethernet_device: eth0

@@ -1,0 +1,27 @@
+site: /tencent/toronto
+site_name: Tencent Toronto
+operator_name: Unknown
+operator_email: unknown@unknown.com
+ansible_host: toronto.testbed.named-data.net
+host_ip: 49.51.18.162
+local_ip: 49.51.18.162
+site_email_domain: []
+default_prefix: /ndn/tencent/toronto
+advertised_prefixes:
+- /ndn/tencent/toronto
+routable_prefixes:
+- /ndn/tencent/toronto
+network_regions:
+- /ndn/tencent/toronto
+router_name: vm
+http_access: https
+memsize: 8
+neighbors:
+  UCLA:
+    link_cost: 100
+position:
+- 44.4006
+- -79.6676
+hr_angle: 0
+hr_radius: 0
+ethernet_device: eth0

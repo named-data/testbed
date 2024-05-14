@@ -33,6 +33,12 @@ neighbors:
     link_cost: 30
   ANYANG:
     link_cost: 100
+  SINGAPORE:
+    link_cost: 100
+  TORONTO:
+    link_cost: 100
+  FRANKFURT:
+    link_cost: 100
 position:
 - 34.0728225
 - -118.4387398

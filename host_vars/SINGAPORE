@@ -1,0 +1,27 @@
+site: /tencent/singapore
+site_name: Tencent Singapore
+operator_name: Unknown
+operator_email: unknown@unknown.com
+ansible_host: singapore.testbed.named-data.net
+host_ip: 43.134.56.106
+local_ip: 43.134.56.106
+site_email_domain: []
+default_prefix: /ndn/tencent/singapore
+advertised_prefixes:
+- /ndn/tencent/singapore
+routable_prefixes:
+- /ndn/tencent/singapore
+network_regions:
+- /ndn/tencent/singapore
+router_name: vm
+http_access: https
+memsize: 8
+neighbors:
+  UCLA:
+    link_cost: 100
+position:
+- 1.2868
+- 103.8503
+hr_angle: 0
+hr_radius: 0
+ethernet_device: eth0
