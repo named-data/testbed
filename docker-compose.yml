@@ -5,7 +5,7 @@
 name: testbed
 services:
   master:
-    image: ghcr.io/named-data/testbed-master:latest
+    image: ghcr.io/named-data/testbed-master:20240512
     init: true
     tty: true
     volumes:
@@ -23,7 +23,7 @@ services:
       interval: 3s
 
   caddy:
-    image: ghcr.io/named-data/testbed-caddy:latest
+    image: ghcr.io/named-data/testbed-caddy:20240512
     cap_add:
       - NET_ADMIN
     ports:
@@ -147,7 +147,7 @@ services:
       nfd: { condition: service_healthy }
 
   root-http-ca:
-    image: ghcr.io/named-data/testbed-master:latest
+    image: ghcr.io/named-data/testbed-master:20240512
     profiles: [root-ca]  # in .env
     init: true
     tty: true
