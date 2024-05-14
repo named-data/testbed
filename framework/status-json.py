@@ -79,20 +79,20 @@ def get_ndnping(routers: dict[str, dict]):
         if ping_prefix:
             print(f'ndnping {host_name} with prefix {ping_prefix} -> ', file=sys.stderr, end='', flush=True)
 
-            code, stdout = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '10', ping_prefix], timeout=10)
-            success = code == 0
-            if success:
-                # Parse duration from ndnping output
-                # content from /ndn/ca/utoronto: seq=4544900493281171156 time=91.6838 ms
-                durations = []
-                for line in stdout.decode('utf-8').splitlines():
-                    match = re.search(r'time=([\d.]+)', line)
-                    if match:
-                        durations.append(float(match.group(1)))
+            _, stdout = compose.exec('ndnpingserver', ['ndnping', '-c', '3', '-i', '100', ping_prefix], timeout=10)
 
-                duration = round(sum(durations) / len(durations), 3) if durations else -1
-                result[host_name] = duration
-                print(duration, file=sys.stderr)
+            # Parse duration from ndnping output
+            # content from /ndn/ca/utoronto: seq=4544900493281171156 time=91.6838 ms
+            durations = []
+            for line in stdout.decode('utf-8').splitlines():
+                match = re.search(r'^content .* time=([\d.]+)', line)
+                if match:
+                    durations.append(float(match.group(1)))
+
+            if durations:
+                avg = round(sum(durations) / len(durations), 2)
+                result[host_name] = avg
+                print(avg, file=sys.stderr)
             else:
                 result[host_name] = False
                 print('fail', file=sys.stderr)
