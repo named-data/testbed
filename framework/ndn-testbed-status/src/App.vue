@@ -36,8 +36,8 @@
             {{ router.shortname }}
           </td>
 
-          <td>{{ router.prefix }}</td>
-          <td><a :href="`https://${router.host}`" target="_blank">{{ router.host }}</a></td>
+          <td class="sel-all">{{ router.prefix }}</td>
+          <td class="sel-all"><a :href="`https://${router.host}`" target="_blank">{{ router.host }}</a></td>
 
           <td :class="{
             warning: getFromNow(router.status?.timestamp ?? 0) < -1800,
@@ -259,6 +259,10 @@ td.blue {
 }
 td.forceshort {
   max-width: 80px;
+}
+
+.sel-all {
+  user-select: all;
 }
 
 a {
