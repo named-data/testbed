@@ -5,9 +5,9 @@
         <tr>
           <th></th>
           <th>Prefix</th>
-          <th>HTTPS</th>
+          <th colspan=2>Status Page</th>
 
-          <th>Status</th>
+          <th>Last Refresh</th>
           <th>TLS Expiry</th>
           <th>WSS</th>
           <th>Revision</th>
@@ -38,6 +38,7 @@
 
           <td class="sel-all">{{ router.prefix }}</td>
           <td class="sel-all"><a :href="`https://${router.host}`" target="_blank">{{ router.host }}</a></td>
+          <td><a :href="`https://${router.host}/n/`" target="_blank">&#129109;</a></td>
 
           <td :class="{
             warning: getFromNow(router.status?.timestamp ?? 0) < -1800,
