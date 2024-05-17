@@ -18,12 +18,14 @@ router_name: ndnrtr
 http_access: http
 memsize: 2
 neighbors:
-  QUB:
-    link_cost: 60
+  WU:
+    link_cost: 38
   SAVI:
-    link_cost: 15
-  MEMPHIS:
-    link_cost: 21
+    link_cost: 38
+  TORONTO:
+    link_cost: 25
+  AVEIRO:
+    link_cost: 108
 position:
 - 42.3398783
 - -71.0887358

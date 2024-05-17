@@ -19,14 +19,20 @@ router_name: insula
 http_access: https
 memsize: 24
 neighbors:
-  IIITH:
-    link_cost: 90
+  UCLA:
+    link_cost: 171
+  TORONTO:
+    link_cost: 111
+  FRANKFURT:
+    link_cost: 36
+  MML1:
+    link_cost: 60
   AVEIRO:
-    link_cost: 15
+    link_cost: 30
   MINHO:
-    link_cost: 13
-  WU:
-    link_cost: 86
+    link_cost: 28
+  BERN:
+    link_cost: 30
 position:
 - 40.3359
 - -3.8732

@@ -19,9 +19,13 @@ http_access: http
 memsize: 2
 neighbors:
   TNO:
-    link_cost: 25
-  DELFT:
-    link_cost: 26
+    link_cost: 50
+  MML1:
+    link_cost: 1
+  BERN:
+    link_cost: 42
+  UFBA:
+    link_cost: 190
 position:
 - 37.9942
 - 23.7326

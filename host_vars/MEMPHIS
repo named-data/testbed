@@ -18,18 +18,14 @@ router_name: titan
 http_access: https
 memsize: 4
 neighbors:
-  MML1:
-    link_cost: 80
-  SRRU:
-    link_cost: 150
-  UFBA:
-    link_cost: 115
   ARIZONA:
-    link_cost: 17
+    link_cost: 41
   WU:
-    link_cost: 17
-  NEU:
-    link_cost: 21
+    link_cost: 27
+  SAVI:
+    link_cost: 28
+  DELFT:
+    link_cost: 119
 position:
 - 35.1186099
 - -89.93700109999999

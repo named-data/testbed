@@ -25,20 +25,22 @@ router_name: suns
 http_access: https
 memsize: 2
 neighbors:
-  SAVI:
-    link_cost: 40
-  ARIZONA:
-    link_cost: 25
-  WU:
-    link_cost: 30
-  ANYANG:
-    link_cost: 100
-  SINGAPORE:
-    link_cost: 100
   TORONTO:
-    link_cost: 100
+    link_cost: 66
   FRANKFURT:
-    link_cost: 100
+    link_cost: 149
+  URJC:
+    link_cost: 171
+  MML1:
+    link_cost: 195
+  ARIZONA:
+    link_cost: 12
+  WU:
+    link_cost: 54
+  UFBA:
+    link_cost: 130
+  WASEDA:
+    link_cost: 108
 position:
 - 34.0728225
 - -118.4387398

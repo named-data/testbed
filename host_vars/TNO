@@ -21,9 +21,11 @@ neighbors:
   DELFT:
     link_cost: 2
   MML2:
-    link_cost: 25
+    link_cost: 50
+  AFA:
+    link_cost: 37
   QUB:
-    link_cost: 15
+    link_cost: 22
 position:
 - 52.05858
 - 4.0

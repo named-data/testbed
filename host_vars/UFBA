@@ -18,10 +18,12 @@ router_name: ndn-testbed-ufba
 http_access: https
 memsize: 2
 neighbors:
+  UCLA:
+    link_cost: 130
   WU:
-    link_cost: 65
-  MEMPHIS:
-    link_cost: 115
+    link_cost: 129
+  MML2:
+    link_cost: 190
 position:
 - -3.7
 - -49.6

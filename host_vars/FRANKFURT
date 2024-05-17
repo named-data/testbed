@@ -18,7 +18,21 @@ http_access: https
 memsize: 8
 neighbors:
   UCLA:
-    link_cost: 100
+    link_cost: 149
+  TORONTO:
+    link_cost: 107
+  URJC:
+    link_cost: 36
+  MML1:
+    link_cost: 50
+  AVEIRO:
+    link_cost: 44
+  DELFT:
+    link_cost: 9
+  AFA:
+    link_cost: 28
+  SINGAPORE:
+    link_cost: 178
 position:
 - 50.1187
 - 8.6842

@@ -18,10 +18,14 @@ router_name: ndn-1
 http_access: http
 memsize: 2
 neighbors:
-  WU:
-    link_cost: 60
+  URJC:
+    link_cost: 30
+  QUB:
+    link_cost: 39
+  MML2:
+    link_cost: 42
   AFA:
-    link_cost: 15
+    link_cost: 28
 position:
 - 46.8
 - 8.5836

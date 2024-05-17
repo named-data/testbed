@@ -20,14 +20,14 @@ router_name: selficn
 http_access: https
 memsize: 4
 neighbors:
-  WU:
-    link_cost: 75
+  FRANKFURT:
+    link_cost: 44
   URJC:
-    link_cost: 15
+    link_cost: 30
   MINHO:
-    link_cost: 2
-  AFA:
-    link_cost: 45
+    link_cost: 3
+  NEU:
+    link_cost: 108
 position:
 - 40.6
 - -9.0

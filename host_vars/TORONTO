@@ -18,7 +18,19 @@ http_access: https
 memsize: 8
 neighbors:
   UCLA:
-    link_cost: 100
+    link_cost: 66
+  FRANKFURT:
+    link_cost: 107
+  URJC:
+    link_cost: 111
+  MML1:
+    link_cost: 167
+  WU:
+    link_cost: 25
+  NEU:
+    link_cost: 25
+  SINGAPORE:
+    link_cost: 252
 position:
 - 44.4006
 - -79.6676

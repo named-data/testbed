@@ -19,10 +19,12 @@ router_name: vnetlab
 http_access: https
 memsize: 4
 neighbors:
-  AVEIRO:
-    link_cost: 2
   URJC:
-    link_cost: 13
+    link_cost: 28
+  QUB:
+    link_cost: 60
+  AVEIRO:
+    link_cost: 3
 position:
 - 41.8
 - -8.2

@@ -18,12 +18,14 @@ router_name: ndntestbed
 http_access: http
 memsize: 2
 neighbors:
-  URJC:
-    link_cost: 90
-  WU:
-    link_cost: 122
-  AFA:
-    link_cost: 72
+  MML1:
+    link_cost: 191
+  SINGAPORE:
+    link_cost: 214
+  ANYANG:
+    link_cost: 116
+  SRRU:
+    link_cost: 108
 position:
 - 17.4456
 - 78.3497

@@ -18,28 +18,18 @@ router_name: wundngw
 http_access: https
 memsize: 2
 neighbors:
-  DELFT:
-    link_cost: 60
-  MML1:
-    link_cost: 75
-  QUB:
-    link_cost: 60
-  IIITH:
-    link_cost: 122
-  AVEIRO:
-    link_cost: 75
-  UFBA:
-    link_cost: 65
   UCLA:
-    link_cost: 30
-  URJC:
-    link_cost: 86
+    link_cost: 54
   ARIZONA:
-    link_cost: 33
+    link_cost: 50
   MEMPHIS:
-    link_cost: 17
-  BERN:
-    link_cost: 60
+    link_cost: 27
+  NEU:
+    link_cost: 38
+  UFBA:
+    link_cost: 129
+  TORONTO:
+    link_cost: 25
 position:
 - 38.6490701
 - -90.3033471

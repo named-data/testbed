@@ -18,12 +18,12 @@ router_name: ndn
 http_access: https
 memsize: 4
 neighbors:
-  AVEIRO:
-    link_cost: 45
-  IIITH:
-    link_cost: 72
+  FRANKFURT:
+    link_cost: 28
+  TNO:
+    link_cost: 37
   BERN:
-    link_cost: 15
+    link_cost: 28
 position:
 - 42.1
 - 14.5

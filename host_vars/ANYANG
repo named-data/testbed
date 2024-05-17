@@ -18,14 +18,16 @@ router_name: anyanghub
 http_access: http
 memsize: 48
 neighbors:
-  SRRU:
-    link_cost: 57
-  OSAKA:
-    link_cost: 36
+  ARIZONA:
+    link_cost: 234
   WASEDA:
-    link_cost: 40
-  UCLA:
-    link_cost: 100
+    link_cost: 89
+  OSAKA:
+    link_cost: 98
+  IIITH:
+    link_cost: 116
+  SRRU:
+    link_cost: 140
 position:
 - 37.7
 - 127.0

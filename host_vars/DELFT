@@ -18,14 +18,14 @@ router_name: ndn-testbed
 http_access: https
 memsize: 4
 neighbors:
+  FRANKFURT:
+    link_cost: 9
   TNO:
     link_cost: 2
-  QUB:
-    link_cost: 15
-  WU:
-    link_cost: 60
-  MML2:
-    link_cost: 26
+  MEMPHIS:
+    link_cost: 119
+  OSAKA:
+    link_cost: 234
 position:
 - 52.0
 - 4.4

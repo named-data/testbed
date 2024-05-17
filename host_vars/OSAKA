@@ -18,14 +18,16 @@ router_name: NDNtestbed
 http_access: http
 memsize: 16
 neighbors:
-  SRRU:
-    link_cost: 67
-  ANYANG:
-    link_cost: 36
+  DELFT:
+    link_cost: 234
+  SINGAPORE:
+    link_cost: 79
   WASEDA:
-    link_cost: 5
-  ARIZONA:
-    link_cost: 100
+    link_cost: 12
+  ANYANG:
+    link_cost: 98
+  SRRU:
+    link_cost: 123
 position:
 - 34.72
 - 135.5193

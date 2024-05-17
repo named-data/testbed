@@ -18,14 +18,14 @@ router_name: ndn
 http_access: https
 memsize: 8
 neighbors:
-  DELFT:
-    link_cost: 15
-  WU:
-    link_cost: 60
-  NEU:
-    link_cost: 60
   TNO:
-    link_cost: 15
+    link_cost: 22
+  BERN:
+    link_cost: 39
+  MINHO:
+    link_cost: 60
+  SAVI:
+    link_cost: 100
 position:
 - 54.5973
 - -5.9301

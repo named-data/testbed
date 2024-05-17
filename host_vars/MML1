@@ -19,10 +19,18 @@ router_name: mmlab1
 http_access: http
 memsize: 2
 neighbors:
-  WU:
-    link_cost: 75
-  MEMPHIS:
-    link_cost: 80
+  UCLA:
+    link_cost: 195
+  TORONTO:
+    link_cost: 167
+  FRANKFURT:
+    link_cost: 50
+  URJC:
+    link_cost: 60
+  MML2:
+    link_cost: 1
+  IIITH:
+    link_cost: 191
 position:
 - 37.9942
 - 23.7326
