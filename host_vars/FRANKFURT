@@ -1,18 +1,18 @@
-site: /tencent/frankfurt
-site_name: Tencent Frankfurt
-operator_name: Unknown
-operator_email: unknown@unknown.com
+site: /pcl/frankfurt
+site_name: PCL Frankfurt
+operator_name: Teng Liang
+operator_email: redact@pcl.ac.cn
 ansible_host: frankfurt.testbed.named-data.net
 host_ip: 49.51.163.56
 local_ip: 49.51.163.56
 site_email_domain: []
-default_prefix: /ndn/tencent/frankfurt
+default_prefix: /ndn/pcl/frankfurt
 advertised_prefixes:
-- /ndn/tencent/frankfurt
+- /ndn/pcl/frankfurt
 routable_prefixes:
-- /ndn/tencent/frankfurt
+- /ndn/pcl/frankfurt
 network_regions:
-- /ndn/tencent/frankfurt
+- /ndn/pcl/frankfurt
 router_name: vm
 http_access: https
 memsize: 8

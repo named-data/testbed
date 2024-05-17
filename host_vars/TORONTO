@@ -1,18 +1,18 @@
-site: /tencent/toronto
-site_name: Tencent Toronto
-operator_name: Unknown
-operator_email: unknown@unknown.com
+site: /pcl/toronto
+site_name: PCL Toronto
+operator_name: Teng Liang
+operator_email: redact@pcl.ac.cn
 ansible_host: toronto.testbed.named-data.net
 host_ip: 49.51.18.162
 local_ip: 49.51.18.162
 site_email_domain: []
-default_prefix: /ndn/tencent/toronto
+default_prefix: /ndn/pcl/toronto
 advertised_prefixes:
-- /ndn/tencent/toronto
+- /ndn/pcl/toronto
 routable_prefixes:
-- /ndn/tencent/toronto
+- /ndn/pcl/toronto
 network_regions:
-- /ndn/tencent/toronto
+- /ndn/pcl/toronto
 router_name: vm
 http_access: https
 memsize: 8
