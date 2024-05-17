@@ -38,7 +38,7 @@
 
           <td class="sel-all">{{ router.prefix }}</td>
           <td class="sel-all"><a :href="`https://${router.host}`" target="_blank">{{ router.host }}</a></td>
-          <td><a :href="`https://${router.host}/n/`" target="_blank">&#129109;</a></td>
+          <td><a :href="`https://${router.host}/n/`" target="_blank">&UpperRightArrow;</a></td>
 
           <td :class="{
             warning: getFromNow(router.status?.timestamp ?? 0) < -1800,
