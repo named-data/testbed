@@ -3,8 +3,8 @@ site_name: Northeastern University
 operator_name: Ran Liu
 operator_email: liuranapply@gmail.com
 ansible_host: neu.testbed.named-data.net
-host_ip: 129.10.224.42
-local_ip: 129.10.224.42
+host_ip: 155.33.178.42
+local_ip: 155.33.178.42
 site_email_domain:
 - neu.edu
 default_prefix: /ndn/edu/neu
