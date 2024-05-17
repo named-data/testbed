@@ -94,7 +94,7 @@ services:
       nfd: { condition: service_healthy }
 
   nlsr:
-    image: ghcr.io/pulsejet/nlsr@sha256:567558e8ce37453f410cf2cdc612c1bf11252de0b935b8b7d5da41ce6381f5de
+    image: ghcr.io/named-data/nlsr:20240508
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
