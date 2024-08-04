@@ -21,6 +21,8 @@ services:
     healthcheck:
       test: [CMD, stat, /testbed/dist/.master-ready]
       interval: 3s
+    logging:
+      driver: local
 
   caddy:
     image: ghcr.io/named-data/testbed-caddy:20240512
@@ -38,6 +40,8 @@ services:
     restart: unless-stopped
     depends_on:
       master: { condition: service_healthy }
+    logging:
+      driver: local
 
   nfd:
     image: ghcr.io/named-data/nfd:20240420
@@ -54,9 +58,11 @@ services:
     restart: unless-stopped
     healthcheck:
       test: [CMD, nfdc, status]
-      interval: 5s
+      interval: 30s
     depends_on:
       master: { condition: service_healthy }
+    logging:
+      driver: local
 
   nfd-http-status-server:
     image: ghcr.io/named-data/nfd-status-http-server:20240420
@@ -66,6 +72,8 @@ services:
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
+    logging:
+      driver: local
 
   ndnpingserver:
     image: ghcr.io/named-data/ndn-tools:20240505
@@ -79,6 +87,8 @@ services:
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
+    logging:
+      driver: local
 
   serve-certs:
     image: ghcr.io/yoursunny/ndn6-tools:20240505
@@ -92,6 +102,8 @@ services:
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
+    logging:
+      driver: local
 
   nlsr:
     image: ghcr.io/named-data/nlsr:20240508
@@ -106,6 +118,8 @@ services:
     depends_on:
       nfd: { condition: service_healthy }
       serve-certs: { condition: service_started }
+    logging:
+      driver: local
 
   mongodb:
     image: mongo:${MONGO_TAG:-7}
@@ -117,6 +131,8 @@ services:
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | ${MONGO_SH:-mongosh} --quiet
       interval: 5s
+    logging:
+      driver: local
 
   ndn-python-repo:
     image: ghcr.io/ucla-irl/ndn-python-repo:20240508
@@ -131,6 +147,8 @@ services:
     depends_on:
       mongodb: { condition: service_healthy }
       nfd: { condition: service_healthy }
+    logging:
+      driver: local
 
   ndncert:
     image: ghcr.io/named-data/ndncert-ca:20240507
@@ -145,6 +163,8 @@ services:
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
+    logging:
+      driver: local
 
   root-http-ca:
     image: ghcr.io/named-data/testbed-master:20240512
@@ -163,6 +183,8 @@ services:
     restart: unless-stopped
     depends_on:
       master: { condition: service_healthy }
+    logging:
+      driver: local
 
   root-ndncert:
     image: ghcr.io/named-data/ndncert-ca:20240507
@@ -178,6 +200,8 @@ services:
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
+    logging:
+      driver: local
 
   file-server:
     image: ghcr.io/yoursunny/ndn6-tools:20240505
@@ -191,3 +215,5 @@ services:
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
+    logging:
+      driver: local
