@@ -44,7 +44,7 @@ services:
       driver: local
 
   nfd:
-    image: ghcr.io/named-data/nfd:20240420
+    image: ghcr.io/named-data/nfd:24.07
     init: true
     volumes:
       - /run/nfd:/run/nfd
@@ -65,7 +65,7 @@ services:
       driver: local
 
   nfd-http-status-server:
-    image: ghcr.io/named-data/nfd-status-http-server:20240420
+    image: ghcr.io/named-data/nfd-status-http-server:24.07
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
@@ -76,7 +76,7 @@ services:
       driver: local
 
   ndnpingserver:
-    image: ghcr.io/named-data/ndn-tools:20240505
+    image: ghcr.io/named-data/ndn-tools:24.07
     tty: true
     init: true
     volumes:
@@ -151,7 +151,7 @@ services:
       driver: local
 
   ndncert:
-    image: ghcr.io/named-data/ndncert-ca:20240507
+    image: ghcr.io/named-data/ndncert-ca:20240720
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
@@ -187,7 +187,7 @@ services:
       driver: local
 
   root-ndncert:
-    image: ghcr.io/named-data/ndncert-ca:20240507
+    image: ghcr.io/named-data/ndncert-ca:20240720
     profiles: [root-ca]  # in .env
     init: true
     volumes:
