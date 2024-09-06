@@ -5,7 +5,7 @@
 name: testbed
 services:
   master:
-    image: ghcr.io/named-data/testbed-master:20240512
+    image: ghcr.io/named-data/testbed-master:20240906
     init: true
     tty: true
     volumes:
@@ -25,7 +25,7 @@ services:
       driver: local
 
   caddy:
-    image: ghcr.io/named-data/testbed-caddy:20240512
+    image: ghcr.io/named-data/testbed-caddy:20240906
     cap_add:
       - NET_ADMIN
     ports:
