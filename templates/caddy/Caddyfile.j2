@@ -1,6 +1,6 @@
 {{ ansible_host }} {
   @nfdstatus path / /nfd-status.xsl /*.css
-  reverse_proxy @nfdstatus http://nfd-http-status-server:8080
+  reverse_proxy @nfdstatus http://nfd-http-status-server:6380
 
   @ws path /ws /ws/*
   reverse_proxy @ws http://nfd:9696
