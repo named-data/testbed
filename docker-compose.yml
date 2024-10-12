@@ -141,6 +141,8 @@ services:
       - /run/nfd:/run/nfd:ro
       - ${PWD}/dist/ndn-python-repo:/config
       - ${PWD}/dist/ndn-python-repo/repo.conf:/config/repo.conf:ro
+    ports:
+      - 7378:7378
     environment:
       HOME: /config
     restart: unless-stopped
