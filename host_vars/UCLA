@@ -23,7 +23,7 @@ network_regions:
 - /ndn/edu/ucla
 router_name: suns
 http_access: https
-memsize: 2
+memsize: 10
 neighbors:
   TORONTO:
     link_cost: 66
