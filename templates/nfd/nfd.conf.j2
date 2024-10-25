@@ -1,8 +1,3 @@
-general
-{
-
-}
-
 log
 {
   default_level INFO
@@ -20,7 +15,7 @@ tables
     cs_max_packets 262144
   {% endif %}
 
-  cs_policy priority_fifo
+  cs_policy lru
   cs_unsolicited_policy drop-all
 
   strategy_choice
@@ -61,13 +56,13 @@ face_system
 
   udp
   {
+    listen yes
     port {{udp_port}}
     enable_v4 yes
     enable_v6 yes
 
     idle_timeout 600
     unicast_mtu 1452
-    keep_alive_interval 25
 
     mcast yes
     mcast_group 224.0.23.170
@@ -76,11 +71,12 @@ face_system
     mcast_port_v6 56363
     mcast_ad_hoc no
 
-    whitelist {
+    whitelist
+    {
       *
     }
-    blacklist {
-
+    blacklist
+    {
     }
   }
 
@@ -93,11 +89,12 @@ face_system
     mcast_group 01:00:5E:00:17:AA
     mcast_ad_hoc no
 
-    whitelist {
+    whitelist
+    {
       *
     }
-    blacklist {
-
+    blacklist
+    {
     }
   }
 
