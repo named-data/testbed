@@ -58,7 +58,8 @@ services:
     restart: unless-stopped
     healthcheck:
       test: [CMD, nfdc, status]
-      interval: 30s
+      interval: 1m
+      start_period: 30s
     depends_on:
       master: { condition: service_healthy }
     logging:
@@ -130,7 +131,7 @@ services:
     restart: unless-stopped
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | ${MONGO_SH:-mongosh} --quiet
-      interval: 5s
+      start_period: 30s
     logging:
       driver: local
     ports:
