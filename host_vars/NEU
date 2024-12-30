@@ -20,10 +20,6 @@ memsize: 2
 neighbors:
   WU:
     link_cost: 38
-  SAVI:
-    link_cost: 38
-  TORONTO:
-    link_cost: 25
   AVEIRO:
     link_cost: 108
 position:

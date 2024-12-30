@@ -21,8 +21,6 @@ memsize: 2
 neighbors:
   UCLA:
     link_cost: 195
-  TORONTO:
-    link_cost: 167
   FRANKFURT:
     link_cost: 50
   URJC:

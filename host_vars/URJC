@@ -21,8 +21,6 @@ memsize: 24
 neighbors:
   UCLA:
     link_cost: 171
-  TORONTO:
-    link_cost: 111
   FRANKFURT:
     link_cost: 36
   MML1:

@@ -17,8 +17,6 @@ router_name: vm
 http_access: https
 memsize: 8
 neighbors:
-  TORONTO:
-    link_cost: 252
   FRANKFURT:
     link_cost: 178
   WASEDA:

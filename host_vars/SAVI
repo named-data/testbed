@@ -19,8 +19,6 @@ router_name: ndnrtr
 http_access: https
 memsize: 8
 neighbors:
-  NEU:
-    link_cost: 38
   MEMPHIS:
     link_cost: 28
   QUB:

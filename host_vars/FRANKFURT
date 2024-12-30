@@ -19,8 +19,6 @@ memsize: 8
 neighbors:
   UCLA:
     link_cost: 149
-  TORONTO:
-    link_cost: 107
   URJC:
     link_cost: 36
   MML1:

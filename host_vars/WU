@@ -28,8 +28,6 @@ neighbors:
     link_cost: 38
   UFBA:
     link_cost: 129
-  TORONTO:
-    link_cost: 25
 position:
 - 38.6490701
 - -90.3033471
