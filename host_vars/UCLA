@@ -14,9 +14,8 @@ default_prefix: /ndn/edu/ucla
 advertised_prefixes:
 - /ndn/edu/ucla
 - /ndn/CA
-- /ndn/localfirst/meetingnotes/CA
-- /ndn/irl-workspace/CA
-- /ndn/ndncomm2024/CA
+- /ndn/irl-workspace/20240525/CA
+- /ndn/weekly-call-doc/CA
 routable_prefixes:
 - /ndn/edu/ucla
 network_regions:
