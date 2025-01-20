@@ -99,7 +99,7 @@ services:
       - ${PWD}/dist/ndncert/site.ndncert:/certs/site.ndncert:ro
       - ${PWD}/anchors:/keys/anchors:ro
     entrypoint: /bin/bash
-    command: ['-c', 'ndn6-serve-certs /keys/anchors/*.base64  /certs/*.ndncert']
+    command: ['-c', 'ndn6-serve-certs /keys/anchors/*.base64 /certs/*.ndncert']
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
@@ -107,7 +107,7 @@ services:
       driver: local
 
   nlsr:
-    image: ghcr.io/named-data/nlsr:20240508
+    image: ghcr.io/named-data/nlsr:20250120
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
