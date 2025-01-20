@@ -4,7 +4,7 @@ Container orchestration for the Global Named Data Networking Testbed.
 
 [![Lint](https://github.com/named-data/testbed/actions/workflows/lint.yml/badge.svg)](https://github.com/named-data/testbed/actions/workflows/lint.yml)
 [![Docker](https://github.com/named-data/testbed/actions/workflows/docker.yml/badge.svg)](https://github.com/named-data/testbed/actions/workflows/docker.yml)
-[![Status Page](https://img.shields.io/website?down_color=red&down_message=offline&label=status%20page&up_color=brightgreen&up_message=online&url=https%3A%2F%2Fdemo.memories.gallery)](https://named-data.github.io/testbed/)
+[![Status Page](https://img.shields.io/website?url=https%3A%2F%2Fnamed-data.github.io%2Ftestbed%2F&up_message=online&down_message=offline&label=status%20page)](https://named-data.github.io/testbed/)
 [![Map](https://img.shields.io/badge/map-live-brightgreen)](https://play.ndn.today/?testbed=1)
 
 ## Overview
