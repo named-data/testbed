@@ -1,4 +1,4 @@
-name: build
+name: Build
 on:
   push:
     paths:
@@ -12,22 +12,24 @@ jobs:
   status-page:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Build status page
+        working-directory: framework/ndn-testbed-status
         run: |
-          cd framework/ndn-testbed-status
           npm install
           npm run build
 
-      - uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy
         if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108549d475ec49e8ef4d45e # v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./framework/ndn-testbed-status/dist
-          publish_branch: gh-pages
           force_orphan: true
