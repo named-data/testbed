@@ -134,8 +134,6 @@ services:
       start_period: 30s
     logging:
       driver: local
-    ports:
-      - 27017:27017
 
   ndn-python-repo:
     image: ghcr.io/ucla-irl/ndn-python-repo:20240508
