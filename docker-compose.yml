@@ -222,12 +222,12 @@ services:
       driver: local
 
   trace-collector:
-    image: sankalpatimilsina/scheduler:latest
+    image: ghcr.io/sankalpatimilsina12/trace-collector:20250214
     init: true
     network_mode: service:nfd
     volumes:
       - /home/.ssh:/root/.ssh:ro
-      - /home/ndnops/ndntdump-exp-2023:/dump
+      - /home/ndnops/traces:/dump
       - ${PWD}/dist/nlsr:/config
     restart: unless-stopped
     depends_on:
