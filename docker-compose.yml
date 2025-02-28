@@ -220,3 +220,17 @@ services:
       nfd: { condition: service_healthy }
     logging:
       driver: local
+
+  trace-collector:
+    image: ghcr.io/sankalpatimilsina12/trace-collector:20250214
+    init: true
+    network_mode: service:nfd
+    volumes:
+      - /home/.ssh:/root/.ssh:ro
+      - /home/ndnops/traces:/dump
+      - ${PWD}/dist/nlsr:/config
+    restart: unless-stopped
+    depends_on:
+      nfd: { condition: service_healthy }
+    logging:
+      driver: local
