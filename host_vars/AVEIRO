@@ -1,4 +1,4 @@
-site: /pt/it/av
+site: /selficn.av.it.pt
 site_name: University of Aveiro, Portugal
 operator_name: Jose Quevedo
 operator_email: quevedo@av.it.pt
@@ -9,13 +9,13 @@ outgoing_subnets:
 - 193.136.80.0/20
 site_email_domain:
 - av.it.pt
-default_prefix: /ndn/pt/it/av
+default_prefix: /ndn/selficn.av.it.pt
 advertised_prefixes:
-- /ndn/pt/it/av
+- /ndn/selficn.av.it.pt
 routable_prefixes:
-- /ndn/pt/it/av
+- /ndn/selficn.av.it.pt
 network_regions:
-- /ndn/pt/it/av
+- /ndn/selficn.av.it.pt
 router_name: selficn
 http_access: https
 memsize: 4

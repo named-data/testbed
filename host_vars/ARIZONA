@@ -1,4 +1,4 @@
-site: /edu/arizona
+site: /hobo.cs.arizona.edu
 site_name: The University of Arizona
 operator_name: Teng Liang
 operator_email: philoliang2011@gmail.com
@@ -9,14 +9,14 @@ site_email_domain:
 - arizona.edu
 - cs.arizona.edu
 - email.arizona.edu
-default_prefix: /ndn/edu/arizona
+default_prefix: /ndn/hobo.cs.arizona.edu
 advertised_prefixes:
-- /ndn/edu/arizona
+- /ndn/hobo.cs.arizona.edu
 - /ndn/web/stats
 routable_prefixes:
-- /ndn/edu/arizona
+- /ndn/hobo.cs.arizona.edu
 network_regions:
-- /ndn/edu/arizona
+- /ndn/hobo.cs.arizona.edu
 router_name: hobo
 http_access: https
 memsize: 8

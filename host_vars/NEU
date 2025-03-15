@@ -1,4 +1,4 @@
-site: /edu/neu
+site: /neu.testbed.named-data.net
 site_name: Northeastern University
 operator_name: Ran Liu
 operator_email: liuranapply@gmail.com
@@ -7,13 +7,13 @@ host_ip: 155.33.178.42
 local_ip: 155.33.178.42
 site_email_domain:
 - neu.edu
-default_prefix: /ndn/edu/neu
+default_prefix: /ndn/neu.testbed.named-data.net
 advertised_prefixes:
-- /ndn/edu/neu
+- /ndn/neu.testbed.named-data.net
 routable_prefixes:
-- /ndn/edu/neu
+- /ndn/neu.testbed.named-data.net
 network_regions:
-- /ndn/edu/neu
+- /ndn/neu.testbed.named-data.net
 router_name: ndnrtr
 http_access: http
 memsize: 2

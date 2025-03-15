@@ -1,4 +1,4 @@
-site: /ch/unibe
+site: /os-float159.cnds.unibe.ch
 site_name: University of Bern, Switzerland
 operator_name: Jonnahtan Saltarin
 operator_email: saltarin@inf.unibe.ch
@@ -7,13 +7,13 @@ host_ip: 130.92.70.159
 local_ip: 192.168.111.10
 site_email_domain:
 - inf.unibe.ch
-default_prefix: /ndn/ch/unibe
+default_prefix: /ndn/os-float159.cnds.unibe.ch
 advertised_prefixes:
-- /ndn/ch/unibe
+- /ndn/os-float159.cnds.unibe.ch
 routable_prefixes:
-- /ndn/ch/unibe
+- /ndn/os-float159.cnds.unibe.ch
 network_regions:
-- /ndn/ch/unibe
+- /ndn/os-float159.cnds.unibe.ch
 router_name: ndn-1
 http_access: http
 memsize: 2

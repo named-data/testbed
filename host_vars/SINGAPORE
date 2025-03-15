@@ -1,4 +1,4 @@
-site: /pcl/singapore
+site: /singapore.testbed.named-data.net
 site_name: PCL Singapore
 operator_name: Teng Liang
 operator_email: redact@pcl.ac.cn
@@ -6,13 +6,13 @@ ansible_host: singapore.testbed.named-data.net
 host_ip: 43.134.56.106
 local_ip: 43.134.56.106
 site_email_domain: []
-default_prefix: /ndn/pcl/singapore
+default_prefix: /ndn/singapore.testbed.named-data.net
 advertised_prefixes:
-- /ndn/pcl/singapore
+- /ndn/singapore.testbed.named-data.net
 routable_prefixes:
-- /ndn/pcl/singapore
+- /ndn/singapore.testbed.named-data.net
 network_regions:
-- /ndn/pcl/singapore
+- /ndn/singapore.testbed.named-data.net
 router_name: vm
 http_access: https
 memsize: 8
