@@ -19,7 +19,12 @@ if [[ -z "$SKIP_SLEEP" ]]; then
     random_sleep 120
 fi
 
+# Remove git lock file if it exists and pull the latest changes
+rm -f .git/index.lock
 git pull
+
+# Renew certificates if needed
+bash $(pwd)/scripts/cert-renew.sh
 
 PWD="${ROOT_DIR}" python3 framework/main.py
 
