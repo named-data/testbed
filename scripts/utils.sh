@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 # Allow call to fail and return exit code
 allow_fail_status=0
 function allow_fail {
@@ -27,6 +29,8 @@ function get_csr {
 function needs_renewal {
     local cert_path=$1
     if [[ ! -f "${cert_path}" || -n "${HAS_FORCE}" ]]; then
+        echo -e "1"
+    elif ! python3 "${SCRIPT_DIR}/cert-check.py" "${cert_path}" 1>&2; then
         echo -e "1"
     else
         echo -e "${cert_path} exists, skipping ..." >&2

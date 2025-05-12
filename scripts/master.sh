@@ -23,9 +23,7 @@ if [[ -z "$DEBUG" ]]; then
     python3 framework/main.py --dry
 
     # Check and reissue certificates
-    bash dist/ndncert/renew.sh
-    bash dist/nlsr/renew.sh
-    bash dist/ndn-python-repo/renew.sh
+    bash $(pwd)/scripts/cert-renew.sh
 else
     echo -e "Skipping initial repo pull and bootstrap because DEBUG=1" >&2
 fi
