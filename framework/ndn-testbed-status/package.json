@@ -11,10 +11,10 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
-    "@ndn/autoconfig": "https://ndnts-nightly.ndn.today/autoconfig.tgz",
-    "@ndn/endpoint": "https://ndnts-nightly.ndn.today/endpoint.tgz",
-    "@ndn/rdr": "https://ndnts-nightly.ndn.today/rdr.tgz",
-    "@ndn/segmented-object": "https://ndnts-nightly.ndn.today/segmented-object.tgz",
+    "@ndn/autoconfig": "^0.0.20250307",
+    "@ndn/endpoint": "^0.0.20250307",
+    "@ndn/rdr": "^0.0.20250307",
+    "@ndn/segmented-object": "^0.0.20250307",
     "vue": "^3.4.21"
   },
   "devDependencies": {
