@@ -14,3 +14,8 @@ fi
 bash "$(pwd)/dist/ndncert/renew.sh" "${FORCE}"
 bash "$(pwd)/dist/nlsr/renew.sh" "${FORCE}"
 bash "$(pwd)/dist/ndn-python-repo/renew.sh" "${FORCE}"
+
+# Restart containers if force
+if [[ -n "${FORCE}" ]]; then
+    docker compose restart nlsr ndncert serve-certs ndn-python-repo
+fi
