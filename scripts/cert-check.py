@@ -27,7 +27,8 @@ def main():
     not_after = bytes(cert.signature_info.validity_period.not_after).decode()
     not_after = datetime.strptime(not_after, date_template)
 
-    print("Cert Status", file_path, not_before, not_after)
+    # Print expiration date in seconds since epoch
+    print(int(not_after.timestamp()))
 
     now = datetime.now()
     if not_before <= now <= not_after - timedelta(days=91):

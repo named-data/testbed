@@ -26,6 +26,7 @@ interface IStatus {
         error: string | null,
     },
     'ws-tls': boolean,
+    site_cert_expiry: number,
     services: Record<string, {
         image: string;
         status: string;

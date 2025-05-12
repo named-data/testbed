@@ -10,6 +10,7 @@
           <th>Last Refresh</th>
           <th>TLS Expiry</th>
           <th>WSS</th>
+          <th>Site Cert</th>
           <th>Revision</th>
 
           <th v-for="node in routers">{{ node.shortname }}</th>
@@ -55,6 +56,12 @@
           }">
             {{ router.status?.['ws-tls'] ? 'OK' : '' }}
           </td>
+          <td :class="{
+            forceshort: true,
+            warning: (router.status?.site_cert_expiry ?? -1) < 0,
+            okay: getFromNow(router.status?.site_cert_expiry ?? -1) > 7 * 86400,
+          }" :title="router.status?.tls?.error ?? ''"
+          >{{ getFromNowStr(router.status?.site_cert_expiry, 'days') }}</td>
           <td>
             <a v-if="router.status?.revision"
                 :href="getRevUrl(router)"

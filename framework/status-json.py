@@ -126,6 +126,15 @@ def get_ws_tls_status(host: dict) -> bool:
     except urllib.request.HTTPError as response:
         return response.code == 426
 
+def get_ndn_cert_expiry(cert_path: str) -> int:
+    print(f'Getting expirty for {cert_path}', file=sys.stderr)
+    try:
+        cmd = ['python3', '/testbed/scripts/cert-check.py', cert_path]
+        output = subprocess.check_output(cmd, timeout=5)
+        return int(output.strip())
+    except subprocess.CalledProcessError as e:
+        return 0
+
 if __name__ == '__main__':
     config = conf.get()
 
@@ -147,6 +156,7 @@ if __name__ == '__main__':
         'host_info': run_safe(get_host_info),
         'tls': run_safe(get_tls_status, host),
         'ws-tls': run_safe(get_ws_tls_status, host),
+        'site_cert_expiry': run_safe(get_ndn_cert_expiry, "/testbed/dist/ndncert/site.ndncert"),
         'services': run_safe(get_services),
         'nfd': run_safe(get_nfd),
         'nlsr': run_safe(get_nlsr),
