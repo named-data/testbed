@@ -127,7 +127,7 @@ def get_ws_tls_status(host: dict) -> bool:
         return response.code == 426
 
 def get_ndn_cert_expiry(cert_path: str) -> int:
-    print(f'Getting expirty for {cert_path}', file=sys.stderr)
+    print(f'Getting expiry for {cert_path}', file=sys.stderr)
     try:
         cmd = ['python3', '/testbed/scripts/cert-check.py', cert_path]
         output = subprocess.check_output(cmd, timeout=5)
