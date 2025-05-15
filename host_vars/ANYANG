@@ -1,4 +1,4 @@
-site: /kr/anyang
+site: /anyang.testbed.named-data.net
 site_name: Anyang University, South Korea
 operator_name: Euihyun Jung
 operator_email: jung@anyang.ac.kr
@@ -7,13 +7,13 @@ host_ip: 210.114.89.49
 local_ip: 210.114.89.49
 site_email_domain:
 - anyang.ac.kr
-default_prefix: /ndn/kr/anyang
+default_prefix: /ndn/anyang.testbed.named-data.net
 advertised_prefixes:
-- /ndn/kr/anyang
+- /ndn/anyang.testbed.named-data.net
 routable_prefixes:
-- /ndn/kr/anyang
+- /ndn/anyang.testbed.named-data.net
 network_regions:
-- /ndn/kr/anyang
+- /ndn/anyang.testbed.named-data.net
 router_name: anyanghub
 http_access: http
 memsize: 48

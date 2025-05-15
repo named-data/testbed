@@ -1,4 +1,4 @@
-site: /edu/memphis
+site: /titan.cs.memphis.edu
 site_name: The University of Memphis
 operator_name: Saurab Dulal
 operator_email: sdulal@memphis.edu
@@ -7,13 +7,13 @@ host_ip: 141.225.11.173
 local_ip: 141.225.11.173
 site_email_domain:
 - memphis.edu
-default_prefix: /ndn/edu/memphis
+default_prefix: /ndn/titan.cs.memphis.edu
 advertised_prefixes:
-- /ndn/edu/memphis
+- /ndn/titan.cs.memphis.edu
 routable_prefixes:
-- /ndn/edu/memphis
+- /ndn/titan.cs.memphis.edu
 network_regions:
-- /ndn/edu/memphis
+- /ndn/titan.cs.memphis.edu
 router_name: titan
 http_access: https
 memsize: 4

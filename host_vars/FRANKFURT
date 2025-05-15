@@ -1,4 +1,4 @@
-site: /pcl/frankfurt
+site: /frankfurt.testbed.named-data.net
 site_name: PCL Frankfurt
 operator_name: Teng Liang
 operator_email: redact@pcl.ac.cn
@@ -6,13 +6,13 @@ ansible_host: frankfurt.testbed.named-data.net
 host_ip: 49.51.163.56
 local_ip: 49.51.163.56
 site_email_domain: []
-default_prefix: /ndn/pcl/frankfurt
+default_prefix: /ndn/frankfurt.testbed.named-data.net
 advertised_prefixes:
-- /ndn/pcl/frankfurt
+- /ndn/frankfurt.testbed.named-data.net
 routable_prefixes:
-- /ndn/pcl/frankfurt
+- /ndn/frankfurt.testbed.named-data.net
 network_regions:
-- /ndn/pcl/frankfurt
+- /ndn/frankfurt.testbed.named-data.net
 router_name: vm
 http_access: https
 memsize: 8
