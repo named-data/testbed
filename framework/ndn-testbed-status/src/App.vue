@@ -8,9 +8,9 @@
           <th colspan=2>Status Page</th>
 
           <th>Last Refresh</th>
-          <th>TLS Expiry</th>
+          <th>Site Cert Expiry</th>
+          <th>TLS Cert Expiry</th>
           <th>WSS</th>
-          <th>Site Cert</th>
           <th>Revision</th>
 
           <th v-for="node in routers">{{ node.shortname }}</th>
@@ -43,38 +43,41 @@
 
           <td :class="{
             warning: getFromNow(router.status?.timestamp ?? 0) < -1800,
-          }">{{ getFromNowStr(router.status?.timestamp, 'seconds')  }}</td>
+          }">
+            {{ getFromNowStr(router.status?.timestamp, 'seconds') }}
+          </td>
+          <td :class="{
+            forceshort: true,
+            warning: (router.status?.site_cert_expiry ?? -1) < 0,
+            okay: getFromNow(router.status?.site_cert_expiry ?? -1) > 7 * 86400,
+          }">
+            {{ getFromNowStr(router.status?.site_cert_expiry, 'days') }}
+          </td>
           <td :class="{
             forceshort: true,
             warning: (router.status?.tls?.expiry ?? -1) < 0,
             okay: getFromNow(router.status?.tls?.expiry ?? -1) > 7 * 86400,
-          }" :title="router.status?.tls?.error ?? ''"
-          >{{ getFromNowStr(router.status?.tls?.expiry, 'days') || router.status?.tls?.error }}</td>
+          }" :title="router.status?.tls?.error ?? ''">
+            {{ getFromNowStr(router.status?.tls?.expiry, 'days') || router.status?.tls?.error }}
+          </td>
           <td :class="{
             okay: !!router.status?.['ws-tls'],
             warning: !router.status?.['ws-tls'],
           }">
             {{ router.status?.['ws-tls'] ? 'OK' : '' }}
           </td>
-          <td :class="{
-            forceshort: true,
-            warning: (router.status?.site_cert_expiry ?? -1) < 0,
-            okay: getFromNow(router.status?.site_cert_expiry ?? -1) > 7 * 86400,
-          }">{{ getFromNowStr(router.status?.site_cert_expiry, 'days') }}</td>
           <td>
-            <a v-if="router.status?.revision"
-                :href="getRevUrl(router)"
-                target="_blank">
-                {{ router.status?.revision }}
+            <a v-if="router.status?.revision" :href="getRevUrl(router)" target="_blank">
+              {{ router.status?.revision }}
             </a>
           </td>
 
           <td v-for="node in routers" :class="{
-              error: router.status && !router.status?.ndnping[node.shortname],
-              okay: router.status && (router.shortname != node.shortname) && (router.status?.ndnping[node.shortname] ?? 0 > 0),
-              blue: router.status && (router.shortname == node.shortname),
-            }">
-              {{ router.status?.ndnping[node.shortname] || '' }}
+            error: router.status && !router.status?.ndnping[node.shortname],
+            okay: router.status && (router.shortname != node.shortname) && (router.status?.ndnping[node.shortname] ?? 0 > 0),
+            blue: router.status && (router.shortname == node.shortname),
+          }">
+            {{ router.status?.ndnping[node.shortname] || '' }}
           </td>
 
           <td>{{ router.status?.host_info?.os }}</td>
