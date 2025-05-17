@@ -12,6 +12,7 @@ Container orchestration for the Global Named Data Networking Testbed.
 All services are run with Docker Compose and pull automatically built images from upstream repositories. A cron job in the `master` container polls this Git repository and deploys changes automatically.
 
 The various components are:
+
 - [framework](./framework/): Template rendering (Jinja2) and service management (Docker Compose) framework
 - [host_vars](./host_vars/): Host-specific configuration
 - [templates](./templates/): Jinja2 templates for service configuration
