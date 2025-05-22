@@ -5,14 +5,14 @@
 
 exec_with_tty() {
     if [[ -t 0 && ! -p /dev/stdout ]]; then
-        docker exec -it $@
+        docker exec -it "$@"
     else
-        docker exec -i $@
+        docker exec -i "$@"
     fi
 }
 
-for tool in ndnpeek ndnpoke ndncatchunks ndnputchunks ndnping ndnpingserver ndndump ndn-dissect; do
-    alias "${tool}"="exec_with_tty testbed-ndnpingserver-1 ${tool}"
+for tool in ndnpeek ndnpoke ndnget ndnserve ndnping ndnpingserver ndndump ndndissect; do
+    alias "${tool}=exec_with_tty testbed-ndnpingserver-1 ${tool}"
 done
 
 alias nfdc="exec_with_tty testbed-nfd-1 nfdc"
