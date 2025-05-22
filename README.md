@@ -75,7 +75,7 @@ echo -e "\nsource $(pwd)/bash_aliases.sh\n" >> ~/.bashrc  # make it permanent
 
 # Now you can use nfdc or ndn-tools for debugging
 nfdc status report
-ndnpeek /ndn/edu/ucla/ping/test | ndn-dissect
+ndnpeek /ndn/edu/ucla/ping/test | ndndissect
 ```
 
 The master service runs internal cron jobs for polling. You can trigger these manually during debugging (only when not in DEBUG mode).

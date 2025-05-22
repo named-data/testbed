@@ -77,7 +77,7 @@ services:
       driver: local
 
   ndnpingserver:
-    image: ghcr.io/named-data/ndn-tools:20250220
+    image: ghcr.io/named-data/ndn-tools:20250520
     tty: true
     init: true
     volumes:

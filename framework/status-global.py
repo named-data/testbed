@@ -19,12 +19,12 @@ if __name__ == '__main__':
     for rn, router in routers.items():
         try:
             status_file = f"{router['prefix']}/file-server/status.json"
-            code, stdout = compose.exec('ndnpingserver', ['ndncatchunks', '-q', status_file, '-r', '2', '-l', '1000'])
+            code, stdout = compose.exec('ndnpingserver', ['ndnget', '-q', status_file, '-r', '2', '-l', '1000'])
             if code == 0:
                 router.update(json.loads(stdout))
                 router['ndn-up'] = True
             else:
-                raise Exception(f"ndncatchunks failed with {code}")
+                raise Exception(f"ndnget failed with {code}")
         except Exception as e:
             print(f"Error fetching status for {rn}: {e}", file=sys.stderr)
             router['ndn-up'] = False
