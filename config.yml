@@ -51,6 +51,10 @@ services:
     template_path: templates/file-server
     render_path: dist/file-server
 
+  trace-collector:
+    template_path: templates/trace-collector
+    render_path: dist/trace-collector
+
 # Global variables that are available in all templates
 globals:
   ndnNetwork: /ndn
