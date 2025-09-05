@@ -1,4 +1,4 @@
-site: /jp/waseda
+site: /ndn-tb.nz.comm.waseda.ac.jp
 site_name: Waseda University, Tokyo, Japan
 operator_name: Xiabo Li
 operator_email: lxb385@fuji.waseda.jp
@@ -8,13 +8,13 @@ local_ip: 133.9.67.98
 site_email_domain:
 - waseda.jp
 - fuji.waseda.jp
-default_prefix: /ndn/jp/waseda
+default_prefix: /ndn/ndn-tb.nz.comm.waseda.ac.jp
 advertised_prefixes:
-- /ndn/jp/waseda
+- /ndn/ndn-tb.nz.comm.waseda.ac.jp
 routable_prefixes:
-- /ndn/jp/waseda
+- /ndn/ndn-tb.nz.comm.waseda.ac.jp
 network_regions:
-- /ndn/jp/waseda
+- /ndn/ndn-tb.nz.comm.waseda.ac.jp
 router_name: ndn-tb
 http_access: htt
 memsize: 2

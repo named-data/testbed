@@ -1,4 +1,4 @@
-site: /jp/ac/osaka-u
+site: /ndn.ist.osaka-u.ac.jp
 site_name: Osaka University, Japan
 operator_name: Yuki Koizumi
 operator_email: ykoizumi@ist.osaka-u.ac.jp
@@ -7,13 +7,13 @@ host_ip: 133.1.17.51
 local_ip: 133.1.17.51
 site_email_domain:
 - ist.osaka-u.ac.jp
-default_prefix: /ndn/jp/ac/osaka-u
+default_prefix: /ndn/ndn.ist.osaka-u.ac.jp
 advertised_prefixes:
-- /ndn/jp/ac/osaka-u
+- /ndn/ndn.ist.osaka-u.ac.jp
 routable_prefixes:
-- /ndn/jp/ac/osaka-u
+- /ndn/ndn.ist.osaka-u.ac.jp
 network_regions:
-- /ndn/jp/ac/osaka-u
+- /ndn/ndn.ist.osaka-u.ac.jp
 router_name: NDNtestbed
 http_access: http
 memsize: 16

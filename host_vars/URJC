@@ -1,4 +1,4 @@
-site: /es/urjc
+site: /insula.gsyc.es
 site_name: Universidad Rey Juan Carlos, Spain
 operator_name: Pedro de las Heras Quiros
 operator_email: pheras@gsyc.es
@@ -8,13 +8,13 @@ local_ip: 193.147.79.41
 site_email_domain:
 - urjc.es
 - alumnos.urjc.es
-default_prefix: /ndn/es/urjc
+default_prefix: /ndn/insula.gsyc.es
 advertised_prefixes:
-- /ndn/es/urjc
+- /ndn/insula.gsyc.es
 routable_prefixes:
-- /ndn/es/urjc
+- /ndn/insula.gsyc.es
 network_regions:
-- /ndn/es/urjc
+- /ndn/insula.gsyc.es
 router_name: insula
 http_access: https
 memsize: 24

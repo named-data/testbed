@@ -1,4 +1,4 @@
-site: /in/ac/iiith
+site: /ndntestbed.iiit.ac.in
 site_name: International Institute of Information Technology, Hyderabad, India
 operator_name: Madhubabu Dontineni
 operator_email: madhu@iiit.ac.in
@@ -7,13 +7,13 @@ host_ip: 14.139.82.16
 local_ip: 14.139.82.16
 site_email_domain:
 - iiit.ac.in
-default_prefix: /ndn/in/ac/iiith
+default_prefix: /ndn/ndntestbed.iiit.ac.in
 advertised_prefixes:
-- /ndn/in/ac/iiith
+- /ndn/ndntestbed.iiit.ac.in
 routable_prefixes:
-- /ndn/in/ac/iiith
+- /ndn/ndntestbed.iiit.ac.in
 network_regions:
-- /ndn/in/ac/iiith
+- /ndn/ndntestbed.iiit.ac.in
 router_name: ndntestbed
 http_access: http
 memsize: 2

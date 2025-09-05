@@ -1,4 +1,4 @@
-site: /nl/tno
+site: /tno.testbed.named-data.net
 site_name: Netherlands Organisation for Applied Scientific Research, Netherlands
 operator_name: Bastiaan Wissingh
 operator_email: bastiaan.wissingh@tno.nl
@@ -7,13 +7,13 @@ host_ip: 134.221.116.42
 local_ip: 134.221.116.42
 site_email_domain:
 - tno.nl
-default_prefix: /ndn/nl/tno
+default_prefix: /ndn/tno.testbed.named-data.net
 advertised_prefixes:
-- /ndn/nl/tno
+- /ndn/tno.testbed.named-data.net
 routable_prefixes:
-- /ndn/nl/tno
+- /ndn/tno.testbed.named-data.net
 network_regions:
-- /ndn/nl/tno
+- /ndn/tno.testbed.named-data.net
 router_name: tno-ndntestbed-bordernode
 http_access: http
 memsize: 4
