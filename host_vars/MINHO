@@ -1,4 +1,4 @@
-site: /pt/uminho
+site: /vnetlab.gcom.di.uminho.pt
 site_name: University of Minho, Portugal
 operator_name: Ertugrul Dogruluk
 operator_email: id5540@alunos.uminho.pt
@@ -8,13 +8,13 @@ local_ip: 193.136.9.206
 site_email_domain:
 - di.minho.pt
 - alunos.uminho.pt
-default_prefix: /ndn/pt/uminho
+default_prefix: /ndn/vnetlab.gcom.di.uminho.pt
 advertised_prefixes:
-- /ndn/pt/uminho
+- /ndn/vnetlab.gcom.di.uminho.pt
 routable_prefixes:
-- /ndn/pt/uminho
+- /ndn/vnetlab.gcom.di.uminho.pt
 network_regions:
-- /ndn/pt/uminho
+- /ndn/vnetlab.gcom.di.uminho.pt
 router_name: vnetlab
 http_access: https
 memsize: 4

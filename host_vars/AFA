@@ -1,4 +1,4 @@
-site: /it/afasystems
+site: /afa.testbed.named-data.net
 site_name: AFA Systems, Italy
 operator_name: Gianmichele Russi
 operator_email: russi@afasystems.it
@@ -7,13 +7,13 @@ host_ip: 213.203.158.40
 local_ip: 213.203.158.40
 site_email_domain:
 - afasystems.it
-default_prefix: /ndn/it/afasystems
+default_prefix: /ndn/afa.testbed.named-data.net
 advertised_prefixes:
-- /ndn/it/afasystems
+- /ndn/afa.testbed.named-data.net
 routable_prefixes:
-- /ndn/it/afasystems
+- /ndn/afa.testbed.named-data.net
 network_regions:
-- /ndn/it/afasystems
+- /ndn/afa.testbed.named-data.net
 router_name: ndn
 http_access: https
 memsize: 4

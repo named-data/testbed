@@ -1,4 +1,4 @@
-site: /edu/wustl
+site: /wundngw.wustl.edu
 site_name: Washington University in St. Louis
 operator_name: John DeHart
 operator_email: jdd@wustl.edu
@@ -7,13 +7,13 @@ host_ip: 128.252.185.35
 local_ip: 128.252.185.35
 site_email_domain:
 - wustl.edu
-default_prefix: /ndn/edu/wustl
+default_prefix: /ndn/wundngw.wustl.edu
 advertised_prefixes:
-- /ndn/edu/wustl
+- /ndn/wundngw.wustl.edu
 routable_prefixes:
-- /ndn/edu/wustl
+- /ndn/wundngw.wustl.edu
 network_regions:
-- /ndn/edu/wustl
+- /ndn/wundngw.wustl.edu
 router_name: wundngw
 http_access: https
 memsize: 2

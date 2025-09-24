@@ -1,4 +1,4 @@
-site: /br/ufba
+site: /ufba.testbed.named-data.net
 site_name: Federal University of Bahia, Brazil
 operator_name: 'Thiago Bomfim '
 operator_email: thiagobomfim@pop-ba.rnp.br
@@ -7,13 +7,13 @@ host_ip: 200.128.51.61
 local_ip: 200.128.51.61
 site_email_domain:
 - pop-ba.rnp.br
-default_prefix: /ndn/br/ufba
+default_prefix: /ndn/ufba.testbed.named-data.net
 advertised_prefixes:
-- /ndn/br/ufba
+- /ndn/ufba.testbed.named-data.net
 routable_prefixes:
-- /ndn/br/ufba
+- /ndn/ufba.testbed.named-data.net
 network_regions:
-- /ndn/br/ufba
+- /ndn/ufba.testbed.named-data.net
 router_name: ndn-testbed-ufba
 http_access: https
 memsize: 2

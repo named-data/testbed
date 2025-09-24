@@ -1,4 +1,4 @@
-site: /th/ac/srru
+site: /srru.testbed.named-data.net
 site_name: Surindra Rajabhat University, Thailand
 operator_name: 'Thongchai Chuachan '
 operator_email: thongchai.c@srru.ac.th
@@ -7,13 +7,13 @@ host_ip: 202.29.30.31
 local_ip: 192.168.2.60
 site_email_domain:
 - srru.ac.th
-default_prefix: /ndn/th/ac/srru
+default_prefix: /ndn/srru.testbed.named-data.net
 advertised_prefixes:
-- /ndn/th/ac/srru
+- /ndn/srru.testbed.named-data.net
 routable_prefixes:
-- /ndn/th/ac/srru
+- /ndn/srru.testbed.named-data.net
 network_regions:
-- /ndn/th/ac/srru
+- /ndn/srru.testbed.named-data.net
 router_name: comsci2
 http_access: https
 memsize: 8

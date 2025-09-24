@@ -1,4 +1,4 @@
-site: /gr/edu/mmlab2
+site: /mmlab-aueb-2.mmlab.edu.gr
 site_name: Athens University of Economics and Business, Greece
 operator_name: Nikos Fotiou
 operator_email: fotiou@aueb.gr
@@ -7,13 +7,13 @@ host_ip: 195.251.234.12
 local_ip: 195.251.234.12
 site_email_domain:
 - aueb.gr
-default_prefix: /ndn/gr/edu/mmlab2
+default_prefix: /ndn/mmlab-aueb-2.mmlab.edu.gr
 advertised_prefixes:
-- /ndn/gr/edu/mmlab2
+- /ndn/mmlab-aueb-2.mmlab.edu.gr
 routable_prefixes:
-- /ndn/gr/edu/mmlab2
+- /ndn/mmlab-aueb-2.mmlab.edu.gr
 network_regions:
-- /ndn/gr/edu/mmlab1
+- /ndn/mmlab-aueb-2.mmlab.edu.gr
 router_name: mmlab12
 http_access: http
 memsize: 2

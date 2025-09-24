@@ -1,4 +1,4 @@
-site: /uk/ac/qub
+site: /ndn.qub.ac.uk
 site_name: Queen's University Belfast, UK
 operator_name: Paul McAllister
 operator_email: P.McAllister@qub.ac.uk
@@ -7,13 +7,13 @@ host_ip: 51.148.47.242
 local_ip: 10.60.60.2
 site_email_domain:
 - qub.ac.uk
-default_prefix: /ndn/uk/ac/qub
+default_prefix: /ndn/ndn.qub.ac.uk
 advertised_prefixes:
-- /ndn/uk/ac/qub
+- /ndn/ndn.qub.ac.uk
 routable_prefixes:
-- /ndn/uk/ac/qub
+- /ndn/ndn.qub.ac.uk
 network_regions:
-- /ndn/uk/ac/qub
+- /ndn/ndn.qub.ac.uk
 router_name: ndn
 http_access: https
 memsize: 8
