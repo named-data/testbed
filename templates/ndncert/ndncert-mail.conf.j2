@@ -6,7 +6,7 @@ SMTP_USER = {{ SMTP_USER }}
 SMTP_PASSWORD = {{ SMTP_PASSWORD }}
 
 [ndncert.email]
-MAIL_FROM = NDN Testbed Certificate Robot <noreply@ndncert.named-data.net>
+FROM = NDN Testbed Certificate Robot <noreply@ndncert.named-data.net>
 SUBJECT = Email Challenge Triggered by NDNCERT
 TEXT_TEMPLATE = Your PIN code: {0} from NDNCERT CA {1}. Certificate Name: {2}. Your email has been used to apply for a digital certificate from NDNCERT. Do not share the pin code with anyone, only type it into the application to finish the certificate issuance process. If you do not know what is going on, ignore the message.
 HTML_TEMPLATE = <html><head></head><body><p><b>Your PIN code: {0} from NDNCERT CA {1}. Certificate Name: {2}.</b></p><p>Your email has been used to apply for a digital certificate from NDNCERT. Please keep it secret and type in to your application to finish the certificiate issuance process. If you do not know what is going on, please ignore the message.</p><p>Sincerely,<br/>NDN Testbed NDNCERT robot</p>
