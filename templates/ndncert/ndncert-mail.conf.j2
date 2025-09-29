@@ -1,11 +1,11 @@
-[ndncert_smtp_settings]
+[ndncert.smtp]
 SMTP_SERVER = {{ SMTP_SERVER }}
 SMTP_PORT = 587
 ENCRYPT_MODE = tls
 SMTP_USER = {{ SMTP_USER }}
 SMTP_PASSWORD = {{ SMTP_PASSWORD }}
 
-[ndncert_email_settings]
+[ndncert.email]
 MAIL_FROM = NDN Testbed Certificate Robot <noreply@ndncert.named-data.net>
 SUBJECT = Email Challenge Triggered by NDNCERT
 TEXT_TEMPLATE = Your PIN code: {0} from NDNCERT CA {1}. Certificate Name: {2}. Your email has been used to apply for a digital certificate from NDNCERT. Do not share the pin code with anyone, only type it into the application to finish the certificate issuance process. If you do not know what is going on, ignore the message.
