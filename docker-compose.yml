@@ -154,7 +154,7 @@ services:
       driver: local
 
   ndncert:
-    image: ghcr.io/named-data/ndncert-ca:20241224
+    image: ghcr.io/ucla-irl/ndncert-ca:20250923
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
