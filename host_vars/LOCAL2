@@ -1,0 +1,30 @@
+site: /local/node2
+site_name: Local Test Node 2
+operator_name: Test Operator
+operator_email: test@localhost
+ansible_host: nfd2
+host_ip: nfd2
+local_ip: nfd2
+site_email_domain:
+- localhost
+default_prefix: /ndn/local/node2
+advertised_prefixes:
+- /ndn/local/node2
+routable_prefixes:
+- /ndn/local/node2
+network_regions:
+- /ndn/local/node2
+router_name: router2
+http_access: http
+memsize: 2
+neighbors:
+  LOCAL1:
+    link_cost: 10
+  LOCAL3:
+    link_cost: 15
+position:
+- 35.0
+- -117.0
+hr_angle: 1.0
+hr_radius: 1.0
+ethernet_device: eth0

@@ -1,0 +1,82 @@
+general
+{
+  network {{ ndnNetwork }}
+  site {{ site }}
+  router /%C1.Router/{{ router_name }}
+
+  lsa-refresh-time 1800
+  lsa-interest-lifetime 4
+
+  sync-protocol psync
+  sync-interest-lifetime 60000
+
+  state-dir /config/state
+}
+
+neighbors
+{
+  hello-retries  3
+  hello-timeout  1
+  hello-interval 60
+
+  adj-lsa-build-interval 5
+  first-hello-interval  10
+
+  face-dataset-fetch-tries 3
+  face-dataset-fetch-interval 3600
+
+  {% for neighbor, data in neighbors.items() %}
+    neighbor
+    {
+      ; {{ neighbor }}
+      name {{ ndnNetwork }}{{hostvars[neighbor].site }}/%C1.Router/{{ hostvars[neighbor].router_name }}
+      link-cost {{ data['link_cost'] }}
+
+      face-uri  udp4://{{ hostvars[neighbor].host_ip }}:{{ hostvars[neighbor].udp_port }}
+    }
+  {% endfor %}
+}
+
+hyperbolic
+{
+  state {{ hyperbolic_state }}
+  radius   {{ hr_radius }}
+  angle    {{ hr_angle }}
+}
+
+fib
+{
+  max-faces-per-prefix 10
+  routing-calc-interval 15
+}
+
+advertising
+{
+  {% for prefix in advertised_prefixes %}
+    prefix {{ prefix }}
+  {% endfor %}
+}
+
+; Simplified security for local testing - accepts all signed packets
+security
+{
+  validator
+  {
+    trust-anchor
+    {
+      type any
+    }
+  }
+
+  prefix-update-validator
+  {
+    trust-anchor
+    {
+      type any
+    }
+  }
+
+  ; Still need to publish certs for signing
+  cert-to-publish "/config/operator.cert"
+  cert-to-publish "/config/router.cert"
+}

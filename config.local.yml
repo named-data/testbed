@@ -1,0 +1,55 @@
+# Local testing configuration
+# This config uses dist-local{1,2,3} directories for each node
+
+environment_path: .
+host_vars_path: host_vars
+
+# Services for local testing (subset of full testbed)
+services:
+  nfd:
+    template_path: templates/nfd
+    render_path: dist-local{node}/nfd
+
+  ndnpingserver:
+    template_path: templates/ndnpingserver
+    render_path: dist-local{node}/ndnpingserver
+
+  nlsr:
+    template_path: templates/nlsr
+    render_path: dist-local{node}/nlsr
+
+# Global variables
+globals:
+  ndnNetwork: /ndn
+  hyperbolic_state: "off"
+  tcp_port: 6363
+  udp_port: 6363
+  multicast_port: 56363
+  supports_guest_certs: False
+  operator_user: ndnops
+  root_ca_https: https://localhost
+
+variables:
+  site: string
+  site_name: string
+  operator_name: string
+  operator_email: string
+  ansible_host: string
+  host_ip: string
+  local_ip: string
+  outgoing_subnets: "?list"
+  site_email_domain: list
+  default_prefix: string
+  advertised_prefixes: list
+  routable_prefixes: list
+  network_regions: list
+  router_name: string
+  http_access: string
+  memsize: number
+  neighbors: dict
+  position: list
+  hr_angle: number
+  hr_radius: number
+  ethernet_device: string
+  is_root_ca: "?boolean"
+  is_status_page: "?boolean"

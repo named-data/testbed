@@ -1,0 +1,167 @@
+# Local 3-node testbed for testing
+# Usage:
+#   1. Render configs: ./scripts/local-render.sh
+#   2. Start: docker compose -f docker-compose.local.yml up -d
+#   3. Test: docker exec testbed-local-nfd1-1 nfdc status report
+
+name: testbed-local
+
+networks:
+  ndn-testbed:
+    driver: bridge
+
+services:
+  # ============== NODE 1 ==============
+  nfd1:
+    image: ghcr.io/named-data/nfd:20250420
+    hostname: nfd1
+    init: true
+    volumes:
+      - nfd1-socket:/run/nfd
+      - ${PWD}/anchors:/keys/anchors:ro
+      - ${PWD}/dist-local1/nfd:/config
+    entrypoint: /bin/bash
+    command: /config/entrypoint.sh
+    restart: unless-stopped
+    networks:
+      - ndn-testbed
+    healthcheck:
+      test: [CMD, nfdc, status]
+      interval: 30s
+      start_period: 30s
+
+  ndnpingserver1:
+    image: ghcr.io/named-data/ndn-tools:20250520
+    tty: true
+    init: true
+    volumes:
+      - nfd1-socket:/run/nfd:ro
+      - ${PWD}/dist-local1/ndnpingserver:/config
+    entrypoint: /bin/bash
+    command: /config/entrypoint.sh
+    restart: unless-stopped
+    networks:
+      - ndn-testbed
+    depends_on:
+      nfd1: { condition: service_healthy }
+
+  nlsr1:
+    image: ghcr.io/named-data/nlsr:20250502
+    init: true
+    volumes:
+      - nfd1-socket:/run/nfd:ro
+      - ${PWD}/anchors-local:/keys/anchors:ro
+      - ${PWD}/dist-local1/nlsr:/config
+    environment:
+      NDN_LOG: nlsr.*=DEBUG
+      HOME: /config
+    restart: unless-stopped
+    networks:
+      - ndn-testbed
+    depends_on:
+      nfd1: { condition: service_healthy }
+
+  # ============== NODE 2 ==============
+  nfd2:
+    image: ghcr.io/named-data/nfd:20250420
+    hostname: nfd2
+    init: true
+    volumes:
+      - nfd2-socket:/run/nfd
+      - ${PWD}/anchors:/keys/anchors:ro
+      - ${PWD}/dist-local2/nfd:/config
+    entrypoint: /bin/bash
+    command: /config/entrypoint.sh
+    restart: unless-stopped
+    networks:
+      - ndn-testbed
+    healthcheck:
+      test: [CMD, nfdc, status]
+      interval: 30s
+      start_period: 30s
+
+  ndnpingserver2:
+    image: ghcr.io/named-data/ndn-tools:20250520
+    tty: true
+    init: true
+    volumes:
+      - nfd2-socket:/run/nfd:ro
+      - ${PWD}/dist-local2/ndnpingserver:/config
+    entrypoint: /bin/bash
+    command: /config/entrypoint.sh
+    restart: unless-stopped
+    networks:
+      - ndn-testbed
+    depends_on:
+      nfd2: { condition: service_healthy }
+
+  nlsr2:
+    image: ghcr.io/named-data/nlsr:20250502
+    init: true
+    volumes:
+      - nfd2-socket:/run/nfd:ro
+      - ${PWD}/anchors-local:/keys/anchors:ro
+      - ${PWD}/dist-local2/nlsr:/config
+    environment:
+      NDN_LOG: nlsr.*=DEBUG
+      HOME: /config
+    restart: unless-stopped
+    networks:
+      - ndn-testbed
+    depends_on:
+      nfd2: { condition: service_healthy }
+
+  # ============== NODE 3 ==============
+  nfd3:
+    image: ghcr.io/named-data/nfd:20250420
+    hostname: nfd3
+    init: true
+    volumes:
+      - nfd3-socket:/run/nfd
+      - ${PWD}/anchors:/keys/anchors:ro
+      - ${PWD}/dist-local3/nfd:/config
+    entrypoint: /bin/bash
+    command: /config/entrypoint.sh
+    restart: unless-stopped
+    networks:
+      - ndn-testbed
+    healthcheck:
+      test: [CMD, nfdc, status]
+      interval: 30s
+      start_period: 30s
+
+  ndnpingserver3:
+    image: ghcr.io/named-data/ndn-tools:20250520
+    tty: true
+    init: true
+    volumes:
+      - nfd3-socket:/run/nfd:ro
+      - ${PWD}/dist-local3/ndnpingserver:/config
+    entrypoint: /bin/bash
+    command: /config/entrypoint.sh
+    restart: unless-stopped
+    networks:
+      - ndn-testbed
+    depends_on:
+      nfd3: { condition: service_healthy }
+
+  nlsr3:
+    image: ghcr.io/named-data/nlsr:20250502
+    init: true
+    volumes:
+      - nfd3-socket:/run/nfd:ro
+      - ${PWD}/anchors-local:/keys/anchors:ro
+      - ${PWD}/dist-local3/nlsr:/config
+    environment:
+      NDN_LOG: nlsr.*=DEBUG
+      HOME: /config
+    restart: unless-stopped
+    networks:
+      - ndn-testbed
+    depends_on:
+      nfd3: { condition: service_healthy }
+
+volumes:
+  nfd1-socket:
+  nfd2-socket:
+  nfd3-socket:

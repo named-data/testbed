@@ -1,5 +1,6 @@
 __pycache__/
 dist/
+dist-local*/
 secrets.yml
 .env
 root-ca-home/
