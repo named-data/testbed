@@ -3,7 +3,7 @@
     {{ name | tojson }}: {{{
         'shortname': name,
         'name': data['site_name'],
-        'ip_addresses': [data['host_ip']],
+        'ip_addresses': [data['host_ip']] + ([data['host_ipv6']] if data.get('host_ipv6') else []),
         'prefix': data['default_prefix'],
 
         'host': data['ansible_host'],
