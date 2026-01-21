@@ -2,13 +2,14 @@ name: Docker
 on:
   schedule:
     # twice a month
-    - cron: '20 9 5,20 * *'
+    - cron: '20 15 5,20 * *'
   workflow_dispatch:
 
 permissions:
+  artifact-metadata: write
   attestations: write
-  packages: write
   id-token: write
+  packages: write
 
 jobs:
   testbed-master:
@@ -16,7 +17,6 @@ jobs:
     with:
       name: testbed-master
       target: testbed-master
-
   testbed-caddy:
     uses: named-data/actions/.github/workflows/docker-image.yml@v1
     with:
