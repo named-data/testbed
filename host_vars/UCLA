@@ -1,4 +1,4 @@
-site: /edu/ucla
+site: /suns.cs.ucla.edu
 site_name: University of California, Los Angeles
 operator_name: Tianyuan Yu
 operator_email: royu29@g.ucla.edu
@@ -12,13 +12,13 @@ site_email_domain:
 - engineering.ucla.edu
 default_prefix: /ndn/edu/ucla
 advertised_prefixes:
-- /ndn/edu/ucla
+- /ndn/suns.cs.ucla.edu
 - /ndn/CA
 - /ndn2/CA
 routable_prefixes:
-- /ndn/edu/ucla
+- /ndn/suns.cs.ucla.edu
 network_regions:
-- /ndn/edu/ucla
+- /ndn/suns.cs.ucla.edu
 router_name: suns
 http_access: https
 memsize: 10

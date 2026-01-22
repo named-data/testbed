@@ -1,4 +1,4 @@
-site: /ca/utoronto
+site: /savi.testbed.named-data.net
 site_name: University of Toronto
 operator_name: Morteza Moghaddassian
 operator_email: m.moghaddassian@mail.utoronto.ca
@@ -8,13 +8,13 @@ local_ip: 10.30.44.13
 site_email_domain:
 - utoronto.ca
 - mail.utoronto.ca
-default_prefix: /ndn/ca/utoronto
+default_prefix: /ndn/savi.testbed.named-data.net
 advertised_prefixes:
-- /ndn/ca/utoronto
+- /ndn/savi.testbed.named-data.net
 routable_prefixes:
-- /ndn/ca/utoronto
+- /ndn/savi.testbed.named-data.net
 network_regions:
-- /ndn/ca/utoronto
+- /ndn/savi.testbed.named-data.net
 router_name: ndnrtr
 http_access: https
 memsize: 8

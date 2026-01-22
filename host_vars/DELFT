@@ -1,4 +1,4 @@
-site: /nl/delft
+site: /ndn-testbed.ewi.tudelft.nl
 site_name: Delft University of Technology, Netherlands
 operator_name: Chhagan Lal
 operator_email: c.lal@tudelft.nl
@@ -7,13 +7,13 @@ host_ip: 131.180.178.63
 local_ip: 131.180.178.63
 site_email_domain:
 - delft.nl
-default_prefix: /ndn/nl/delft
+default_prefix: /ndn/ndn-testbed.ewi.tudelft.nl
 advertised_prefixes:
-- /ndn/nl/delft
+- /ndn/ndn-testbed.ewi.tudelft.nl
 routable_prefixes:
-- /ndn/nl/delft
+- /ndn/ndn-testbed.ewi.tudelft.nl
 network_regions:
-- /ndn/nl/delft
+- /ndn/ndn-testbed.ewi.tudelft.nl
 router_name: ndn-testbed
 http_access: https
 memsize: 4
