@@ -221,8 +221,8 @@ When patch 7818 is merged and deployed:
 # 1. Pull latest NLSR image (includes merged patch)
 docker-compose pull nlsr
 
-# 2. Regenerate config from updated template
-ansible-playbook -i inventory site.yml --tags nlsr
+# 2. Config auto-regenerates via master container cron job, or manually:
+python3 framework/main.py --dry
 
 # 3. Restart NLSR on each node
 docker-compose up -d nlsr
