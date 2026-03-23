@@ -24,7 +24,7 @@ services:
     #   dockerfile: nlsr.Dockerfile
 
     # Image from your registry (push built image to ghcr.io first)
-    image: ghcr.io/a-thieme/nlsr:patch-7818
+    image: ghcr.io/a-thieme/nlsr:patch-7818-v2
 
     # To use pre-built Named Data image instead:
-    # image: ghcr.io/named-data/nlsr:20250502
+    # image: ghcr.io/a-thieme/nlsr:patch-7818-v2
