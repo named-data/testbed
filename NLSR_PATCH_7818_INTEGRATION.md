@@ -166,8 +166,88 @@ docker exec testbed-nlsr-1 nlsrc lsdb | grep -A5 osaka
 
 ---
 
+---
+
+## After Patch Merge: "Just Works" Deployment (Option B)
+
+This section describes the **minimal changes** needed in named-data/testbed once patch 7818 is merged into NLSR, assuming **no backward compatibility** (Option B).
+
+### Assumption
+
+Patch 7818 is merged into NLSR master branch. A future NLSR release/tag includes the patch. The testbed simply needs to use that version.
+
+### Required Changes
+
+#### 1. named-data/testbed
+
+**Single required change:**
+
+Update `templates/nlsr/nlsr.conf.j2` - advertising section format:
+
+```jinja
+advertising
+{
+  {% for prefix in advertised_prefixes %}
+    {{ prefix }} 1
+  {% endfor %}
+}
+```
+
+That's it. **One line change.**
+
+Everything else works automatically because:
+- Named Data's CI builds NLSR Docker images with the merged patch
+- Testbed's docker-compose.yml already references `ghcr.io/named-data/nlsr:latest` (or a tagged version)
+- The NLSR Docker image includes `ENV HOME=/config` (already in official Dockerfile)
+
+#### 2. NLSR Gerrit Patch (7818)
+
+**No changes needed.** The patch works as-is. The breaking config format change is intentional and documented.
+
+### How It Works After Merge
+
+```
+named-data/testbed:
+├── docker-compose.yml          ──► References NLSR image (auto-includes patch)
+├── templates/nlsr/nlsr.conf.j2 ──► Generates <prefix> <cost> format ✓
+└── Dockerfile                  ──► Uses official NLSR image (already has HOME=/config)
+```
+
+### Rolling Update Process
+
+When patch 7818 is merged and deployed:
+
+```bash
+# 1. Pull latest NLSR image (includes merged patch)
+docker-compose pull nlsr
+
+# 2. Regenerate config from updated template
+ansible-playbook -i inventory site.yml --tags nlsr
+
+# 3. Restart NLSR on each node
+docker-compose up -d nlsr
+```
+
+### What NOT to Change
+
+The following files do **not** need modification:
+
+- `nlsr.Dockerfile` - Only needed for custom builds before patch is merged
+- `docker-compose.override.yml` - Per-deployer override, not in upstream
+
+### Summary
+
+| Repository | Change Required | When |
+|------------|----------------|------|
+| named-data/testbed | Update `templates/nlsr/nlsr.conf.j2` | One-time after patch merge |
+| NLSR (gerrit 7818) | None | Already works |
+
+**Result:** After the single template update, deploying new NLSR versions "just works."
+
+---
+
 ## Related Files
 
-- `nlsr.Dockerfile` - Multi-stage build for patched NLSR
-- `docker-compose.override.yml` - Override to use patched image
-- `templates/nlsr/nlsr.conf.j2` - NLSR configuration template
+- `nlsr.Dockerfile` - Multi-stage build for patched NLSR (custom, not needed after merge)
+- `docker-compose.override.yml` - Override to use patched image (per-deployer, not upstream)
+- `templates/nlsr/nlsr.conf.j2` - NLSR configuration template (the only file needing update)
