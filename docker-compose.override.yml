@@ -1,0 +1,30 @@
+# docker-compose.override.yml - Override nlsr service for local build
+#
+# Docker Compose automatically reads this file when running `docker-compose up`.
+# See: https://docs.docker.com/compose/compose-file/13-override/
+#
+# Workflow to build and deploy patched NLSR:
+#   1. On local machine with Docker and ghcr.io access:
+#      docker build -t ghcr.io/a-thieme/nlsr:patch-7818 -f nlsr.Dockerfile .
+#      docker push ghcr.io/a-thieme/nlsr:patch-7818
+#
+#   2. Update NLSR_IMAGE below to your registry image
+#
+#   3. On remote machine:
+#      docker-compose pull
+#      docker-compose up -d nlsr
+
+name: testbed
+services:
+  nlsr:
+    # Build from local Dockerfile (for local testing only)
+    # Comment out build: to pull pre-built image instead
+    # build:
+    #   context: .
+    #   dockerfile: nlsr.Dockerfile
+
+    # Image from your registry (push built image to ghcr.io first)
+    image: ghcr.io/a-thieme/nlsr:patch-7818
+
+    # To use pre-built Named Data image instead:
+    # image: ghcr.io/named-data/nlsr:20250502
