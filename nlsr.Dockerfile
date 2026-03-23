@@ -40,6 +40,7 @@ RUN ./waf configure --prefix=/usr --libdir=/usr/lib --with-psync && \
 FROM ghcr.io/named-data/ndn-cxx-runtime
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV HOME=/config
 
 # Runtime dependencies for NLSR
 RUN apt-get update && apt-get install -y \
