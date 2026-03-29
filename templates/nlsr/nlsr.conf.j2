@@ -54,7 +54,7 @@ fib
 advertising
 {
   {% for prefix in advertised_prefixes %}
-    prefix {{ prefix }}
+    {{ prefix }} 0
   {% endfor %}
 }
 

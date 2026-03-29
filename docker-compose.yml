@@ -99,7 +99,7 @@ services:
       - ${PWD}/dist/ndncert/site.ndncert:/certs/site.ndncert:ro
       - ${PWD}/anchors:/keys/anchors:ro
     entrypoint: /bin/bash
-    command: ['-c', 'ndn6-serve-certs /keys/anchors/*.base64 /certs/*.ndncert']
+    command: ["-c", "ndn6-serve-certs /keys/anchors/*.base64 /certs/*.ndncert"]
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
@@ -107,7 +107,7 @@ services:
       driver: local
 
   nlsr:
-    image: ghcr.io/named-data/nlsr:20250502
+    image: ghcr.io/named-data/nlsr:20260328
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
@@ -162,7 +162,7 @@ services:
       - ${PWD}/dist/ndncert/ndncert-mail.conf:/etc/ndncert/ndncert-mail.conf:ro
       - ${PWD}/dist/ndncert/ndncert-ca.conf:/config/ndncert-ca.conf:ro
     environment:
-      NDN_LOG: '*=TRACE'
+      NDN_LOG: "*=TRACE"
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
@@ -171,7 +171,7 @@ services:
 
   root-http-ca:
     image: ghcr.io/named-data/testbed-master:20240512
-    profiles: [root-ca]  # in .env
+    profiles: [root-ca] # in .env
     init: true
     tty: true
     volumes:
@@ -191,7 +191,7 @@ services:
 
   root-ndncert:
     image: ghcr.io/ucla-irl/ndncert-ca:20250923
-    profiles: [root-ca]  # in .env
+    profiles: [root-ca] # in .env
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
@@ -199,7 +199,7 @@ services:
       - ${PWD}/dist/root-ndncert/root-mail.conf:/etc/ndncert/ndncert-mail.conf:ro
       - ${PWD}/dist/root-ndncert/root-ca.conf:/config/ndncert-ca.conf:ro
     environment:
-      NDN_LOG: '*=TRACE'
+      NDN_LOG: "*=TRACE"
     restart: unless-stopped
     depends_on:
       nfd: { condition: service_healthy }
