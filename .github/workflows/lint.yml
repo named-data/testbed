@@ -10,7 +10,7 @@ permissions: {}
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -18,10 +18,8 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: python -m pip install PyYAML
+          python-version: '3.14'
+          pip-install: PyYAML
 
       - name: Lint
         run: python framework/lint.py
