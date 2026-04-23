@@ -7,7 +7,7 @@ FROM ghcr.io/named-data/ndn-cxx-runtime:${NDN_CXX_VERSION} AS testbed-master
 RUN <<EOF
     set -eux
 
-    apt-get -Uy install --no-install-recommends ca-certificates curl
+    apt-get install -Uy --no-install-recommends ca-certificates curl
     install -m 0755 -d /etc/apt/keyrings
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
     chmod a+r /etc/apt/keyrings/docker.asc
@@ -25,16 +25,16 @@ RUN <<EOF
     apt-get distclean
 
     pip install --no-cache-dir --disable-pip-version-check --break-system-packages \
-        PyYAML \
+        jinja2==3.1.6 \
         python-ndn==0.4.2 \
-        Jinja2==3.1.4
+        pyyaml==6.0.3
 EOF
 
 VOLUME /testbed
 WORKDIR /testbed
 
 
-FROM caddy:2 AS testbed-caddy
+FROM caddy:2-alpine AS testbed-caddy
 
 ADD https://nfd-status-page.ndn.today/NDNts-NFD-status-page.txz /srv/n/dist.txz
 RUN tar -Jxvf /srv/n/dist.txz -C /srv/n && rm /srv/n/dist.txz
