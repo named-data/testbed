@@ -36,5 +36,4 @@ WORKDIR /testbed
 
 FROM caddy:2-alpine AS testbed-caddy
 
-ADD https://nfd-status-page.ndn.today/NDNts-NFD-status-page.txz /srv/n/dist.txz
-RUN tar -Jxvf /srv/n/dist.txz -C /srv/n && rm /srv/n/dist.txz
+ADD --unpack https://nfd-status-page.ndn.today/NDNts-NFD-status-page.txz /srv/n
