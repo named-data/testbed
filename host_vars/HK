@@ -1,0 +1,29 @@
+site: /hk
+site_name: Hong Kong
+operator_name: Jian Yang
+operator_email: yangj@stu.hit.edu.cn
+ansible_host: hk.testbed.named-data.net
+host_ip: 47.238.59.170
+local_ip: 47.238.59.170
+site_email_domain: []
+default_prefix: /ndn/hk
+advertised_prefixes:
+- /ndn/hk
+routable_prefixes:
+- /ndn/hk
+network_regions:
+- /ndn/hk
+router_name: vm
+http_access: https
+memsize: 8
+neighbors:
+  SINGAPORE:
+    link_cost: 35
+  OSAKA:
+    link_cost: 62
+position:
+- 22.3193
+- 114.1694
+hr_angle: 0
+hr_radius: 0
+ethernet_device: eth0
