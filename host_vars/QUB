@@ -24,8 +24,6 @@ neighbors:
     link_cost: 39
   MINHO:
     link_cost: 60
-  SAVI:
-    link_cost: 100
 position:
 - 54.5973
 - -5.9301
