@@ -27,6 +27,8 @@ neighbors:
     link_cost: 214
   SRRU:
     link_cost: 39
+  HK:
+    link_cost: 35
 position:
 - 1.2868
 - 103.8503
