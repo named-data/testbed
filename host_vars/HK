@@ -1,4 +1,4 @@
-site: /hk
+site: /pcl/hk
 site_name: Hong Kong
 operator_name: Jian Yang
 operator_email: yangj@stu.hit.edu.cn
@@ -6,13 +6,13 @@ ansible_host: hk.testbed.named-data.net
 host_ip: 47.238.59.170
 local_ip: 47.238.59.170
 site_email_domain: []
-default_prefix: /ndn/hk
+default_prefix: /ndn/pcl/hk
 advertised_prefixes:
-- /ndn/hk
+- /ndn/pcl/hk
 routable_prefixes:
-- /ndn/hk
+- /ndn/pcl/hk
 network_regions:
-- /ndn/hk
+- /ndn/pcl/hk
 router_name: vm
 http_access: https
 memsize: 8
