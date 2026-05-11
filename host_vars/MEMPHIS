@@ -22,8 +22,6 @@ neighbors:
     link_cost: 41
   WU:
     link_cost: 27
-  SAVI:
-    link_cost: 28
   DELFT:
     link_cost: 119
 position:
