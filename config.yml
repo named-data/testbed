@@ -90,3 +90,4 @@ variables:
   ethernet_device: string
   is_root_ca: "?boolean"
   is_status_page: "?boolean"
+  mongo_tag: "?string"
