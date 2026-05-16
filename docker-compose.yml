@@ -123,7 +123,7 @@ services:
       driver: local
 
   mongodb:
-    image: mongo:{{ mongo_tag }}
+    image: mongo:${MONGO_TAG:-7}
     volumes:
       - ${PWD}/dist/mongodb:/data/db
     depends_on:
