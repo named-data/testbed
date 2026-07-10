@@ -220,3 +220,26 @@ services:
       nfd: { condition: service_healthy }
     logging:
       driver: local
+
+  trace-collector:
+    image: ghcr.io/sankalpatimilsina12/trace-collector:20250328
+    init: true
+    network_mode: service:nfd
+    volumes:
+      - trace-collector-ssh:/root/.ssh # SSH keys
+      - trace-collector-dump:/root/dump # Dumps
+      - ${PWD}/dist/trace-collector:/config  # Entrypoint
+      - ${PWD}/dist/file-server/trace-collector-pubkey:/file-server/trace-collector-pubkey  # Publish public key
+    entrypoint: /bin/bash
+    command: /config/entrypoint.sh
+    restart: unless-stopped
+    depends_on:
+      nfd: { condition: service_healthy }
+      file-server: { condition: service_healthy }
+    logging:
+      driver: local
+
+# Persist trace-collector's SSH keys and dump files
+volumes:
+  trace-collector-ssh:
+  trace-collector-dump:
