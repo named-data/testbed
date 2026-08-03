@@ -3,10 +3,15 @@ on:
   push:
     branches:
       - '**'
+    paths-ignore:
+      - 'README.md'
   pull_request:
+    paths-ignore:
+      - 'README.md'
   workflow_dispatch:
 
-permissions: {}
+permissions:
+  contents: read
 
 jobs:
   lint:
@@ -14,12 +19,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
         with:
-          python-version: '3.14'
-          pip-install: PyYAML
-
+          enable-cache: false
       - name: Lint
-        run: python framework/lint.py
+        run: uv run --no-project --with pyyaml framework/lint.py
