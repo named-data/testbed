@@ -1,8 +1,8 @@
 name: Docker
 on:
   schedule:
-    # twice a month
-    - cron: '20 15 5,20 * *'
+    # monthly on day 5
+    - cron: '20 15 5 * *'
   workflow_dispatch:
 
 permissions:
