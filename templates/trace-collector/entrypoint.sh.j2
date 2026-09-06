@@ -1,0 +1,31 @@
+#!/bin/bash
+set -e
+
+# Variables
+SITE="{{ site }}"
+SITE_CLEAN=$(echo "$SITE" | sed 's#^/##; s#/#_#g') # Eg. /edu/memphis get converted to edu_memphis
+SSH_DIR="/root/.ssh"
+PRIVATE_KEY="$SSH_DIR/id_rsa"
+PUBLIC_KEY="$SSH_DIR/id_rsa.pub"
+PUBKEY_EXPORT_PATH="/file-server/trace-collector-pubkey/id_rsa.pub"
+
+# Ensure permissions
+mkdir -p "$SSH_DIR"
+chmod 700 "$SSH_DIR"
+
+# Generate SSH key pair if not already present
+if [[ ! -f "$PRIVATE_KEY" || ! -f "$PUBLIC_KEY" ]]; then
+    echo "[trace-collector] No SSH key pair found. Generating a new one..."
+    ssh-keygen -t rsa -b 4096 -N "" -f "$PRIVATE_KEY"
+else
+    echo "[trace-collector] SSH key pair already exists."
+fi
+
+# Always export the public key
+mkdir -p "$(dirname "$PUBKEY_EXPORT_PATH")"
+cp "$PUBLIC_KEY" "$PUBKEY_EXPORT_PATH"
+echo "[trace-collector] Public key copied to $PUBKEY_EXPORT_PATH"
+
+# Run
+echo "[trace-collector] Starting trace collector..."
+exec python3.10 /app/scheduler.py --site "$SITE_CLEAN"
