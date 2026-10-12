@@ -69,14 +69,6 @@ docker compose exec -e HOME=/testbed/root-ca-home master ndnsec list -c
 
 Each node runs the pinned `ndnd-repo` container with identity `<default_prefix>/ndnd/repo` (e.g. `/ndn/edu/ucla/ndnd/repo`). Master generates a dedicated key, obtains a certificate from the local site CA, and installs the public chain selected by `globals.ndnd_repo_anchors`. The repo can write only its keychain and storage; it has no access to CA private keys or master renewal scripts.
 
-Certificates last up to 90 days, bounded by the issuing chain, and renew with 30 days remaining. Renewal reuses the key and restarts the repo when credentials change. Failed signing preserves the installed certificate. Pending dependent renewals and service reloads survive a partially failed site renewal and retry on the next poll. Back up `dist/ndnd-repo/keys` and `dist/ndnd-repo/storage`. Group enrollment ends on restart by design; applications enroll again while stored data persists.
-
-Before merging this change into the branch polled by nodes, publish an NDNd image containing commit `cfffe287` or later and rebuild `testbed-master` from this Dockerfile. The master needs `python-ndn==0.5.2` to compile NDNd's LVS format; the previously pinned master image and January NDNd image are incompatible. Use the two repositories' existing Docker workflows; no new CI is needed. Compose keeps the existing dated-image convention. Publish the dated images pinned in Compose before rollout; if the workflows publish on a different date, update the pins to those published tags.
-
-Master compiles the management trust schema while rendering configuration. Any user certified directly by a configured testbed site may enroll or leave groups; user identities may have one to five components below that site's prefix. Send commands to `<site>/ndnd/repo/32=cmd`, with embedded signed Data named `<user>/32=repo/<version>`. Publish application security-config objects as `<user>/32=repo-security/<version>/<segment>`. The schema binds these packets to the user's identity and authorizes responses only from the local repo key. Applications retain control of per-group data schemas and should validate responses using the same root-to-site-to-repo rules.
-
-The active root expires on December 31, 2026. Before expiry, distribute its replacement, add it to `ndnd_repo_anchors`, and renew site certificates before removing the old root. Root rollover is separate from automatic site/repo renewal.
-
 ## Development
 
 For debugging and development, you can define `DEBUG=1` in your `.env` file. This will prevent the `dist` folder from auto-rendering and disable git polling. You can then use docker compose as usual to manage the containers.
