@@ -39,6 +39,12 @@ services:
     template_path: templates/ndnd-repo
     render_path: dist/ndnd-repo
 
+  ndnd-merkle:
+    hosts: [UCLA]
+    profile: merkle-log
+    template_path: templates/ndnd-merkle
+    render_path: dist/ndnd-merkle
+
   ndncert:
     template_path: templates/ndncert
     render_path: dist/ndncert

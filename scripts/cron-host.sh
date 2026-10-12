@@ -24,6 +24,10 @@ fi
 # to recreate everything when master is updated
 docker compose up -d master --no-deps
 
+# Resolve service profiles from Git configuration inside the existing master image.
+COMPOSE_PROFILES=$(docker compose exec -T master python3 framework/service-profiles.py) || exit $?
+export COMPOSE_PROFILES
+
 # Ensure services are running
 docker compose up -d --remove-orphans
 

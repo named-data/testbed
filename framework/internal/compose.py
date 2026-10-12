@@ -1,14 +1,17 @@
 import json
+import os
 import subprocess
 import sys
+from . import conf
 
 STATUS_CACHE = {}
 
-def config() -> dict:
+def config(node: str = None) -> dict:
     """
     Get the global configuration for the docker compose
     """
     try:
+        os.environ['COMPOSE_PROFILES'] = conf.compose_profiles(node)
         cmd = ['docker', 'compose', 'config', '--format', 'json']
         result = subprocess.run(cmd, stdout=subprocess.PIPE)
         return json.loads(result.stdout)

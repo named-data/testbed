@@ -175,6 +175,34 @@ services:
     logging:
       driver: local
 
+  ndnd-merkle:
+    image: ghcr.io/named-data/ndnd:20261012
+    pull_policy: always
+    profiles: [merkle-log] # selected by config.yml through maintenance
+    init: true
+    volumes:
+      - /run/nfd:/run/nfd:ro
+      - ${PWD}/dist/ndnd-merkle/keys:/config/keys
+      - ${PWD}/dist/ndnd-merkle/storage:/config/storage
+      - ${PWD}/dist/ndnd-merkle/merkle.yml:/config/merkle.yml:ro
+      - ${PWD}/dist/ndnd-merkle/management-schema.tlv:/config/management-schema.tlv:ro
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/nfd/nfd.sock
+    command: [merkle, run, /config/merkle.yml]
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 2g
+    cpus: 1
+    pids_limit: 128
+    restart: unless-stopped
+    depends_on:
+      nfd: { condition: service_healthy }
+      serve-certs: { condition: service_started }
+    logging:
+      driver: local
+
   ndncert:
     image: ghcr.io/ucla-irl/ndncert-ca:20250923
     init: true

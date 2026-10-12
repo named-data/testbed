@@ -69,6 +69,10 @@ docker compose exec -e HOME=/testbed/root-ca-home master ndnsec list -c
 
 Each node runs the pinned `ndnd-repo` container with identity `<default_prefix>/ndnd/repo` (e.g. `/ndn/edu/ucla/ndnd/repo`). Master generates a dedicated key, obtains a certificate from the local site CA, and installs the public chain selected by `globals.ndnd_repo_anchors`. The repo can write only its keychain and storage; it has no access to CA private keys or master renewal scripts.
 
+## NDNd Merkle
+
+Only UCLA runs the `ndnd-merkle` container, selected by `services.ndnd-merkle.hosts: [UCLA]` in `config.yml`, with identity `/ndn/edu/ucla/ndnd/merkle`. Master automatically provisions and renews its dedicated site-issued certificate using the same testbed anchors as the repo. Its trust schema permits testbed-certified users to append under their own identities and only the log key to sign responses. History persists in `dist/ndnd-merkle/storage`.
+
 ## Development
 
 For debugging and development, you can define `DEBUG=1` in your `.env` file. This will prevent the `dist` folder from auto-rendering and disable git polling. You can then use docker compose as usual to manage the containers.

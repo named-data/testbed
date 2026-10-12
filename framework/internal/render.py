@@ -35,7 +35,7 @@ def render(node_name: str, dry: bool = False) -> None:
     config = conf.get()
 
     # Get the docker compose config
-    compose_config = compose.config()
+    compose_config = compose.config(node_name)
 
     # Load environment and templates for each service. Set undefined to StrictUndefined to throw
     # a noisy error if a value that is present in the template is not passed in as a value.
@@ -66,7 +66,7 @@ def render(node_name: str, dry: bool = False) -> None:
     # For each service, render templates with the corresponding values
     for service, values in config.services.items():
         # Check if the service is enabled
-        if service not in compose_config['services']:
+        if not conf.service_enabled(values, node_name) or service not in compose_config['services']:
             continue
 
         # Check if any file did change

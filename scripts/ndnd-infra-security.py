@@ -89,17 +89,17 @@ def get_key(directory, identity):
     keys = list(directory.glob('*.key'))
     if keys:
         if len(keys) != 1:
-            raise ValueError('Expected exactly one private repo key')
+            raise ValueError('Expected exactly one private service key')
         wire = decode_pem(keys[0].read_text(), 'KEY')
         name, meta, content, pointers = parse_data(wire)
         if (meta.content_type != 9 or len(name) != len(identity) + 2
                 or Name.to_bytes(name[:-2]) != Name.to_bytes(identity)
                 or bytes(name[-2]) != Component.from_str('KEY')):
-            raise ValueError('Existing repo key has the wrong identity or format')
+            raise ValueError('Existing service key has the wrong identity or format')
         key = ECC.import_key(bytes(content))
         keys[0].chmod(0o600)
         if not key.has_private() or not verify_ecdsa(key.public_key(), pointers):
-            raise ValueError('Invalid private repo key')
+            raise ValueError('Invalid private service key')
         return name, key, wire
 
     key = ECC.generate(curve='P-256')
@@ -112,19 +112,23 @@ def get_key(directory, identity):
     return name, key, wire
 
 
-def provision(directory, site_home, site_prefix, anchors_path, force=False, renew_before_days=30):
+def provision(directory, site_home, site_prefix, anchors_path, force=False, renew_before_days=30, service='repo'):
     # Serialize overlapping cron/manual renewal runs without rotating the key.
     with (directory / '.security.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        return provision_locked(directory, site_home, site_prefix, anchors_path, force, renew_before_days)
+        return provision_locked(directory, site_home, site_prefix, anchors_path, force, renew_before_days, service)
 
 
-def provision_locked(directory, site_home, site_prefix, anchors_path, force, renew_before_days):
-    with (directory / 'repo.yml').open() as stream:
-        config = yaml.safe_load(stream)['repo']
+def provision_locked(directory, site_home, site_prefix, anchors_path, force, renew_before_days, service):
+    if service not in ('repo', 'merkle'):
+        raise ValueError('Unsupported NDNd service')
+    if service == 'merkle' and site_prefix != '/ndn/edu/ucla':
+        raise ValueError('Merkle log provisioning is restricted to UCLA')
+    with (directory / f'{service}.yml').open() as stream:
+        config = yaml.safe_load(stream)[service]
     identity = Name.normalize(config['name'])
-    if Name.to_bytes(identity) != Name.to_bytes(Name.normalize(site_prefix + '/ndnd/repo')):
-        raise ValueError('Repo identity must be <site-prefix>/ndnd/repo')
+    if Name.to_bytes(identity) != Name.to_bytes(Name.normalize(site_prefix + '/ndnd/' + service)):
+        raise ValueError(f'Identity must be <site-prefix>/ndnd/{service}')
 
     now = datetime.now(timezone.utc)
     site_wire = decode_certificate(site_home / 'site.ndncert')
@@ -156,7 +160,7 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
     keys.mkdir(mode=0o700, exist_ok=True)
     keys.chmod(0o700)
     key_name, key, key_wire = get_key(keys, identity)
-    cert_path = directory / 'repo.ndncert'
+    cert_path = directory / f'{service}.ndncert'
     cert_wire = decode_certificate(cert_path) if cert_path.exists() else None
     margin = timedelta(days=renew_before_days)
     renew = force or cert_wire is None
@@ -174,7 +178,7 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
         before = max(now - timedelta(minutes=5), site_before, root_before).replace(microsecond=0)
         after = min(now + timedelta(days=90), site_after, root_after).replace(microsecond=0)
         if after <= now + margin:
-            raise ValueError('Renew the site/root certificate before issuing a repo certificate')
+            raise ValueError('Renew the site/root certificate before issuing a service certificate')
         signer = Sha256WithEcdsaSigner(key_name, key.export_key(format='DER', use_pkcs8=False))
         _, csr = new_cert(key_name, Component.from_str('self'),
                           key.public_key().export_key(format='DER'), signer, before, after)
@@ -189,7 +193,7 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
                 or bytes(cert.content) != key.public_key().export_key(format='DER')
                 or not verify_certificate(cert_wire, site_wire)
                 or not before <= actual_before <= now < actual_after <= after):
-            raise ValueError('Site CA returned an invalid repo certificate')
+            raise ValueError('Site CA returned an invalid service certificate')
 
     # Prepare every credential before marking it for a service reload.
     changed = import_packet(keys, key_wire, 'KEY')
@@ -198,7 +202,7 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
     changed |= write_atomic(cert_path, base64.encodebytes(cert_wire))
     if changed:
         write_atomic(directory / '.security-changed', b'\n')
-    print(f"NDNd repo {config['name']}: {'credentials updated' if changed else 'credentials current'}")
+    print(f"NDNd {service} {config['name']}: {'credentials updated' if changed else 'credentials current'}")
     return changed
 
 
@@ -208,6 +212,7 @@ if __name__ == '__main__':
     parser.add_argument('--site-home', type=Path, required=True)
     parser.add_argument('--site-prefix', required=True)
     parser.add_argument('--anchors', type=Path, required=True)
+    parser.add_argument('--service', choices=('repo', 'merkle'), default='repo')
     parser.add_argument('--force', action='store_true')
     args = parser.parse_args()
-    provision(args.directory, args.site_home, args.site_prefix, args.anchors, args.force)
+    provision(args.directory, args.site_home, args.site_prefix, args.anchors, args.force, service=args.service)

@@ -1,6 +1,8 @@
 import yaml
+import shlex
 
 from dataclasses import dataclass
+from os import getenv
 from typing import Any
 
 from .utils import read_dotenv
@@ -29,3 +31,26 @@ def get() -> Config:
             config.globals[rkey] = value
 
     return config
+
+
+def service_enabled(service: dict, node: str) -> bool:
+    return 'hosts' not in service or node in service['hosts']
+
+
+def compose_profiles(node: str = None) -> str:
+    """Apply tracked host profiles without replacing operator-managed profiles."""
+    env = read_dotenv()
+    node = node or getenv('MANAGED_HOST', env.get('MANAGED_HOST'))
+    services = get().services.values()
+    managed = {service['profile'] for service in services if 'profile' in service}
+    default_profiles = ''.join(shlex.split(env.get('COMPOSE_PROFILES', ''), comments=True))
+    requested = [p.strip() for p in getenv('COMPOSE_PROFILES', default_profiles).split(',')]
+    if '*' in requested:
+        with open('docker-compose.yml') as stream:
+            compose = yaml.safe_load(stream)
+        requested = [p for service in compose['services'].values() for p in service.get('profiles', [])]
+    profiles = [p for p in requested
+                if p and p not in managed]
+    profiles.extend(service['profile'] for service in services
+                    if 'profile' in service and service_enabled(service, node))
+    return ','.join(dict.fromkeys(profiles))
