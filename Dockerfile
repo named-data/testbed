@@ -26,7 +26,7 @@ RUN <<EOF
 
     pip install --no-cache-dir --disable-pip-version-check --break-system-packages \
         jinja2==3.1.6 \
-        python-ndn==0.4.2 \
+        python-ndn==0.5.2 \
         pyyaml==6.0.3
 EOF
 
