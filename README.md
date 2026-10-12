@@ -40,16 +40,17 @@ A cron job is required on the host for some tasks. Make sure the cron user is pr
 
 ## Certificate Management
 
-The master container will automatically attempt to get certificates initiall if they don't exist. Certificates will not be automatically renewed. To renew certificates, run the following command:
+The master container provisions certificates before marking itself ready and checks them for renewal every five minutes. To force renewal manually, run the following commands:
 
 ```bash
 # Renew certificates
 docker compose exec master bash /testbed/dist/ndncert/renew.sh --force
 docker compose exec master bash /testbed/dist/nlsr/renew.sh --force
 docker compose exec master bash /testbed/dist/ndn-python-repo/renew.sh --force
+docker compose exec master bash /testbed/dist/ndnd-repo/renew.sh --force
 
 # Restart containers
-docker compose restart nlsr ndncert serve-certs ndn-python-repo
+docker compose restart nlsr ndncert serve-certs ndn-python-repo ndnd-repo
 ```
 
 To get the list of currently installed certificates, run
@@ -58,10 +59,23 @@ To get the list of currently installed certificates, run
 docker compose exec -e HOME=/testbed/dist/ndncert master ndnsec list -c
 docker compose exec -e HOME=/testbed/dist/nlsr master ndnsec list -c
 docker compose exec -e HOME=/testbed/dist/ndn-python-repo master ndnsec list -c
+docker compose exec ndnd-repo /ndnd sec key-list dir:///config/keys
 
 # For root CA only
 docker compose exec -e HOME=/testbed/root-ca-home master ndnsec list -c
 ```
+
+## NDNd Repository
+
+Each node runs the pinned `ndnd-repo` container with identity `<default_prefix>/ndnd/repo` (e.g. `/ndn/edu/ucla/ndnd/repo`). Master generates a dedicated key, obtains a certificate from the local site CA, and installs the public chain selected by `globals.ndnd_repo_anchors`. The repo can write only its keychain and storage; it has no access to CA private keys or master renewal scripts.
+
+Certificates last up to 90 days, bounded by the issuing chain, and renew with 30 days remaining. Renewal reuses the key and restarts the repo when credentials change. Failed signing preserves the installed certificate. Pending dependent renewals and service reloads survive a partially failed site renewal and retry on the next poll. Back up `dist/ndnd-repo/keys` and `dist/ndnd-repo/storage`. Group enrollment ends on restart by design; applications enroll again while stored data persists.
+
+Before merging this change into the branch polled by nodes, publish an NDNd image containing commit `cfffe287` or later and rebuild `testbed-master` from this Dockerfile. The master needs `python-ndn==0.5.2` to compile NDNd's LVS format; the previously pinned master image and January NDNd image are incompatible. Use the two repositories' existing Docker workflows; no new CI is needed. Compose keeps the existing dated-image convention. Publish the dated images pinned in Compose before rollout; if the workflows publish on a different date, update the pins to those published tags.
+
+Master compiles the management trust schema while rendering configuration. Any user certified directly by a configured testbed site may enroll or leave groups; user identities may have one to five components below that site's prefix. Send commands to `<site>/ndnd/repo/32=cmd`, with embedded signed Data named `<user>/32=repo/<version>`. Publish application security-config objects as `<user>/32=repo-security/<version>/<segment>`. The schema binds these packets to the user's identity and authorizes responses only from the local repo key. Applications retain control of per-group data schemas and should validate responses using the same root-to-site-to-repo rules.
+
+The active root expires on December 31, 2026. Before expiry, distribute its replacement, add it to `ndnd_repo_anchors`, and renew site certificates before removing the old root. Root rollover is separate from automatic site/repo renewal.
 
 ## Development
 
