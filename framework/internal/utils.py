@@ -28,6 +28,22 @@ def hash_file(path: str) -> str:
     """
     return hashlib.md5(open(path, 'rb').read()).hexdigest()
 
+def ndn_cert_name(text: str) -> str:
+    """Read the full certificate name from an ndn-cxx base64 certificate."""
+    import base64
+    from ndn.app_support.security_v2 import parse_certificate
+    from ndn.encoding import Name
+
+    wire = base64.b64decode(''.join(text.split()), validate=True)
+    return Name.to_str(parse_certificate(wire).name)
+
+def ndn_lvs_name(name: str) -> str:
+    """Encode an NDN name as literal components in an LVS schema."""
+    import json
+    from ndn.encoding import Component, Name
+
+    return '/'.join(json.dumps(Component.to_str(comp)) for comp in Name.normalize(name))
+
 def read_dotenv(file='.env') -> dict[str, str]:
     """
     This function reads a .env file and returns a dictionary of the key-value

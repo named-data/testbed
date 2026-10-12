@@ -3,6 +3,7 @@ import pathlib
 import sys
 import yaml
 import jinja2
+from ndn.app_support.light_versec import compile_lvs
 
 from . import conf
 from . import compose
@@ -14,6 +15,8 @@ JINJA_FUNCTIONS = {
     'oneline': lambda text: ''.join(text.splitlines()),
     'list': lambda obj: list(obj),
     'str': lambda obj: str(obj),
+    'ndn_cert_name': utils.ndn_cert_name,
+    'ndn_lvs_name': utils.ndn_lvs_name,
 }
 
 def render(node_name: str, dry: bool = False) -> None:
@@ -97,6 +100,16 @@ def render(node_name: str, dry: bool = False) -> None:
                 with open(template_path, 'r') as f:
                     output_content = f.read()
 
+            # Compile LVS templates before a changed service is restarted.
+            if output_basename.endswith('.lvs'):
+                output_basename = os.path.splitext(output_basename)[0] + '.tlv'
+                schema = compile_lvs(output_content)
+                if schema.version != 0x00011000:
+                    raise RuntimeError('NDNd requires LVS 1.1; rebuild master with python-ndn 0.5.2')
+                output_content = bytes(schema.encode())
+            else:
+                output_content = output_content.encode()
+
             # Get relative path of template to base directory
             relative_path = os.path.dirname(os.path.relpath(template_path, base_template_path))
 
@@ -110,15 +123,13 @@ def render(node_name: str, dry: bool = False) -> None:
             # Read the existing file if it exists
             existing_content = None
             if pathlib.Path(output_path).is_file():
-                with open(output_path, 'r') as f:
-                    existing_content = f.read()
+                existing_content = pathlib.Path(output_path).read_bytes()
 
             # Check if the content has changed
             if existing_content != output_content:
                 print(f"File {output_path} has changed.", file=sys.stderr)
                 service_changed = True
-                with open(output_path, 'w') as f:
-                    f.write(output_content)
+                pathlib.Path(output_path).write_bytes(output_content)
 
         # Skip service checkers on dry run
         if dry:

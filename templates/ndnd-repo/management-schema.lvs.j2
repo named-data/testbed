@@ -1,0 +1,22 @@
+// Root -> site -> user/repo. The configured full root names pin trust anchors.
+#key: "KEY"/_/_/_
+#root: {{ ndn_lvs_name(ndnNetwork) }}/#key
+{% for host, values in hostvars.items() %}
+{% set site_id = loop.index %}
+#site_{{ site_id }}: {{ ndn_lvs_name(values.default_prefix) }}/#key <= #root
+// NDNCERT allows up to five identity components below the site prefix.
+{% for depth in range(1, 6) %}
+{% set id = site_id ~ '_' ~ depth %}
+#user_{{ id }}: {{ ndn_lvs_name(values.default_prefix) }}{% for n in range(depth) %}/user{{ n }}{% endfor %}
+
+#user_key_{{ id }}: #user_{{ id }}/#key <= #site_{{ site_id }}
+// Object validation removes the terminal version and segment components.
+#command_{{ id }}: #user_{{ id }}/"32=repo" <= #user_key_{{ id }}
+#security_{{ id }}: #user_{{ id }}/"32=repo-security" <= #user_key_{{ id }}
+{% endfor %}
+{% if host == inventory_hostname %}
+#repo_key: {{ ndn_lvs_name(default_prefix + '/ndnd/repo') }}/#key <= #site_{{ site_id }}
+{% endif %}
+{% endfor %}
+// Only this site's repo identity may sign its management responses.
+#response: {{ ndn_lvs_name(default_prefix + '/ndnd/repo') }}/"32=cmd"/_ <= #repo_key

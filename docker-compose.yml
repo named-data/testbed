@@ -5,7 +5,7 @@
 name: testbed
 services:
   master:
-    image: ghcr.io/named-data/testbed-master:20260423
+    image: ghcr.io/named-data/testbed-master:20261012
     init: true
     tty: true
     volumes:
@@ -153,6 +153,28 @@ services:
     logging:
       driver: local
 
+  ndnd-repo:
+    image: ghcr.io/named-data/ndnd:20261012
+    init: true
+    volumes:
+      - /run/nfd:/run/nfd:ro
+      - ${PWD}/dist/ndnd-repo/keys:/config/keys
+      - ${PWD}/dist/ndnd-repo/storage:/config/storage
+      - ${PWD}/dist/ndnd-repo/repo.yml:/config/repo.yml:ro
+      - ${PWD}/dist/ndnd-repo/management-schema.tlv:/config/management-schema.tlv:ro
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/nfd/nfd.sock
+    command: [repo, run, /config/repo.yml]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    depends_on:
+      nfd: { condition: service_healthy }
+      serve-certs: { condition: service_started }
+    logging:
+      driver: local
+
   ndncert:
     image: ghcr.io/ucla-irl/ndncert-ca:20250923
     init: true
@@ -170,7 +192,7 @@ services:
       driver: local
 
   root-http-ca:
-    image: ghcr.io/named-data/testbed-master:20260423
+    image: ghcr.io/named-data/testbed-master:20261012
     profiles: [root-ca] # in .env
     init: true
     tty: true

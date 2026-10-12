@@ -23,9 +23,10 @@ fi
 rm -f .git/index.lock
 git pull
 
-# Renew certificates if needed
-bash $(pwd)/scripts/cert-renew.sh
+# Render new service templates before certificate provisioning on an existing node.
+PWD="${ROOT_DIR}" python3 framework/main.py || exit $?
 
-PWD="${ROOT_DIR}" python3 framework/main.py
+# Renew certificates if needed
+bash $(pwd)/scripts/cert-renew.sh || exit $?
 
 echo -e "Finished cron-master at $(date)" >&2

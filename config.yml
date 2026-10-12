@@ -35,6 +35,10 @@ services:
     template_path: templates/ndn-python-repo
     render_path: dist/ndn-python-repo
 
+  ndnd-repo:
+    template_path: templates/ndnd-repo
+    render_path: dist/ndnd-repo
+
   ndncert:
     template_path: templates/ndncert
     render_path: dist/ndncert
@@ -61,6 +65,9 @@ globals:
   supports_guest_certs: False
   operator_user: ndnops
   root_ca_https: https://suns.cs.ucla.edu/root-ca
+  # Explicitly select the active root; retain additional roots here during rollover.
+  ndnd_repo_anchors:
+    - anchors/ndn-testbed-root.ndncert.2204.base64
 
 # Declare variables available for each host
 # You can use lint.py to check variables, their types and
