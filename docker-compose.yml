@@ -73,8 +73,10 @@ services:
     init: true
     volumes:
       - /run/ndnd:/run/ndnd:ro
+      - ${PWD}/framework/ndnd-status-http-server.py:/app/ndnd-status-http-server.py:ro
     environment:
       NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+    entrypoint: [python3, /app/ndnd-status-http-server.py]
     restart: unless-stopped
     depends_on:
       ndnd: { condition: service_healthy }
