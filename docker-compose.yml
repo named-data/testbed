@@ -44,9 +44,9 @@ services:
       driver: local
 
   ndnd:
-    image: ndnd-dv2:a841cc27
+    image: ndnd-dv2:8263081
     build:
-      context: https://github.com/named-data/ndnd.git#a841cc27f6ee90ca4dfefa8d4f3ef4ce91e5da93
+      context: https://github.com/markverick/ndnd.git#826308101bd266c5b33c6105b584595674214522
     profiles: [ndnd]
     init: true
     volumes:
@@ -68,15 +68,19 @@ services:
       driver: local
 
   ndnd-http-status-server:
-    image: ghcr.io/named-data/nfd-status-http-server:20260420
+    image: ndnd-dv2:8263081
+    build:
+      context: https://github.com/markverick/ndnd.git#826308101bd266c5b33c6105b584595674214522
     profiles: [ndnd]
     init: true
     volumes:
       - /run/ndnd:/run/ndnd:ro
-      - ${PWD}/framework/ndnd-status-http-server.py:/app/ndnd-status-http-server.py:ro
     environment:
       NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
-    entrypoint: [python3, /app/ndnd-status-http-server.py]
+    command: [fw, status-server]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
     restart: unless-stopped
     depends_on:
       ndnd: { condition: service_healthy }
