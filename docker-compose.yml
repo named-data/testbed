@@ -43,6 +43,44 @@ services:
     logging:
       driver: local
 
+  ndnd:
+    image: ndnd-dv2:a841cc27
+    build:
+      context: https://github.com/named-data/ndnd.git#a841cc27f6ee90ca4dfefa8d4f3ef4ce91e5da93
+    profiles: [ndnd]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd
+      - ${PWD}/dist/ndnd:/config:ro
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+    command: [fw, run, /config/yanfd.yml]
+    ports:
+      - 6364:6364/udp
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, /ndnd, fw, status]
+      interval: 1m
+      start_period: 30s
+    depends_on:
+      master: { condition: service_healthy }
+    logging:
+      driver: local
+
+  ndnd-http-status-server:
+    image: ghcr.io/named-data/nfd-status-http-server:20260420
+    profiles: [ndnd]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd:ro
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+    restart: unless-stopped
+    depends_on:
+      ndnd: { condition: service_healthy }
+    logging:
+      driver: local
+
   nfd:
     image: ghcr.io/named-data/nfd:20250420
     init: true

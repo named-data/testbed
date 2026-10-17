@@ -1,4 +1,13 @@
 {{ ansible_host }} {
+  {% if ndnd_enabled | default(false) %}
+  handle_path /ndnd-status/* {
+    reverse_proxy http://ndnd-http-status-server:6380
+  }
+
+  @ndndws path /ndnd /ndnd/*
+  reverse_proxy @ndndws http://ndnd:9696
+  {% endif %}
+
   @nfdstatus path / /nfd-status.xsl /xslt-polyfill.min.js /*.css
   reverse_proxy @nfdstatus http://nfd-http-status-server:6380
 

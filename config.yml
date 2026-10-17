@@ -6,6 +6,17 @@ host_vars_path: host_vars
 
 # This must match exactly with the docker-compose.yml file
 services:
+  ndnd:
+    enabled_by: ndnd_enabled
+    profile: ndnd
+    template_path: templates/ndnd
+    render_path: dist/ndnd
+
+  ndnd-http-status-server:
+    enabled_by: ndnd_enabled
+    profile: ndnd
+    pass: on
+
   caddy:
     template_path: templates/caddy
     render_path: dist/caddy
@@ -74,6 +85,7 @@ globals:
   # Explicitly select the active root; retain additional roots here during rollover.
   ndnd_repo_anchors:
     - anchors/ndn-testbed-root.ndncert.2204.base64
+  ndnd_udp_port: 6364
 
 # Declare variables available for each host
 # You can use lint.py to check variables, their types and
@@ -102,3 +114,4 @@ variables:
   ethernet_device: string
   is_root_ca: "?boolean"
   is_status_page: "?boolean"
+  ndnd_enabled: "?boolean"

@@ -3,6 +3,7 @@ import shlex
 
 from dataclasses import dataclass
 from os import getenv
+from pathlib import Path
 from typing import Any
 
 from .utils import read_dotenv
@@ -34,7 +35,16 @@ def get() -> Config:
 
 
 def service_enabled(service: dict, node: str) -> bool:
-    return 'hosts' not in service or node in service['hosts']
+    if 'hosts' in service and node not in service['hosts']:
+        return False
+    enabled_by = service.get('enabled_by')
+    if enabled_by is None:
+        return True
+    if not node:
+        return False
+    with open(Path(get().host_vars_path) / node) as stream:
+        host_vars = yaml.safe_load(stream) or {}
+    return bool(host_vars.get(enabled_by, False))
 
 
 def compose_profiles(node: str = None) -> str:
