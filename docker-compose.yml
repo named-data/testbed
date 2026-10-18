@@ -77,10 +77,11 @@ services:
       - /run/ndnd:/run/ndnd:ro
       - ${PWD}/dist/ndnd-dv/dv.yml:/config/dv.yml:ro
       - ${PWD}/dist/ndnd-dv/dv-schema.tlv:/config/dv-schema.tlv:ro
-      - ${PWD}/dist/ndnd-dv/keys:/config/keys:ro
+      - ${PWD}/dist/ndnd-dv/keys:/config/keys
     environment:
       NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
     command: [dv, run, /config/dv.yml]
+    network_mode: none
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
