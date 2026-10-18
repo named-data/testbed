@@ -44,9 +44,9 @@ services:
       driver: local
 
   ndnd:
-    image: ndnd-dv2:924263f
+    image: ndnd-dv2:e9b25bd
     build:
-      context: https://github.com/markverick/ndnd.git#924263f1a89e8698ee1d4913b331894c1bb16378
+      context: https://github.com/markverick/ndnd.git#e9b25bda4a313727696c99efe2b26c59677740b9
     profiles: [ndnd]
     init: true
     volumes:
@@ -68,9 +68,9 @@ services:
       driver: local
 
   ndnd-http-status-server:
-    image: ndnd-dv2:924263f
+    image: ndnd-dv2:e9b25bd
     build:
-      context: https://github.com/markverick/ndnd.git#924263f1a89e8698ee1d4913b331894c1bb16378
+      context: https://github.com/markverick/ndnd.git#e9b25bda4a313727696c99efe2b26c59677740b9
     profiles: [ndnd]
     init: true
     volumes:
