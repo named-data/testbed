@@ -22,8 +22,9 @@ if [[ $(needs_renewal "${NDNCERT_CERTFILE}") ]]; then
   trap 'rm -f "${RENEW_CERTFILE}"' EXIT
 
   # Get certificate from root certificate authority
-  curl -fsSL -X POST --upload-file "${NDNCERT_CERTFILE}.csr" -o "${RENEW_CERTFILE}" \
-      "${ROOT_CA_HTTPS}/sign?secret=${ROOT_CA_SECRET}"
+  curl -fsSL -X POST -H "Authorization: Bearer ${ROOT_CA_SECRET}" \
+      --upload-file "${NDNCERT_CERTFILE}.csr" -o "${RENEW_CERTFILE}" \
+      "${ROOT_CA_HTTPS}/sign"
 
   # Install certificate to keychain
   ndnsec cert-install -f "${RENEW_CERTFILE}"

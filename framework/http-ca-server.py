@@ -7,6 +7,8 @@ import base64
 import subprocess
 import ndn
 import ipaddress
+from datetime import datetime, timedelta
+from urllib.parse import parse_qs
 
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -30,7 +32,13 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
 
     def sign(self, path: str, query: str, data: bytes) -> None:
         # Check if the secret is correct from query parameter
-        if query != f'secret={config.secret}':
+        try:
+            params = parse_qs(query, strict_parsing=True)
+        except ValueError:
+            self.send_error(400, "Invalid query parameters")
+            return
+        authorization = self.headers.get('Authorization')
+        if authorization != f'Bearer {config.secret}' and params.get('secret') != [config.secret]:
             self.send_error(401, "Invalid secret")
             return
 
@@ -49,8 +57,28 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_error(400, f"Invalid name {str_name}, expected prefix {pfx}")
             return
 
-        # Sign a certificate for the name
-        proc = subprocess.run(['ndnsec', 'cert-gen', '-s', config.global_prefix, '-'], input=data, capture_output=True)
+        not_before = params.get('not_before', [])
+        not_after = params.get('not_after', [])
+        if bool(not_before) != bool(not_after) or len(not_before) > 1 or len(not_after) > 1:
+            self.send_error(400, "Both validity bounds must be provided once")
+            return
+
+        command = ['ndnsec', 'cert-gen', '-s', config.global_prefix]
+        if not_before:
+            try:
+                start = datetime.strptime(not_before[0], '%Y%m%d%H%M%S')
+                end = datetime.strptime(not_after[0], '%Y%m%d%H%M%S')
+            except ValueError:
+                self.send_error(400, "Invalid certificate validity bounds")
+                return
+            if end <= start or end - start > timedelta(days=90):
+                self.send_error(400, "Certificate validity must be positive and no longer than 90 days")
+                return
+            command.extend(['-S', not_before[0], '-E', not_after[0]])
+        command.append('-')
+
+        # Sign a certificate for the name.
+        proc = subprocess.run(command, input=data, capture_output=True)
 
         if proc.returncode != 0:
             self.send_error(500, f"Failed to sign certificate: {proc.stderr}")
@@ -66,8 +94,11 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(certificate)
 
-        # Store the certificate if path provided
-        if path := host.get('cert_file'):
+        # This cache is consumed as the host's site certificate, not as a
+        # general log of every descendant certificate signed for that host.
+        identity = ndn.encoding.name.Name.to_str(cert_name[:-4]) if len(cert_name) >= 4 else ''
+        path = host.get('cert_file')
+        if path and identity == pfx:
             with open(path, 'wb') as f:
                 f.write(certificate)
 
@@ -98,6 +129,11 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
             return forwarded_for.split(',')[0].strip()
 
         return self.client_address[0]
+
+    def log_request(self, code='-', size='-') -> None:
+        # Legacy callers put the root CA secret in the query string.
+        requestline = self.requestline.split('?', 1)[0]
+        self.log_message('"%s" %s %s', requestline, str(code), str(size))
 
 if __name__ == '__main__':
     # Read YAML config

@@ -12,6 +12,7 @@ import secrets
 import subprocess
 import tempfile
 import time
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from Cryptodome.PublicKey import ECC, RSA
@@ -62,9 +63,14 @@ def import_packet(directory, wire, kind):
     return write_atomic(path, pem(wire, kind))
 
 
-def sign_with_root_ca(csr, root_ca_url, secret):
-    url = f'{root_ca_url.rstrip("/")}/sign?secret={secret}'
-    request = Request(url, data=base64.encodebytes(csr), method='POST')
+def sign_with_root_ca(csr, root_ca_url, secret, before, after):
+    query = urlencode({
+        'not_before': before.strftime('%Y%m%d%H%M%S'),
+        'not_after': after.strftime('%Y%m%d%H%M%S'),
+    })
+    url = f'{root_ca_url.rstrip("/")}/sign?{query}'
+    request = Request(url, data=base64.encodebytes(csr), method='POST',
+                      headers={'Authorization': f'Bearer {secret}'})
     with urlopen(request, timeout=30) as response:
         return base64.b64decode(b''.join(response.read().split()), validate=True)
 
@@ -201,7 +207,7 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
         _, csr = new_cert(key_name, Component.from_str('self'),
                           key.public_key().export_key(format='DER'), signer, before, after)
         if service == 'dv':
-            cert_wire = sign_with_root_ca(csr, root_ca_url, os.environ['ROOT_CA_SECRET'])
+            cert_wire = sign_with_root_ca(csr, root_ca_url, os.environ['ROOT_CA_SECRET'], before, after)
         else:
             command = ['ndnsec', 'cert-gen', '-s', site_prefix,
                        '-S', before.strftime('%Y%m%d%H%M%S'), '-E', after.strftime('%Y%m%d%H%M%S'), '-']
