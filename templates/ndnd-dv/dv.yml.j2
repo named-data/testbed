@@ -1,0 +1,20 @@
+dv:
+  network: {{ ndnd_dv_network | tojson }}
+  router: {{ default_prefix | tojson }}
+  keychain: dir:///config/keys
+  trust_anchors:
+    {% for anchor in ndnd_repo_anchors %}
+    - {{ ndn_cert_name(read_file(anchor)) | tojson }}
+    {% endfor %}
+  trust_schema: dv-schema.tlv
+  neighbors:
+    {% set peers = namespace(count=0) %}
+    {% for host, values in hostvars.items() %}
+    {% if host != inventory_hostname and values.get('ndnd_enabled', false) %}
+    - uri: {{ ("udp4://" + values.host_ip + ":" + str(ndnd_udp_port)) | tojson }}
+    {% set peers.count = peers.count + 1 %}
+    {% endif %}
+    {% endfor %}
+    {% if peers.count == 0 %}
+    []
+    {% endif %}

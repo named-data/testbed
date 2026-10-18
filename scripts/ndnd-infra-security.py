@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Provision NDNd's directory keychain using the existing ndn-cxx site CA."""
+"""Provision NDNd service keychains using the testbed certificate authorities."""
 
 import argparse
 import base64
@@ -12,6 +12,7 @@ import secrets
 import subprocess
 import tempfile
 import time
+from urllib.request import Request, urlopen
 
 from Cryptodome.PublicKey import ECC, RSA
 import yaml
@@ -59,6 +60,13 @@ def import_packet(directory, wire, kind):
     if path.exists() and decode_pem(path.read_text(), kind) == wire:
         return False
     return write_atomic(path, pem(wire, kind))
+
+
+def sign_with_root_ca(csr, root_ca_url, secret):
+    url = f'{root_ca_url.rstrip("/")}/sign?secret={secret}'
+    request = Request(url, data=base64.encodebytes(csr), method='POST')
+    with urlopen(request, timeout=30) as response:
+        return base64.b64decode(b''.join(response.read().split()), validate=True)
 
 
 def validity(wire):
@@ -112,23 +120,32 @@ def get_key(directory, identity):
     return name, key, wire
 
 
-def provision(directory, site_home, site_prefix, anchors_path, force=False, renew_before_days=30, service='repo'):
+def provision(directory, site_home, site_prefix, anchors_path, force=False, renew_before_days=30,
+              service='repo', root_ca_url=''):
     # Serialize overlapping cron/manual renewal runs without rotating the key.
     with (directory / '.security.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        return provision_locked(directory, site_home, site_prefix, anchors_path, force, renew_before_days, service)
+        return provision_locked(directory, site_home, site_prefix, anchors_path, force, renew_before_days,
+                                service, root_ca_url)
 
 
-def provision_locked(directory, site_home, site_prefix, anchors_path, force, renew_before_days, service):
-    if service not in ('repo', 'merkle'):
+def provision_locked(directory, site_home, site_prefix, anchors_path, force, renew_before_days, service, root_ca_url):
+    if service not in ('repo', 'merkle', 'dv'):
         raise ValueError('Unsupported NDNd service')
     if service == 'merkle' and site_prefix != '/ndn/edu/ucla':
         raise ValueError('Merkle log provisioning is restricted to UCLA')
     with (directory / f'{service}.yml').open() as stream:
         config = yaml.safe_load(stream)[service]
-    identity = Name.normalize(config['name'])
-    if Name.to_bytes(identity) != Name.to_bytes(Name.normalize(site_prefix + '/ndnd/' + service)):
-        raise ValueError(f'Identity must be <site-prefix>/ndnd/{service}')
+    if service == 'dv':
+        identity = Name.normalize(config['router'] + '/32=DV')
+        expected_identity = Name.normalize(site_prefix + '/32=DV')
+        if not root_ca_url or not os.environ.get('ROOT_CA_SECRET'):
+            raise ValueError('DV credential provisioning requires the root CA URL and ROOT_CA_SECRET')
+    else:
+        identity = Name.normalize(config['name'])
+        expected_identity = Name.normalize(site_prefix + '/ndnd/' + service)
+    if Name.to_bytes(identity) != Name.to_bytes(expected_identity):
+        raise ValueError(f'Invalid {service} identity {Name.to_str(identity)}')
 
     now = datetime.now(timezone.utc)
     site_wire = decode_certificate(site_home / 'site.ndncert')
@@ -145,6 +162,7 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
     issuer = next((wire for wire in anchor_wires if verify_certificate(site_wire, wire)), None)
     if issuer is None:
         raise ValueError('Site certificate does not verify against a pinned testbed root')
+    signing_issuer = issuer if service == 'dv' else site_wire
     site_before, site_after = validity(site_wire)
     root_before, root_after = validity(issuer)
     # ndn-cxx rounds NotBefore up to a whole second when issuing a certificate.
@@ -170,7 +188,7 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
         renew |= (not before <= now < after - margin
                   or Name.to_bytes(cert.name[:-2]) != Name.to_bytes(key_name)
                   or bytes(cert.content) != key.public_key().export_key(format='DER')
-                  or not verify_certificate(cert_wire, site_wire)
+                  or not verify_certificate(cert_wire, signing_issuer)
                   or before < max(site_before, root_before)
                   or after > min(site_after, root_after))
 
@@ -182,16 +200,19 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
         signer = Sha256WithEcdsaSigner(key_name, key.export_key(format='DER', use_pkcs8=False))
         _, csr = new_cert(key_name, Component.from_str('self'),
                           key.public_key().export_key(format='DER'), signer, before, after)
-        command = ['ndnsec', 'cert-gen', '-s', site_prefix,
-                   '-S', before.strftime('%Y%m%d%H%M%S'), '-E', after.strftime('%Y%m%d%H%M%S'), '-']
-        result = subprocess.run(command, input=base64.encodebytes(csr), stdout=subprocess.PIPE,
-                                env={**os.environ, 'HOME': str(site_home)}, check=True, timeout=30)
-        cert_wire = base64.b64decode(b''.join(result.stdout.split()), validate=True)
+        if service == 'dv':
+            cert_wire = sign_with_root_ca(csr, root_ca_url, os.environ['ROOT_CA_SECRET'])
+        else:
+            command = ['ndnsec', 'cert-gen', '-s', site_prefix,
+                       '-S', before.strftime('%Y%m%d%H%M%S'), '-E', after.strftime('%Y%m%d%H%M%S'), '-']
+            result = subprocess.run(command, input=base64.encodebytes(csr), stdout=subprocess.PIPE,
+                                    env={**os.environ, 'HOME': str(site_home)}, check=True, timeout=30)
+            cert_wire = base64.b64decode(b''.join(result.stdout.split()), validate=True)
         cert = parse_certificate(cert_wire)
         actual_before, actual_after = validity(cert_wire)
         if (Name.to_bytes(cert.name[:-2]) != Name.to_bytes(key_name)
                 or bytes(cert.content) != key.public_key().export_key(format='DER')
-                or not verify_certificate(cert_wire, site_wire)
+                or not verify_certificate(cert_wire, signing_issuer)
                 or not before <= actual_before <= now < actual_after <= after):
             raise ValueError('Site CA returned an invalid service certificate')
 
@@ -202,7 +223,7 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
     changed |= write_atomic(cert_path, base64.encodebytes(cert_wire))
     if changed:
         write_atomic(directory / '.security-changed', b'\n')
-    print(f"NDNd {service} {config['name']}: {'credentials updated' if changed else 'credentials current'}")
+    print(f"NDNd {service} {Name.to_str(identity)}: {'credentials updated' if changed else 'credentials current'}")
     return changed
 
 
@@ -212,7 +233,9 @@ if __name__ == '__main__':
     parser.add_argument('--site-home', type=Path, required=True)
     parser.add_argument('--site-prefix', required=True)
     parser.add_argument('--anchors', type=Path, required=True)
-    parser.add_argument('--service', choices=('repo', 'merkle'), default='repo')
+    parser.add_argument('--service', choices=('repo', 'merkle', 'dv'), default='repo')
+    parser.add_argument('--root-ca-url', default='')
     parser.add_argument('--force', action='store_true')
     args = parser.parse_args()
-    provision(args.directory, args.site_home, args.site_prefix, args.anchors, args.force, service=args.service)
+    provision(args.directory, args.site_home, args.site_prefix, args.anchors, args.force,
+              service=args.service, root_ca_url=args.root_ca_url)

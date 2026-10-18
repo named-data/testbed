@@ -20,6 +20,19 @@ bash "$(pwd)/dist/nlsr/renew.sh" "${FORCE}" || exit $?
 bash "$(pwd)/dist/ndn-python-repo/renew.sh" "${FORCE}" || exit $?
 bash "$(pwd)/dist/ndnd-repo/renew.sh" ${FORCE:+"${FORCE}"} || exit $?
 
+DV_ENABLED=$(python3 framework/service-profiles.py --service ndnd-dv) || exit $?
+if [[ "${DV_ENABLED}" == 1 ]]; then
+    DV_DIR=dist/ndnd-dv
+    bash "${DV_DIR}/renew.sh" ${FORCE:+"${FORCE}"} || exit $?
+    if [[ -f "${DV_DIR}/.security-changed" ]]; then
+        RUNNING_DV=$(PWD="${ROOT_DIR:-$PWD}" docker compose ps --status running -q ndnd-dv) || exit $?
+        if [[ -n "${RUNNING_DV}" ]]; then
+            PWD="${ROOT_DIR:-$PWD}" docker compose restart ndnd-dv || exit $?
+        fi
+        rm -f "${DV_DIR}/.security-changed"
+    fi
+fi
+
 # Restart containers if force
 if [[ -n "${FORCE}" ]]; then
     PWD="${ROOT_DIR:-$PWD}" docker compose restart nlsr ndncert serve-certs ndn-python-repo || exit $?

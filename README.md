@@ -69,6 +69,10 @@ docker compose exec -e HOME=/testbed/root-ca-home master ndnsec list -c
 
 Each node runs the pinned `ndnd-repo` container with identity `<default_prefix>/ndnd/repo` (e.g. `/ndn/edu/ucla/ndnd/repo`). Master generates a dedicated key, obtains a certificate from the local site CA, and installs the public chain selected by `globals.ndnd_repo_anchors`. The repo can write only its keychain and storage; it has no access to CA private keys or master renewal scripts.
 
+## NDNd Distance Vector
+
+Nodes with `ndnd_enabled: true` run the NDNd forwarder and a separate `ndnd dv` router. The router connects only to the forwarder's `/run/ndnd/ndnd.sock` and exchanges DV traffic over the forwarder's UDP listener on port 6364; it does not use NFD's socket or NLSR. Router identities are root-signed as `<default_prefix>/32=DV`, and each router has permanent UDP neighbor links to the other NDNd-enabled nodes.
+
 ## NDNd Merkle
 
 Only UCLA runs the `ndnd-merkle` container, selected by `services.ndnd-merkle.hosts: [UCLA]` in `config.yml`, with identity `/ndn/edu/ucla/ndnd/merkle`. Master automatically provisions and renews its dedicated site-issued certificate using the same testbed anchors as the repo. Its trust schema permits testbed-certified users to append under their own identities and only the log key to sign responses. History persists in `dist/ndnd-merkle/storage`.

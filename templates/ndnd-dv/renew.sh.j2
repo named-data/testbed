@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -eu
+
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TESTBED_DIR="$(cd "${REPO_DIR}/../.." && pwd)"
+ROOT_CA_SECRET={{ ROOT_CA_SECRET | tojson }}
+export ROOT_CA_SECRET
+
+python3 "${TESTBED_DIR}/scripts/ndnd-infra-security.py" \
+    --directory "${REPO_DIR}" \
+    --site-home "${TESTBED_DIR}/dist/ndncert" \
+    --site-prefix {{ default_prefix | tojson }} \
+    --anchors "${TESTBED_DIR}/anchors" \
+    --service dv \
+    --root-ca-url {{ root_ca_https | tojson }} "$@"

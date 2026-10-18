@@ -12,6 +12,12 @@ services:
     template_path: templates/ndnd
     render_path: dist/ndnd
 
+  ndnd-dv:
+    enabled_by: ndnd_enabled
+    profile: ndnd
+    template_path: templates/ndnd-dv
+    render_path: dist/ndnd-dv
+
   ndnd-http-status-server:
     enabled_by: ndnd_enabled
     profile: ndnd
@@ -86,6 +92,7 @@ globals:
   ndnd_repo_anchors:
     - anchors/ndn-testbed-root.ndncert.2204.base64
   ndnd_udp_port: 6364
+  ndnd_dv_network: /ndn/edu
 
 # Declare variables available for each host
 # You can use lint.py to check variables, their types and
