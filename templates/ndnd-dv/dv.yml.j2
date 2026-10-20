@@ -4,7 +4,6 @@ dv:
   keychain: dir:///config/keys
   trust_anchors:
     - {{ ndn_cert_name(read_file(ndnd_root_anchor_path)) | tojson }}
-  trust_schema: dv-schema.tlv
   neighbors:
     {% set peers = namespace(count=0) %}
     {% for host, values in hostvars.items() %}
