@@ -27,19 +27,19 @@ services:
     enabled_by: ndnd_enabled
     profile: ndnd-go-ca
     template_path: templates/ndnd-site-ca
-    render_path: dist/ndnd-site-ca
+    render_path: dist/ndnd-site-ca-config
 
   ndnd-go-root-ca:
     hosts: [UCLA]
     profile: ndnd-go-ca
     template_path: templates/ndnd-go-ca
-    render_path: dist/ndnd-go-root-ca
+    render_path: dist/ndnd-go-root-config
 
   ndnd-root-http-ca:
     hosts: [UCLA]
     profile: ndnd-go-ca
     template_path: templates/ndnd-go-ca
-    render_path: dist/ndnd-go-root-ca
+    render_path: dist/ndnd-go-root-config
 
   caddy:
     template_path: templates/caddy

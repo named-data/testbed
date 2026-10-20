@@ -120,7 +120,7 @@ services:
     volumes:
       - /run/ndnd:/run/ndnd:ro
       - ${PWD}/dist/ndnd-site-ca-independent:/ca:ro
-      - ${PWD}/dist/ndnd-site-ca/ca.json:/config/ca.json:ro
+      - ${PWD}/dist/ndnd-site-ca-config:/config:ro
     environment:
       NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
       NDND_SMTP_PASSWORD: ${VAR_SMTP_PASSWORD:-}
@@ -143,7 +143,7 @@ services:
     volumes:
       - /run/ndnd:/run/ndnd:ro
       - ${PWD}/ndnd-root-ca-home/ndnd:/ca:ro
-      - ${PWD}/dist/ndnd-go-root-ca/ca.json:/config/ca.json:ro
+      - ${PWD}/dist/ndnd-go-root-config:/config:ro
     environment:
       NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
       NDND_SMTP_PASSWORD: ${VAR_SMTP_PASSWORD:-}
@@ -165,7 +165,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${PWD}/framework/http-ca-server.py:/app/http-ca-server.py:ro
-      - ${PWD}/dist/ndnd-go-root-ca/http-ca-server.yml:/config/http-ca-server.yml:ro
+      - ${PWD}/dist/ndnd-go-root-config:/config:ro
       - ${PWD}/dist/ndnd-go-root-ca/cert-store:/config/cert-store
     environment:
       NDND_ROOT_CA_SECRET: ${VAR_NDND_ROOT_CA_SECRET:?VAR_NDND_ROOT_CA_SECRET must be set}
