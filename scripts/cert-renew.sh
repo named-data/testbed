@@ -30,8 +30,9 @@ if [[ "${DV_ENABLED}" == 1 ]]; then
     fi
     SITE_CA_ENABLED=$(python3 framework/service-profiles.py --service ndnd-go-ca) || exit $?
     if [[ "${SITE_CA_ENABLED}" == 1 ]]; then
+        SITE_CA_CONFIG_DIR=dist/ndnd-site-ca-config
         SITE_CA_DIR=dist/ndnd-site-ca-independent
-        bash "${PWD}/${SITE_CA_DIR}/renew.sh" ${FORCE:+"${FORCE}"} || exit $?
+        bash "${PWD}/${SITE_CA_CONFIG_DIR}/renew.sh" ${FORCE:+"${FORCE}"} || exit $?
         if [[ -f "${SITE_CA_DIR}/.security-changed" ]]; then
             RUNNING_CA=$(PWD="${ROOT_DIR:-$PWD}" docker compose ps --status running -q ndnd-go-ca) || exit $?
             if [[ -n "${RUNNING_CA}" ]]; then
