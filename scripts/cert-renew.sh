@@ -2,6 +2,9 @@
 
 source "$(pwd)/scripts/utils.sh"
 
+COMPOSE_PROFILES=$(python3 framework/service-profiles.py) || exit $?
+export COMPOSE_PROFILES
+
 NDNCERT_CERTFILE="$(pwd)/dist/ndncert/site.ndncert"
 
 FORCE=""
@@ -24,8 +27,6 @@ DV_ENABLED=$(python3 framework/service-profiles.py --service ndnd-dv) || exit $?
 if [[ "${DV_ENABLED}" == 1 ]]; then
     NDND_SIGNER_ENABLED=$(python3 framework/service-profiles.py --service ndnd-root-http-ca) || exit $?
     if [[ "${NDND_SIGNER_ENABLED}" == 1 ]]; then
-        COMPOSE_PROFILES=$(python3 framework/service-profiles.py) || exit $?
-        export COMPOSE_PROFILES
         PWD="${ROOT_DIR:-$PWD}" docker compose up -d --no-deps --wait --wait-timeout 30 ndnd-root-http-ca || exit $?
     fi
     SITE_CA_ENABLED=$(python3 framework/service-profiles.py --service ndnd-go-ca) || exit $?
