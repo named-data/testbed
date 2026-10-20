@@ -31,13 +31,13 @@ services:
 
   ndnd-go-root-ca:
     hosts: [UCLA]
-    profile: ndnd-go-ca
+    profile: ndnd-go-root-ca
     template_path: templates/ndnd-go-ca
     render_path: dist/ndnd-go-root-config
 
   ndnd-root-http-ca:
     hosts: [UCLA]
-    profile: ndnd-go-ca
+    profile: ndnd-go-root-ca
     template_path: templates/ndnd-go-ca
     render_path: dist/ndnd-go-root-config
 

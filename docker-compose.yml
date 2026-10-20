@@ -44,9 +44,8 @@ services:
       driver: local
 
   ndnd:
-    image: ndnd-dv2:integration-763420d
-    build:
-      context: https://github.com/markverick/ndnd.git#763420dd4d11b860b97e0cd57169011f3dbfdef5
+    image: ghcr.io/named-data/ndnd:testbed-staging
+    pull_policy: always
     profiles: [ndnd]
     init: true
     volumes:
@@ -68,9 +67,8 @@ services:
       driver: local
 
   ndnd-dv:
-    image: ndnd-dv2:integration-763420d
-    build:
-      context: https://github.com/markverick/ndnd.git#763420dd4d11b860b97e0cd57169011f3dbfdef5
+    image: ghcr.io/named-data/ndnd:testbed-staging
+    pull_policy: always
     profiles: [ndnd]
     init: true
     volumes:
@@ -92,9 +90,8 @@ services:
       driver: local
 
   ndnd-http-status-server:
-    image: ndnd-dv2:integration-763420d
-    build:
-      context: https://github.com/markverick/ndnd.git#763420dd4d11b860b97e0cd57169011f3dbfdef5
+    image: ghcr.io/named-data/ndnd:testbed-staging
+    pull_policy: always
     profiles: [ndnd]
     init: true
     volumes:
@@ -112,9 +109,8 @@ services:
       driver: local
 
   ndnd-go-ca:
-    image: ndnd-dv2:integration-763420d
-    build:
-      context: https://github.com/markverick/ndnd.git#763420dd4d11b860b97e0cd57169011f3dbfdef5
+    image: ghcr.io/named-data/ndnd:testbed-staging
+    pull_policy: always
     profiles: [ndnd-go-ca]
     init: true
     volumes:
@@ -135,10 +131,9 @@ services:
       driver: local
 
   ndnd-go-root-ca:
-    image: ndnd-dv2:integration-763420d
-    build:
-      context: https://github.com/markverick/ndnd.git#763420dd4d11b860b97e0cd57169011f3dbfdef5
-    profiles: [ndnd-go-ca]
+    image: ghcr.io/named-data/ndnd:testbed-staging
+    pull_policy: always
+    profiles: [ndnd-go-root-ca]
     init: true
     volumes:
       - /run/ndnd:/run/ndnd:ro
@@ -159,7 +154,7 @@ services:
 
   ndnd-root-http-ca:
     image: ghcr.io/named-data/testbed-master:20261012
-    profiles: [ndnd-go-ca]
+    profiles: [ndnd-go-root-ca]
     init: true
     tty: true
     volumes:
