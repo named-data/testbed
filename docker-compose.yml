@@ -44,9 +44,9 @@ services:
       driver: local
 
   ndnd:
-    image: ndnd-dv2:integration-a1d6546
+    image: ndnd-dv2:integration-763420d
     build:
-      context: https://github.com/markverick/ndnd.git#a1d6546b10aa700b3fab340ad82015dc19556b4d
+      context: https://github.com/markverick/ndnd.git#763420dd4d11b860b97e0cd57169011f3dbfdef5
     profiles: [ndnd]
     init: true
     volumes:
@@ -68,9 +68,9 @@ services:
       driver: local
 
   ndnd-dv:
-    image: ndnd-dv2:integration-a1d6546
+    image: ndnd-dv2:integration-763420d
     build:
-      context: https://github.com/markverick/ndnd.git#a1d6546b10aa700b3fab340ad82015dc19556b4d
+      context: https://github.com/markverick/ndnd.git#763420dd4d11b860b97e0cd57169011f3dbfdef5
     profiles: [ndnd]
     init: true
     volumes:
@@ -92,9 +92,9 @@ services:
       driver: local
 
   ndnd-http-status-server:
-    image: ndnd-dv2:integration-a1d6546
+    image: ndnd-dv2:integration-763420d
     build:
-      context: https://github.com/markverick/ndnd.git#a1d6546b10aa700b3fab340ad82015dc19556b4d
+      context: https://github.com/markverick/ndnd.git#763420dd4d11b860b97e0cd57169011f3dbfdef5
     profiles: [ndnd]
     init: true
     volumes:
@@ -112,9 +112,9 @@ services:
       driver: local
 
   ndnd-go-ca:
-    image: ndnd-dv2:integration-a1d6546
+    image: ndnd-dv2:integration-763420d
     build:
-      context: https://github.com/markverick/ndnd.git#a1d6546b10aa700b3fab340ad82015dc19556b4d
+      context: https://github.com/markverick/ndnd.git#763420dd4d11b860b97e0cd57169011f3dbfdef5
     profiles: [ndnd-go-ca]
     init: true
     volumes:
@@ -135,9 +135,9 @@ services:
       driver: local
 
   ndnd-go-root-ca:
-    image: ndnd-dv2:integration-a1d6546
+    image: ndnd-dv2:integration-763420d
     build:
-      context: https://github.com/markverick/ndnd.git#a1d6546b10aa700b3fab340ad82015dc19556b4d
+      context: https://github.com/markverick/ndnd.git#763420dd4d11b860b97e0cd57169011f3dbfdef5
     profiles: [ndnd-go-ca]
     init: true
     volumes:
@@ -169,7 +169,7 @@ services:
       - ${PWD}/dist/ndnd-go-root-ca/cert-store:/cert-store
     environment:
       NDND_ROOT_CA_SECRET: ${VAR_NDND_ROOT_CA_SECRET:?VAR_NDND_ROOT_CA_SECRET must be set}
-      NDND_CA_IMAGE: ndnd-dv2:integration-a1d6546
+      NDND_CA_IMAGE: ndnd-dv2:integration-763420d
       NDND_CA_HOST_DIR: ${PWD}/ndnd-root-ca-home/ndnd
     entrypoint: [python3, /app/http-ca-server.py]
     command: [/config/http-ca-server.yml]
