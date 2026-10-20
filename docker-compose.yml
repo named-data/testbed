@@ -166,7 +166,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${PWD}/framework/http-ca-server.py:/app/http-ca-server.py:ro
       - ${PWD}/dist/ndnd-go-root-config:/config:ro
-      - ${PWD}/dist/ndnd-go-root-ca/cert-store:/config/cert-store
+      - ${PWD}/dist/ndnd-go-root-ca/cert-store:/cert-store
     environment:
       NDND_ROOT_CA_SECRET: ${VAR_NDND_ROOT_CA_SECRET:?VAR_NDND_ROOT_CA_SECRET must be set}
       NDND_CA_IMAGE: ndnd-dv2:integration-a1d6546

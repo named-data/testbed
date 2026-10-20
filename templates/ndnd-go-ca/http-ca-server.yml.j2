@@ -17,7 +17,7 @@ hosts:
       {% endif %}
     prefix: {{ (values.ndnd_router_prefix + '/32=DV') | tojson }}
     ca_prefix: {{ values.ndnd_ca_prefix | tojson }}
-    ca_cert_file: /config/cert-store/site-ca.{{ host }}.ndncert
-    cert_file: /config/cert-store/router-dv.{{ host }}.ndncert
+    ca_cert_file: /cert-store/site-ca.{{ host }}.ndncert
+    cert_file: /cert-store/router-dv.{{ host }}.ndncert
   {% endif %}
   {% endfor %}
