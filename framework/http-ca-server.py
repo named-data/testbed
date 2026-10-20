@@ -76,8 +76,13 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
         # Validate prefix of the CSR
         pfx = host['prefix']
         name = ndn.encoding.ndn_format_0_3.parse_data(base64.b64decode(data))[0]
-        valid_name = (is_ndnd_csr_name(pfx, name) if config.signer_backend == 'ndnd-go'
-                  else ndn.encoding.name.Name.is_prefix(pfx, name))
+        if config.signer_backend == 'ndnd-go':
+            valid_name = is_ndnd_csr_name(pfx, name)
+            ca_prefix = host.get('ca_prefix')
+            if ca_prefix:
+                valid_name |= is_ndnd_csr_name(ca_prefix, name)
+        else:
+            valid_name = ndn.encoding.name.Name.is_prefix(pfx, name)
         if not valid_name:
             str_name = ndn.encoding.name.Name.to_str(name)
             self.send_error(400, f"Invalid name {str_name}, expected prefix {pfx}")
@@ -152,8 +157,10 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
         # This cache is consumed as the host's site certificate, not as a
         # general log of every descendant certificate signed for that host.
         identity = ndn.encoding.name.Name.to_str(cert_name[:-4]) if len(cert_name) >= 4 else ''
-        path = host.get('cert_file')
-        if path and identity == pfx:
+        ca_prefix = host.get('ca_prefix')
+        path = host.get('ca_cert_file') if ca_prefix and identity == ca_prefix else host.get('cert_file')
+        expected_identity = ca_prefix if ca_prefix and identity == ca_prefix else pfx
+        if path and identity == expected_identity:
             with open(path, 'wb') as f:
                 f.write(certificate)
 

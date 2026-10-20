@@ -3,6 +3,7 @@ port: 8777
 secret: ""
 signer_backend: ndnd-go
 ndnd_ca_image: {{ ndnd_ca_image | tojson }}
+ndnd_ca_host_dir: {{ ("./ndnd-root-ca-home/ndnd") | tojson }}
 
 hosts:
   {% for host, values in hostvars.items() %}
@@ -15,5 +16,8 @@ hosts:
       - 192.168.0.0/16
       {% endif %}
     prefix: {{ (values.ndnd_router_prefix + '/32=DV') | tojson }}
+    ca_prefix: {{ values.ndnd_ca_prefix | tojson }}
+    ca_cert_file: /config/cert-store/site-ca.{{ host }}.ndncert
+    cert_file: /config/cert-store/router-dv.{{ host }}.ndncert
   {% endif %}
   {% endfor %}

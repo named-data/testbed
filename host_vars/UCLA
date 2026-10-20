@@ -40,6 +40,7 @@ neighbors:
 position:
 - 34.0728225
 - -118.4387398
+ndnd_ca_prefix: /ndnd/ucla
 hr_angle: 2.99911
 hr_radius: 16.5866
 ethernet_device: eth0

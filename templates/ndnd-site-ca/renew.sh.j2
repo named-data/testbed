@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -eu
+
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TESTBED_DIR="$(cd "${REPO_DIR}/../.." && pwd)"
+source "${TESTBED_DIR}/.env"
+NDND_ROOT_CA_SECRET="${VAR_NDND_ROOT_CA_SECRET:?Set VAR_NDND_ROOT_CA_SECRET in .env}"
+export NDND_ROOT_CA_SECRET
+{% if inventory_hostname == ndnd_ca_host %}
+NDND_ROOT_HTTP_CA_URL={{ ndnd_root_http_ca_internal_url | tojson }}
+{% else %}
+NDND_ROOT_HTTP_CA_URL={{ ndnd_root_http_ca_url | tojson }}
+{% endif %}
+
+if ! curl -fsS --max-time 5 "${NDND_ROOT_HTTP_CA_URL}/health" >/dev/null; then
+    echo "NDNd root signer is not ready; deferring site CA renewal to the next cron run" >&2
+    exit 0
+fi
+
+python3 "${TESTBED_DIR}/scripts/ndnd-infra-security.py" \
+    --directory "${TESTBED_DIR}/dist/ndnd-site-ca-independent" \
+    --site-prefix {{ ndnd_ca_prefix | tojson }} \
+    --identity {{ ndnd_ca_prefix | tojson }} \
+    --anchors "${TESTBED_DIR}/anchors" \
+    --service ca \
+    --root-ca-url "${NDND_ROOT_HTTP_CA_URL}" \
+    --root-cert "${TESTBED_DIR}/{{ ndnd_root_anchor_path }}" "$@"

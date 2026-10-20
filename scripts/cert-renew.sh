@@ -28,6 +28,18 @@ if [[ "${DV_ENABLED}" == 1 ]]; then
         export COMPOSE_PROFILES
         PWD="${ROOT_DIR:-$PWD}" docker compose up -d --no-deps --wait --wait-timeout 30 ndnd-root-http-ca || exit $?
     fi
+    SITE_CA_ENABLED=$(python3 framework/service-profiles.py --service ndnd-go-ca) || exit $?
+    if [[ "${SITE_CA_ENABLED}" == 1 ]]; then
+        SITE_CA_DIR=dist/ndnd-site-ca-independent
+        bash "${PWD}/${SITE_CA_DIR}/renew.sh" ${FORCE:+"${FORCE}"} || exit $?
+        if [[ -f "${SITE_CA_DIR}/.security-changed" ]]; then
+            RUNNING_CA=$(PWD="${ROOT_DIR:-$PWD}" docker compose ps --status running -q ndnd-go-ca) || exit $?
+            if [[ -n "${RUNNING_CA}" ]]; then
+                PWD="${ROOT_DIR:-$PWD}" docker compose restart ndnd-go-ca || exit $?
+            fi
+            rm -f "${SITE_CA_DIR}/.security-changed"
+        fi
+    fi
     DV_DIR=dist/ndnd-dv-independent
     bash "${DV_DIR}/renew.sh" ${FORCE:+"${FORCE}"} || exit $?
     if [[ -f "${DV_DIR}/.security-changed" ]]; then

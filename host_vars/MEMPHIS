@@ -27,6 +27,7 @@ neighbors:
 position:
 - 35.1186099
 - -89.93700109999999
+ndnd_ca_prefix: /ndnd/memphis
 hr_angle: 2.9836
 hr_radius: 15.2647
 ethernet_device: eth1
