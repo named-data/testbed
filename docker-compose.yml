@@ -169,7 +169,7 @@ services:
       - ${PWD}/dist/ndnd-go-root-ca/cert-store:/cert-store
     environment:
       NDND_ROOT_CA_SECRET: ${VAR_NDND_ROOT_CA_SECRET:?VAR_NDND_ROOT_CA_SECRET must be set}
-      NDND_CA_IMAGE: ndnd-dv2:integration-763420d
+      NDND_CA_IMAGE: ghcr.io/named-data/ndnd:testbed-staging
       NDND_CA_HOST_DIR: ${PWD}/ndnd-root-ca-home/ndnd
     entrypoint: [python3, /app/http-ca-server.py]
     command: [/config/http-ca-server.yml]
@@ -292,7 +292,8 @@ services:
       driver: local
 
   ndnd-repo:
-    image: ghcr.io/named-data/ndnd:20261012
+    image: ghcr.io/named-data/ndnd:testbed-staging
+    pull_policy: always
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
@@ -314,7 +315,7 @@ services:
       driver: local
 
   ndnd-merkle:
-    image: ghcr.io/named-data/ndnd:20261012
+    image: ghcr.io/named-data/ndnd:testbed-staging
     pull_policy: always
     profiles: [merkle-log] # selected by config.yml through maintenance
     init: true
