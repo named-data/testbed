@@ -237,7 +237,7 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
     if renew:
         before = max(now - timedelta(minutes=5), site_before, root_before).replace(microsecond=0)
         after = min(now + timedelta(days=90), site_after, root_after).replace(microsecond=0)
-        if service == 'dv':
+        if service in ('dv', 'ca'):
             after = min(after, before + timedelta(days=90))
         if after <= now + margin:
             raise ValueError('Renew the site/root certificate before issuing a service certificate')
