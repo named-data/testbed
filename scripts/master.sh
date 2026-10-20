@@ -19,6 +19,9 @@ if [[ -z "$DEBUG" ]]; then
     git config --global --add safe.directory /testbed
     git pull
 
+    # Bootstrap and verify the dedicated NDNd CA root before rendering DV trust.
+    python3 framework/ndnd_ca_bootstrap.py
+
     # Bootstrap all configuration files
     python3 framework/main.py --dry
 

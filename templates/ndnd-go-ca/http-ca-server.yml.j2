@@ -1,0 +1,19 @@
+global_prefix: {{ ndnd_dv_network | tojson }}
+port: 8777
+secret: ""
+signer_backend: ndnd-go
+ndnd_ca_image: {{ ndnd_ca_image | tojson }}
+
+hosts:
+  {% for host, values in hostvars.items() %}
+  {% if values.get('ndnd_enabled', false) %}
+  {{ host }}:
+    subnets:
+      - {{ values.host_ip }}/32
+      {% if host == ndnd_ca_host %}
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+      {% endif %}
+    prefix: {{ (values.ndnd_router_prefix + '/32=DV') | tojson }}
+  {% endif %}
+  {% endfor %}

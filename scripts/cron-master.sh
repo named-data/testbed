@@ -23,6 +23,9 @@ fi
 rm -f .git/index.lock
 git pull
 
+# Bootstrap and verify the dedicated NDNd CA root before rendering DV trust.
+python3 framework/ndnd_ca_bootstrap.py || exit $?
+
 # Render new service templates before certificate provisioning on an existing node.
 PWD="${ROOT_DIR}" python3 framework/main.py || exit $?
 

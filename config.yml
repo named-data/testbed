@@ -16,7 +16,7 @@ services:
     enabled_by: ndnd_enabled
     profile: ndnd
     template_path: templates/ndnd-dv
-    render_path: dist/ndnd-dv
+    render_path: dist/ndnd-dv-independent
 
   ndnd-http-status-server:
     enabled_by: ndnd_enabled
@@ -24,6 +24,12 @@ services:
     pass: on
 
   ndnd-go-ca:
+    hosts: [UCLA]
+    profile: ndnd-go-ca
+    template_path: templates/ndnd-go-ca
+    render_path: dist/ndnd-go-ca
+
+  ndnd-root-http-ca:
     hosts: [UCLA]
     profile: ndnd-go-ca
     template_path: templates/ndnd-go-ca
@@ -98,7 +104,18 @@ globals:
   ndnd_repo_anchors:
     - anchors/ndn-testbed-root.ndncert.2204.base64
   ndnd_udp_port: 6364
-  ndnd_dv_network: /ndn/edu
+  ndnd_dv_network: /ndnd
+  ndnd_ca_host: UCLA
+  ndnd_ca_image: ndnd-dv2:integration-a991047
+  ndnd_ca_info: "NDNd Testbed Go CA"
+  ndnd_ca_max_validity_period: "7776000"
+  ndnd_ca_supported_challenges: [email]
+  ndnd_root_certificate_url: https://suns.cs.ucla.edu/file-server/ndnd/ndnd-root.ndncert
+  ndnd_root_certificate_sha256: c020b0ddf2c82dcbdbb8339bc63d8a63d8fece4be41d3f69097cd3185dd47889
+  ndnd_root_http_ca_url: https://suns.cs.ucla.edu/ndnd-ca
+  ndnd_root_anchor_path: anchors/ndnd-go-root.base64
+  ndnd_trust_schema_url: https://suns.cs.ucla.edu/file-server/ndnd/dv-schema.tlv
+  ndnd_root_http_ca_internal_url: http://ndnd-root-http-ca:8777
 
 # Declare variables available for each host
 # You can use lint.py to check variables, their types and
@@ -128,3 +145,4 @@ variables:
   is_root_ca: "?boolean"
   is_status_page: "?boolean"
   ndnd_enabled: "?boolean"
+  ndnd_router_prefix: "?string"

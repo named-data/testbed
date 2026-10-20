@@ -1,9 +1,9 @@
 {
   "ca-prefix": {{ ndnd_dv_network | tojson }},
-  "ca-info": "NDNd Testbed Go CA",
-  "max-validity-period": "7776000",
+  "ca-info": {{ ndnd_ca_info | tojson }},
+  "max-validity-period": {{ ndnd_ca_max_validity_period | tojson }},
   "supported-challenges": [
-    { "challenge": "email" }
+    {% for challenge in ndnd_ca_supported_challenges %}{ "challenge": {{ challenge | tojson }} }{% if not loop.last %},{% endif %}{% endfor %}
   ],
   "email": {
     "smtp-server": {{ SMTP_SERVER | tojson }},

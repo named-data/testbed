@@ -14,6 +14,14 @@
   @ws path /ws /ws/*
   reverse_proxy @ws http://nfd:9696
 
+  {% if inventory_hostname == ndnd_ca_host %}
+  handle_path /ndnd-ca/* {
+    reverse_proxy http://ndnd-root-http-ca:8777 {
+      header_up X-Forwarded-For {remote_host}
+    }
+  }
+  {% endif %}
+
   root * /srv
   file_server
 

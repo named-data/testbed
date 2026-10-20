@@ -7,6 +7,7 @@ import base64
 import subprocess
 import ndn
 import ipaddress
+import os
 from datetime import datetime, timedelta
 from urllib.parse import parse_qs
 
@@ -19,10 +20,33 @@ class Config:
     secret: str
     hosts: dict[str, dict]
     port: int
+    signer_backend: str = 'ndnsec'
+    ndnd_ca_image: str = ''
+    ndnd_ca_host_dir: str = ''
 
 config: Config = None
 
+
+def is_ndnd_csr_name(prefix: str, name: list[bytes]) -> bool:
+    prefix_name = ndn.encoding.Name.normalize(prefix)
+    if len(name) != len(prefix_name) + 4 or name[:len(prefix_name)] != prefix_name:
+        return False
+    component = ndn.encoding.Component
+    return (name[len(prefix_name)] == component.from_str('KEY')
+            and name[len(prefix_name) + 2] == component.from_str('self')
+            and component.get_type(name[-1]) == component.TYPE_VERSION)
+
+
 class MyHTTPRequestHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/health':
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain; charset=utf-8')
+            self.end_headers()
+            self.wfile.write(b'ok\n')
+            return
+        self.send_error(404)
+
     def which_host_ip(self, address: str) -> dict|None:
         for _, host in config.hosts.items():
             for subnet in host['subnets']:
@@ -52,7 +76,9 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
         # Validate prefix of the CSR
         pfx = host['prefix']
         name = ndn.encoding.ndn_format_0_3.parse_data(base64.b64decode(data))[0]
-        if not ndn.encoding.name.Name.is_prefix(pfx, name):
+        valid_name = (is_ndnd_csr_name(pfx, name) if config.signer_backend == 'ndnd-go'
+                  else ndn.encoding.name.Name.is_prefix(pfx, name))
+        if not valid_name:
             str_name = ndn.encoding.name.Name.to_str(name)
             self.send_error(400, f"Invalid name {str_name}, expected prefix {pfx}")
             return
@@ -63,7 +89,6 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_error(400, "Both validity bounds must be provided once")
             return
 
-        command = ['ndnsec', 'cert-gen', '-s', config.global_prefix]
         if not_before:
             try:
                 start = datetime.strptime(not_before[0], '%Y%m%d%H%M%S')
@@ -74,11 +99,41 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
             if end <= start or end - start > timedelta(days=90):
                 self.send_error(400, "Certificate validity must be positive and no longer than 90 days")
                 return
-            command.extend(['-S', not_before[0], '-E', not_after[0]])
-        command.append('-')
 
-        # Sign a certificate for the name.
-        proc = subprocess.run(command, input=data, capture_output=True)
+        if config.signer_backend == 'ndnd-go':
+            if not config.ndnd_ca_image or not config.ndnd_ca_host_dir:
+                self.send_error(500, "NDNd Go signer is not configured")
+                return
+            try:
+                csr_wire = base64.b64decode(b''.join(data.split()), validate=True)
+            except ValueError:
+                self.send_error(400, "Invalid base64 CSR")
+                return
+            csr_pem = (b'-----BEGIN NDN CERT-----\n' + base64.encodebytes(csr_wire)
+                       + b'-----END NDN CERT-----\n')
+            command = ['docker', 'run', '--rm', '-i', '-v',
+                       f'{config.ndnd_ca_host_dir}:/ca:ro', config.ndnd_ca_image,
+                       'sec', 'sign-cert', '/ca/ca.key.pem']
+            if not_before:
+                command.extend(['--start', not_before[0], '--end', not_after[0]])
+            proc = subprocess.run(command, input=csr_pem, capture_output=True, timeout=30)
+            if proc.returncode == 0:
+                decoded = subprocess.run(
+                    ['docker', 'run', '--rm', '-i', config.ndnd_ca_image, 'sec', 'pem-decode'],
+                    input=proc.stdout, capture_output=True, timeout=30)
+                if decoded.returncode != 0:
+                    proc = decoded
+                else:
+                    proc.stdout = base64.encodebytes(decoded.stdout)
+        elif config.signer_backend == 'ndnsec':
+            command = ['ndnsec', 'cert-gen', '-s', config.global_prefix]
+            if not_before:
+                command.extend(['-S', not_before[0], '-E', not_after[0]])
+            command.append('-')
+            proc = subprocess.run(command, input=data, capture_output=True, timeout=30)
+        else:
+            self.send_error(500, "Unsupported signer backend")
+            return
 
         if proc.returncode != 0:
             self.send_error(500, f"Failed to sign certificate: {proc.stderr}")
@@ -138,7 +193,14 @@ class MyHTTPRequestHandler(BaseHTTPRequestHandler):
 if __name__ == '__main__':
     # Read YAML config
     with open(sys.argv[1], 'r') as f:
-        config = Config(**yaml.safe_load(f))
+        config_data = yaml.safe_load(f)
+    if os.environ.get('NDND_ROOT_CA_SECRET'):
+        config_data['secret'] = os.environ['NDND_ROOT_CA_SECRET']
+    config_data['ndnd_ca_image'] = os.environ.get('NDND_CA_IMAGE', config_data.get('ndnd_ca_image', ''))
+    config_data['ndnd_ca_host_dir'] = os.environ.get('NDND_CA_HOST_DIR', config_data.get('ndnd_ca_host_dir', ''))
+    if not config_data.get('secret'):
+        raise RuntimeError('HTTP CA secret must be configured')
+    config = Config(**config_data)
 
     # Start server
     server_address = ('', config.port)

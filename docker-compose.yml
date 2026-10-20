@@ -75,9 +75,9 @@ services:
     init: true
     volumes:
       - /run/ndnd:/run/ndnd:ro
-      - ${PWD}/dist/ndnd-dv/dv.yml:/config/dv.yml:ro
-      - ${PWD}/dist/ndnd-dv/dv-schema.tlv:/config/dv-schema.tlv:ro
-      - ${PWD}/dist/ndnd-dv/keys:/config/keys
+      - ${PWD}/dist/ndnd-dv-independent/dv.yml:/config/dv.yml:ro
+      - ${PWD}/dist/ndnd-dv-independent/dv-schema.tlv:/config/dv-schema.tlv:ro
+      - ${PWD}/dist/ndnd-dv-independent/keys:/config/keys
     environment:
       NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
     command: [dv, run, /config/dv.yml]
@@ -111,30 +111,6 @@ services:
     logging:
       driver: local
 
-  ndnd-go-ca-bootstrap:
-    image: ghcr.io/named-data/testbed-master:20261012
-    profiles: [ndnd-go-ca]
-    init: true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ${PWD}/framework/ndnd_ca_bootstrap.py:/app/ndnd_ca_bootstrap.py:ro
-      - ${PWD}/dist/ndnd-go-ca/ca.json:/config/ca.json:ro
-      - ${PWD}/ndnd-root-ca-home:/ca
-      - ${PWD}/dist/file-server/ndnd:/public
-    environment:
-      NDND_CA_IMAGE: ndnd-dv2:integration-a991047
-      NDND_CA_HOST_DIR: ${PWD}/ndnd-root-ca-home
-      NDND_ROOT_CERT_URL: https://suns.cs.ucla.edu/file-server/ndnd/ndnd-root.ndncert
-    entrypoint: [python3]
-    command: [/app/ndnd_ca_bootstrap.py]
-    network_mode: none
-    restart: "no"
-    depends_on:
-      master: { condition: service_healthy }
-      ndnd: { condition: service_healthy }
-    logging:
-      driver: local
-
   ndnd-go-ca:
     image: ndnd-dv2:integration-a991047
     build:
@@ -143,7 +119,7 @@ services:
     init: true
     volumes:
       - /run/ndnd:/run/ndnd:ro
-      - ${PWD}/ndnd-root-ca-home:/ca:ro
+      - ${PWD}/ndnd-root-ca-home/ndnd:/ca:ro
       - ${PWD}/dist/ndnd-go-ca/ca.json:/config/ca.json:ro
     environment:
       NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
@@ -155,7 +131,29 @@ services:
     restart: unless-stopped
     depends_on:
       ndnd: { condition: service_healthy }
-      ndnd-go-ca-bootstrap: { condition: service_completed_successfully }
+    logging:
+      driver: local
+
+  ndnd-root-http-ca:
+    image: ghcr.io/named-data/testbed-master:20261012
+    profiles: [ndnd-go-ca]
+    init: true
+    tty: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${PWD}/framework/http-ca-server.py:/app/http-ca-server.py:ro
+      - ${PWD}/dist/ndnd-go-ca/http-ca-server.yml:/config/http-ca-server.yml:ro
+    environment:
+      NDND_ROOT_CA_SECRET: ${VAR_NDND_ROOT_CA_SECRET:?VAR_NDND_ROOT_CA_SECRET must be set}
+      NDND_CA_IMAGE: ndnd-dv2:integration-a991047
+      NDND_CA_HOST_DIR: ${PWD}/ndnd-root-ca-home/ndnd
+    entrypoint: [python3, /app/http-ca-server.py]
+    command: [/config/http-ca-server.yml]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD-SHELL, "python3 -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8777/health', timeout=2).read()\""]
+      interval: 1m
+      start_period: 5s
     logging:
       driver: local
 

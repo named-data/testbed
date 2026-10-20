@@ -1,11 +1,9 @@
 dv:
   network: {{ ndnd_dv_network | tojson }}
-  router: {{ default_prefix | tojson }}
+  router: {{ ndnd_router_prefix | tojson }}
   keychain: dir:///config/keys
   trust_anchors:
-    {% for anchor in ndnd_repo_anchors %}
-    - {{ ndn_cert_name(read_file(anchor)) | tojson }}
-    {% endfor %}
+    - {{ ndn_cert_name(read_file(ndnd_root_anchor_path)) | tojson }}
   trust_schema: dv-schema.tlv
   neighbors:
     {% set peers = namespace(count=0) %}

@@ -1,13 +1,13 @@
-// All NDNd routers use the shared /ndn/edu DV network. The testbed root
+// All NDNd routers use the shared /ndnd DV network. The testbed root
 // directly issues each site router's /32=DV certificate.
 #KEY: "KEY"/_/_/_
 #network: {{ ndn_lvs_name(ndnd_dv_network) }}
-#network_cert: {{ ndn_lvs_name(ndnNetwork) }}/#KEY
+#network_cert: {{ ndn_lvs_name(ndnd_dv_network) }}/#KEY
 #prefix_state: #network/"32=DV"/"32=PSD"
 
 {% for host, values in hostvars.items() %}
 {% if values.get('ndnd_enabled', false) %}
-{% set router = ndn_lvs_name(values.default_prefix) %}
+{% set router = ndn_lvs_name(values.ndnd_router_prefix) %}
 #router_{{ loop.index }}: {{ router }}
 #router_cert_{{ loop.index }}: #router_{{ loop.index }}/"32=DV"/#KEY <= #network_cert
 #advertisement_data_{{ loop.index }}: /"localhop"/#router_{{ loop.index }}/"32=DV"/"32=ADV"/_ <= #router_cert_{{ loop.index }}

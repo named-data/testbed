@@ -22,7 +22,13 @@ bash "$(pwd)/dist/ndnd-repo/renew.sh" ${FORCE:+"${FORCE}"} || exit $?
 
 DV_ENABLED=$(python3 framework/service-profiles.py --service ndnd-dv) || exit $?
 if [[ "${DV_ENABLED}" == 1 ]]; then
-    DV_DIR=dist/ndnd-dv
+    NDND_SIGNER_ENABLED=$(python3 framework/service-profiles.py --service ndnd-root-http-ca) || exit $?
+    if [[ "${NDND_SIGNER_ENABLED}" == 1 ]]; then
+        COMPOSE_PROFILES=$(python3 framework/service-profiles.py) || exit $?
+        export COMPOSE_PROFILES
+        PWD="${ROOT_DIR:-$PWD}" docker compose up -d --no-deps --wait --wait-timeout 30 ndnd-root-http-ca || exit $?
+    fi
+    DV_DIR=dist/ndnd-dv-independent
     bash "${DV_DIR}/renew.sh" ${FORCE:+"${FORCE}"} || exit $?
     if [[ -f "${DV_DIR}/.security-changed" ]]; then
         RUNNING_DV=$(PWD="${ROOT_DIR:-$PWD}" docker compose ps --status running -q ndnd-dv) || exit $?
