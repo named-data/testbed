@@ -3,3 +3,4 @@ dist/
 secrets.yml
 .env
 root-ca-home/
+ndnd-root-ca-home/

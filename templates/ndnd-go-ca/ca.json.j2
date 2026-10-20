@@ -1,0 +1,16 @@
+{
+  "ca-prefix": {{ ndnd_dv_network | tojson }},
+  "ca-info": "NDNd Testbed Go CA",
+  "max-validity-period": "7776000",
+  "supported-challenges": [
+    { "challenge": "email" }
+  ],
+  "email": {
+    "smtp-server": {{ SMTP_SERVER | tojson }},
+    "smtp-port": 587,
+    "smtp-username": {{ SMTP_USER | tojson }},
+    "smtp-password-env": "NDND_SMTP_PASSWORD",
+    "from": "NDN Certificate Robot <noreply@ndncert.named-data.net>",
+    "subject": "Your NDNCERT verification code"
+  }
+}

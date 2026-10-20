@@ -23,6 +23,12 @@ services:
     profile: ndnd
     pass: on
 
+  ndnd-go-ca:
+    hosts: [UCLA]
+    profile: ndnd-go-ca
+    template_path: templates/ndnd-go-ca
+    render_path: dist/ndnd-go-ca
+
   caddy:
     template_path: templates/caddy
     render_path: dist/caddy

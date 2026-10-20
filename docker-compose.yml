@@ -111,6 +111,54 @@ services:
     logging:
       driver: local
 
+  ndnd-go-ca-bootstrap:
+    image: ghcr.io/named-data/testbed-master:20261012
+    profiles: [ndnd-go-ca]
+    init: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${PWD}/framework/ndnd_ca_bootstrap.py:/app/ndnd_ca_bootstrap.py:ro
+      - ${PWD}/dist/ndnd-go-ca/ca.json:/config/ca.json:ro
+      - ${PWD}/ndnd-root-ca-home:/ca
+      - ${PWD}/dist/file-server/ndnd:/public
+    environment:
+      NDND_CA_IMAGE: ndnd-dv2:integration-a991047
+      NDND_CA_HOST_DIR: ${PWD}/ndnd-root-ca-home
+      NDND_ROOT_CERT_URL: https://suns.cs.ucla.edu/file-server/ndnd/ndnd-root.ndncert
+    entrypoint: [python3]
+    command: [/app/ndnd_ca_bootstrap.py]
+    network_mode: none
+    restart: "no"
+    depends_on:
+      master: { condition: service_healthy }
+      ndnd: { condition: service_healthy }
+    logging:
+      driver: local
+
+  ndnd-go-ca:
+    image: ndnd-dv2:integration-a991047
+    build:
+      context: https://github.com/markverick/ndnd.git#a9910477b5943781428773f2e2cd0dec755224e7
+    profiles: [ndnd-go-ca]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd:ro
+      - ${PWD}/ndnd-root-ca-home:/ca:ro
+      - ${PWD}/dist/ndnd-go-ca/ca.json:/config/ca.json:ro
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+      NDND_SMTP_PASSWORD: ${VAR_SMTP_PASSWORD:-}
+    command: [sec, certca, /config/ca.json, /ca/ca.cert.pem, /ca/ca.key.pem]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    depends_on:
+      ndnd: { condition: service_healthy }
+      ndnd-go-ca-bootstrap: { condition: service_completed_successfully }
+    logging:
+      driver: local
+
   nfd:
     image: ghcr.io/named-data/nfd:20250420
     init: true
