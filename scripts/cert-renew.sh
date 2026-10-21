@@ -80,26 +80,28 @@ if [[ -f dist/ndnd-repo/.security-changed ]]; then
 fi
 
 # Optional services run after the core renewals and retain their own retry state.
-MERKLE_ENABLED=$(python3 framework/service-profiles.py --service ndnd-merkle) || exit $?
-if [[ "${MERKLE_ENABLED}" == 1 ]]; then
-    MERKLE_DIR=dist/ndnd-merkle
-    if [[ -n "${FORCE}" ]]; then
-        touch "${MERKLE_DIR}/.renew-pending"
-    fi
-    MERKLE_FORCE=""
-    if [[ -f "${MERKLE_DIR}/.renew-pending" ]]; then
-        MERKLE_FORCE="--force"
-    fi
-    if bash "${MERKLE_DIR}/renew.sh" ${MERKLE_FORCE:+"${MERKLE_FORCE}"}; then
-        rm -f "${MERKLE_DIR}/.renew-pending"
-        if [[ -f "${MERKLE_DIR}/.security-changed" ]]; then
-            RUNNING_LOG=$(PWD="${ROOT_DIR:-$PWD}" docker compose ps --status running -q ndnd-merkle) || exit $?
-            if [[ -n "${RUNNING_LOG}" ]]; then
-                PWD="${ROOT_DIR:-$PWD}" docker compose restart ndnd-merkle || exit $?
-            fi
-            rm -f "${MERKLE_DIR}/.security-changed"
+for MERKLE_SERVICE in ndnd-merkle ndnd-network-merkle; do
+    MERKLE_ENABLED=$(python3 framework/service-profiles.py --service "${MERKLE_SERVICE}") || exit $?
+    if [[ "${MERKLE_ENABLED}" == 1 ]]; then
+        MERKLE_DIR="dist/${MERKLE_SERVICE}"
+        if [[ -n "${FORCE}" ]]; then
+            touch "${MERKLE_DIR}/.renew-pending"
         fi
-    else
-        echo "NDNd Merkle credential renewal failed; core services renewed, log will retry next poll" >&2
+        MERKLE_FORCE=""
+        if [[ -f "${MERKLE_DIR}/.renew-pending" ]]; then
+            MERKLE_FORCE="--force"
+        fi
+        if bash "${MERKLE_DIR}/renew.sh" ${MERKLE_FORCE:+"${MERKLE_FORCE}"}; then
+            rm -f "${MERKLE_DIR}/.renew-pending"
+            if [[ -f "${MERKLE_DIR}/.security-changed" ]]; then
+                RUNNING_LOG=$(PWD="${ROOT_DIR:-$PWD}" docker compose ps --status running -q "${MERKLE_SERVICE}") || exit $?
+                if [[ -n "${RUNNING_LOG}" ]]; then
+                    PWD="${ROOT_DIR:-$PWD}" docker compose restart "${MERKLE_SERVICE}" || exit $?
+                fi
+                rm -f "${MERKLE_DIR}/.security-changed"
+            fi
+        else
+            echo "${MERKLE_SERVICE} credential renewal failed; core services renewed, log will retry next poll" >&2
+        fi
     fi
-fi
+done

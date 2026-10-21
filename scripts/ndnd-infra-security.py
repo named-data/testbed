@@ -143,7 +143,7 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
                      service, root_ca_url, root_cert_path, identity):
     if service not in ('repo', 'merkle', 'dv', 'ca'):
         raise ValueError('Unsupported NDNd service')
-    if service == 'merkle' and site_prefix != '/ndn/edu/ucla':
+    if service == 'merkle' and site_prefix not in ('/ndn/edu/ucla', '/ndnd/ucla'):
         raise ValueError('Merkle log provisioning is restricted to UCLA')
     if service == 'ca':
         config = {}

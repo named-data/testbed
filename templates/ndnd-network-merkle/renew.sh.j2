@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -eu
+
+SERVICE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TESTBED_DIR="$(cd "${SERVICE_DIR}/../.." && pwd)"
+
+python3 "${TESTBED_DIR}/scripts/ndnd-infra-security.py" \
+    --service merkle \
+    --directory "${SERVICE_DIR}" \
+    --site-home "${TESTBED_DIR}/dist/ndnd-site-ca-independent" \
+    --site-prefix {{ ndnd_ca_prefix | tojson }} \
+    --identity {{ (ndnd_router_prefix + '/merkle') | tojson }} \
+    --anchors "${TESTBED_DIR}/anchors" "$@"

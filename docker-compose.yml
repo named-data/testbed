@@ -370,6 +370,44 @@ services:
     logging:
       driver: local
 
+  ndnd-network-merkle:
+    image: ghcr.io/named-data/ndnd:testbed-staging
+    pull_policy: always
+    profiles: [ndnd-merkle-log]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd:ro
+      - ${PWD}/dist/ndnd-network-merkle/keys:/config/keys
+      - ${PWD}/dist/ndnd-network-merkle/storage:/config/storage
+      - type: bind
+        source: ${PWD}/dist/ndnd-network-merkle/merkle.yml
+        target: /config/merkle.yml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${PWD}/dist/ndnd-network-merkle/management-schema.tlv
+        target: /config/management-schema.tlv
+        read_only: true
+        bind:
+          create_host_path: false
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+    command: [merkle, run, /config/merkle.yml]
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 2g
+    cpus: 1
+    pids_limit: 128
+    restart: unless-stopped
+    depends_on:
+      ndnd: { condition: service_healthy }
+      ndnd-dv: { condition: service_started }
+    logging:
+      driver: local
+
   ndncert:
     image: ghcr.io/ucla-irl/ndncert-ca:20250923
     init: true
