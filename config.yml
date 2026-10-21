@@ -87,6 +87,7 @@ services:
     render_path: dist/ndnd-merkle
 
   ndnd-network-merkle:
+    hosts: [UCLA]
     enabled_by: ndnd_enabled
     profile: ndnd-merkle-log
     template_path: templates/ndnd-network-merkle
