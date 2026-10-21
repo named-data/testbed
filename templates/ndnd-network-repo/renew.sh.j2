@@ -1,0 +1,13 @@
+#!/bin/bash
+set -eu
+
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TESTBED_DIR="$(cd "${REPO_DIR}/../.." && pwd)"
+
+python3 "${TESTBED_DIR}/scripts/ndnd-infra-security.py" \
+    --directory "${REPO_DIR}" \
+    --site-home "${TESTBED_DIR}/dist/ndnd-site-ca-independent" \
+    --site-prefix {{ ndnd_ca_prefix | tojson }} \
+    --identity {{ (ndnd_router_prefix + '/repo') | tojson }} \
+    --anchors "${TESTBED_DIR}/anchors" \
+    --service repo "$@"

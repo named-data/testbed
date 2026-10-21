@@ -74,6 +74,12 @@ services:
     template_path: templates/ndnd-repo
     render_path: dist/ndnd-repo
 
+  ndnd-network-repo:
+    enabled_by: ndnd_enabled
+    profile: ndnd
+    template_path: templates/ndnd-network-repo
+    render_path: dist/ndnd-network-repo
+
   ndnd-merkle:
     hosts: [UCLA]
     profile: merkle-log

@@ -51,6 +51,16 @@ if [[ "${DV_ENABLED}" == 1 ]]; then
         fi
         rm -f "${DV_DIR}/.security-changed"
     fi
+    NETWORK_REPO_DIR=dist/ndnd-network-repo
+    bash "${NETWORK_REPO_DIR}/renew.sh" ${FORCE:+"${FORCE}"} || exit $?
+    mkdir -p "${NETWORK_REPO_DIR}/storage"
+    if [[ -f "${NETWORK_REPO_DIR}/.security-changed" ]]; then
+        RUNNING_NETWORK_REPO=$(PWD="${ROOT_DIR:-$PWD}" docker compose ps --status running -q ndnd-network-repo) || exit $?
+        if [[ -n "${RUNNING_NETWORK_REPO}" ]]; then
+            PWD="${ROOT_DIR:-$PWD}" docker compose restart ndnd-network-repo || exit $?
+        fi
+        rm -f "${NETWORK_REPO_DIR}/.security-changed"
+    fi
 fi
 
 # Restart containers if force

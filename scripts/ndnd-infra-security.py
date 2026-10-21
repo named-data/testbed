@@ -167,8 +167,10 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
         if root_cert_path is None:
             raise ValueError('Site CA provisioning requires the NDNd root certificate path')
     else:
+        expected_identity = Name.normalize(identity or (site_prefix + '/ndnd/' + service))
         identity = Name.normalize(config['name'])
-        expected_identity = Name.normalize(site_prefix + '/ndnd/' + service)
+        if not Name.is_prefix(Name.normalize(site_prefix), expected_identity):
+            raise ValueError('Service identity must be beneath the site prefix')
     if Name.to_bytes(identity) != Name.to_bytes(expected_identity):
         raise ValueError(f'Invalid {service} identity {Name.to_str(identity)}')
 
@@ -190,7 +192,10 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
         site_before = root_before
         site_after = root_after
     else:
-        site_wire = decode_certificate(site_home / 'site.ndncert')
+        site_cert_path = site_home / 'site.ndncert'
+        if not site_cert_path.exists():
+            site_cert_path = site_home / 'ca.ndncert'
+        site_wire = decode_certificate(site_cert_path)
         site = parse_certificate(site_wire)
         if Name.to_bytes(site.name[:-4]) != Name.to_bytes(Name.normalize(site_prefix)):
             raise ValueError('Site certificate has the wrong identity')
@@ -246,6 +251,15 @@ def provision_locked(directory, site_home, site_prefix, anchors_path, force, ren
                           key.public_key().export_key(format='DER'), signer, before, after)
         if service in ('dv', 'ca'):
             cert_wire = sign_with_root_ca(csr, root_ca_url, os.environ['NDND_ROOT_CA_SECRET'], before, after)
+        elif site_cert_path.name == 'ca.ndncert':
+            site_key_wire = decode_pem((site_home / 'ca.key.pem').read_text(), 'KEY')
+            _, _, secret, _ = parse_data(site_key_wire)
+            site_key = ECC.import_key(bytes(secret))
+            if site_key.public_key().export_key(format='DER') != bytes(site.content):
+                raise ValueError('Site CA private key does not match its certificate')
+            site_signer = Sha256WithEcdsaSigner(site.name[:-2], site_key.export_key(format='DER', use_pkcs8=False))
+            _, cert_wire = new_cert(key_name, Component.from_str('site'),
+                                   key.public_key().export_key(format='DER'), site_signer, before, after)
         else:
             command = ['ndnsec', 'cert-gen', '-s', site_prefix,
                        '-S', before.strftime('%Y%m%d%H%M%S'), '-E', after.strftime('%Y%m%d%H%M%S'), '-']
