@@ -317,8 +317,18 @@ services:
       - /run/ndnd:/run/ndnd:ro
       - ${PWD}/dist/ndnd-network-repo/keys:/config/keys
       - ${PWD}/dist/ndnd-network-repo/storage:/config/storage
-      - ${PWD}/dist/ndnd-network-repo/repo.yml:/config/repo.yml:ro
-      - ${PWD}/dist/ndnd-network-repo/management-schema.tlv:/config/management-schema.tlv:ro
+      - type: bind
+        source: ${PWD}/dist/ndnd-network-repo/repo.yml
+        target: /config/repo.yml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${PWD}/dist/ndnd-network-repo/management-schema.tlv
+        target: /config/management-schema.tlv
+        read_only: true
+        bind:
+          create_host_path: false
     environment:
       NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
     command: [repo, run, /config/repo.yml]

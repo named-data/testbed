@@ -4,6 +4,14 @@
 #flat_user_key: #flat_user/#key <= #root
 #flat_command: #flat_user/"32=repo" <= #flat_user_key
 #flat_security: #flat_user/"32=repo-security" <= #flat_user_key
+{% for depth in range(2, 7) %}
+// Root-issued NDNCERT identities may have multiple components (e.g. com/gmail/user).
+#root_user_{{ depth }}: {{ ndn_lvs_name(ndnd_dv_network) }}{% for n in range(depth) %}/rootuser{{ n }}{% endfor %}
+
+#root_user_key_{{ depth }}: #root_user_{{ depth }}/#key <= #root
+#root_command_{{ depth }}: #root_user_{{ depth }}/"32=repo" <= #root_user_key_{{ depth }}
+#root_security_{{ depth }}: #root_user_{{ depth }}/"32=repo-security" <= #root_user_key_{{ depth }}
+{% endfor %}
 {% for host, values in hostvars.items() %}
 {% if values.get('ndnd_enabled', false) %}
 {% set site_id = loop.index %}
