@@ -44,7 +44,7 @@ services:
       driver: local
 
   ndnd:
-    image: ghcr.io/named-data/ndnd:testbed-staging
+    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
     pull_policy: always
     profiles: [ndnd]
     init: true
@@ -67,7 +67,7 @@ services:
       driver: local
 
   ndnd-dv:
-    image: ghcr.io/named-data/ndnd:testbed-staging
+    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
     pull_policy: always
     profiles: [ndnd]
     init: true
@@ -90,7 +90,7 @@ services:
       driver: local
 
   ndnd-http-status-server:
-    image: ghcr.io/named-data/ndnd:testbed-staging
+    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
     pull_policy: always
     profiles: [ndnd]
     init: true
@@ -109,7 +109,7 @@ services:
       driver: local
 
   ndnd-go-ca:
-    image: ghcr.io/named-data/ndnd:testbed-staging
+    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
     pull_policy: always
     profiles: [ndnd-go-ca]
     init: true
@@ -131,7 +131,7 @@ services:
       driver: local
 
   ndnd-go-root-ca:
-    image: ghcr.io/named-data/ndnd:testbed-staging
+    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
     pull_policy: always
     profiles: [ndnd-go-root-ca]
     init: true
@@ -164,7 +164,7 @@ services:
       - ${PWD}/dist/ndnd-go-root-ca/cert-store:/cert-store
     environment:
       NDND_ROOT_CA_SECRET: ${VAR_NDND_ROOT_CA_SECRET:?VAR_NDND_ROOT_CA_SECRET must be set}
-      NDND_CA_IMAGE: ghcr.io/named-data/ndnd:testbed-staging
+      NDND_CA_IMAGE: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
       NDND_CA_HOST_DIR: ${PWD}/ndnd-root-ca-home/ndnd
     entrypoint: [python3, /app/http-ca-server.py]
     command: [/config/http-ca-server.yml]
@@ -287,7 +287,7 @@ services:
       driver: local
 
   ndnd-repo:
-    image: ghcr.io/named-data/ndnd:testbed-staging
+    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
     pull_policy: always
     init: true
     volumes:
@@ -310,7 +310,7 @@ services:
       driver: local
 
   ndnd-network-repo:
-    image: ghcr.io/named-data/ndnd:testbed-staging
+    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
     profiles: [ndnd]
     init: true
     volumes:
@@ -343,7 +343,7 @@ services:
       driver: local
 
   ndnd-merkle:
-    image: ghcr.io/named-data/ndnd:testbed-staging
+    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
     pull_policy: always
     profiles: [merkle-log] # selected by config.yml through maintenance
     init: true
@@ -371,7 +371,7 @@ services:
       driver: local
 
   ndnd-network-merkle:
-    image: ghcr.io/named-data/ndnd:testbed-staging
+    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
     pull_policy: always
     profiles: [ndnd-merkle-log]
     init: true
