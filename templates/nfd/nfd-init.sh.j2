@@ -13,7 +13,7 @@ nfdc strategy set  /               /localhost/nfd/strategy/asf/%FD%04/max-timeou
 nfdc strategy set  /ndn/web        /localhost/nfd/strategy/asf/%FD%04/max-timeouts~5
 nfdc strategy set  /ndn/web/stats  /localhost/nfd/strategy/best-route
 {% else %}
-nfdc strategy set  /  /localhost/nfd/strategy/best-route
+nfdc strategy set  /  /localhost/nfd/strategy/best-route/v=5/retx-suppression-max~1000
 {% endif %}
 
 # Set multicast strategy
