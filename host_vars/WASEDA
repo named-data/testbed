@@ -1,6 +1,6 @@
 site: /jp/waseda
 site_name: Waseda University, Tokyo, Japan
-operator_name: Xiabo Li
+operator_name: Hidenori Nakazato
 operator_email: lxb385@fuji.waseda.jp
 ansible_host: ndn-tb.nz.comm.waseda.ac.jp
 host_ip: 133.9.67.98
