@@ -1,8 +1,8 @@
 site: /edu/arizona
 site_name: The University of Arizona
-operator_name: Teng Liang
+operator_name: Beichuan Zhang
 operator_email: philoliang2011@gmail.com
-ansible_host: hobo.cs.arizona.edu
+ansible_host: bzhang@cs.arizona.edu
 host_ip: 128.196.203.36
 local_ip: 128.196.203.36
 site_email_domain:

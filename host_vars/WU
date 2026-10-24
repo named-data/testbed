@@ -1,7 +1,7 @@
 site: /edu/wustl
 site_name: Washington University in St. Louis
-operator_name: John DeHart
-operator_email: jdd@wustl.edu
+operator_name: Patrick Crowley
+operator_email: pcrowley@wustl.edu
 ansible_host: wu.testbed.named-data.net
 host_ip: 128.252.185.35
 local_ip: 128.252.185.35

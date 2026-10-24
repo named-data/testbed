@@ -1,7 +1,7 @@
 site: /edu/memphis
 site_name: The University of Memphis
-operator_name: Saurab Dulal
-operator_email: sdulal@memphis.edu
+operator_name: Mark Roberts
+operator_email: mgrbrts1@memphis.edu
 ansible_host: titan.cs.memphis.edu
 host_ip: 141.225.11.173
 local_ip: 141.225.11.173

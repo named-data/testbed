@@ -1,7 +1,7 @@
 site: /pt/it/av
 site_name: University of Aveiro, Portugal
-operator_name: Jose Quevedo
-operator_email: quevedo@av.it.pt
+operator_name: Rui Miguel Morais Silva
+operator_email: ruimiguelsilva@av.it.pt
 ansible_host: selficn.av.it.pt
 host_ip: 193.136.92.155
 local_ip: 10.0.12.127

@@ -1,7 +1,7 @@
 site: /ch/unibe
 site_name: University of Bern, Switzerland
-operator_name: Jonnahtan Saltarin
-operator_email: saltarin@inf.unibe.ch
+operator_name: hexu xing
+operator_email: hexu.xing@unibe.ch
 ansible_host: os-float159.cnds.unibe.ch
 host_ip: 130.92.70.159
 local_ip: 192.168.111.10

@@ -1,7 +1,7 @@
 site: /br/ufba
 site_name: Federal University of Bahia, Brazil
-operator_name: 'Thiago Bomfim '
-operator_email: thiagobomfim@pop-ba.rnp.br
+operator_name: Prof. Dr. LEOBINO N SAMPAIO
+operator_email: leobino@ufba.br
 ansible_host: ufba.testbed.named-data.net
 host_ip: 200.128.51.61
 local_ip: 200.128.51.61

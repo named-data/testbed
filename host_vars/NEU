@@ -1,7 +1,7 @@
 site: /edu/neu
 site_name: Northeastern University
-operator_name: Ran Liu
-operator_email: liuranapply@gmail.com
+operator_name: Edmund Yeh (PI)
+operator_email: eyeh@ece.neu.edu
 ansible_host: neu.testbed.named-data.net
 host_ip: 155.33.178.42
 local_ip: 155.33.178.42

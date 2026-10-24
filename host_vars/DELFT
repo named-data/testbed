@@ -1,7 +1,7 @@
 site: /nl/delft
 site_name: Delft University of Technology, Netherlands
-operator_name: Chhagan Lal
-operator_email: c.lal@tudelft.nl
+operator_name: Ruud de Jong
+operator_email: R.deJong@tudelft.nl
 ansible_host: ndn-testbed.ewi.tudelft.nl
 host_ip: 131.180.178.63
 local_ip: 131.180.178.63

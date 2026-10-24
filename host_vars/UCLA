@@ -1,7 +1,7 @@
 site: /edu/ucla
 site_name: University of California, Los Angeles
-operator_name: Tianyuan Yu
-operator_email: royu29@g.ucla.edu
+operator_name: Adam Thieme
+operator_email: adam@cs.ucla.edu
 ansible_host: suns.cs.ucla.edu
 host_ip: 131.179.196.48
 local_ip: 131.179.196.48

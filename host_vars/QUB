@@ -1,7 +1,7 @@
 site: /uk/ac/qub
 site_name: Queen's University Belfast, UK
-operator_name: Paul McAllister
-operator_email: P.McAllister@qub.ac.uk
+operator_name: James Grant
+operator_email: J.Grant@qub.ac.uk
 ansible_host: ndn.qub.ac.uk
 host_ip: 51.148.47.242
 local_ip: 10.60.60.2
