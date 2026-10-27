@@ -148,3 +148,33 @@ sudo systemctl enable unattended-upgrades
 sudo systemctl start unattended-upgrades
 sudo unattended-upgrades --debug
 ```
+
+## NDNd status
+
+NDNd services use the digest-pinned DV2 image from
+[workflow run 40476201514](https://github.com/named-data/ndnd/actions/runs/40476201514).
+Upgrade the forwarder, DV router, status server, repositories, Merkle logs, and
+CA services together; the DV2 BIFT management dataset uses TLV encoding.
+
+On hosts with `ndnd_enabled: true`, Caddy exposes:
+
+- `/ndnd-status/`: HTML status page.
+- `/ndnd-status/status.xml`: XML status report.
+- `/ndnd-status/status.json`: JSON status report.
+
+For example: `https://suns.cs.ucla.edu/ndnd-status/status.json`.
+
+The renderer compiles `templates/ndnd-dv/dv-schema.lvs.j2` for both DV and the
+status server. It permits only inventoried NDNd router certificates, issued
+directly by the `/ndnd` root, to sign their routing and status datasets. DV
+explicitly loads this schema; the status server receives the same schema and
+the public root certificate in PEM format through a separate read-only mount.
+It has no access to router private keys. Changes to either status trust file
+cause the existing renderer to restart the status server.
+The same compiled schema is published at `/file-server/ndnd/dv-schema.tlv`,
+matching the schema URL in the NDNd CA profile.
+
+The status server validates `/<router>/32=DV/32=STATUS` before including the
+routing dataset. It does not fall back to an unrestricted schema. The local
+DV summary remains available if the signed dataset cannot be validated; check
+the status server logs and the report's routing state in that case.

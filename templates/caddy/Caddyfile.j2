@@ -1,5 +1,6 @@
 {{ ansible_host }} {
   {% if ndnd_enabled | default(false) %}
+  redir /ndnd-status /ndnd-status/ 308
   handle_path /ndnd-status/* {
     reverse_proxy http://ndnd-http-status-server:6380
   }

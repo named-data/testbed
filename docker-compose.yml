@@ -44,7 +44,7 @@ services:
       driver: local
 
   ndnd:
-    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+    image: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
     pull_policy: always
     profiles: [ndnd]
     init: true
@@ -67,7 +67,7 @@ services:
       driver: local
 
   ndnd-dv:
-    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+    image: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
     pull_policy: always
     profiles: [ndnd]
     init: true
@@ -90,15 +90,16 @@ services:
       driver: local
 
   ndnd-http-status-server:
-    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+    image: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
     pull_policy: always
     profiles: [ndnd]
     init: true
     volumes:
       - /run/ndnd:/run/ndnd:ro
+      - ${PWD}/dist/ndnd-http-status-server:/config:ro
     environment:
       NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
-    command: [fw, status-server]
+    command: [fw, status-server, --trust-schema, /config/dv-schema.tlv, --trust-anchor, /config/root.cert.pem]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
@@ -109,7 +110,7 @@ services:
       driver: local
 
   ndnd-go-ca:
-    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+    image: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
     pull_policy: always
     profiles: [ndnd-go-ca]
     init: true
@@ -131,7 +132,7 @@ services:
       driver: local
 
   ndnd-go-root-ca:
-    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+    image: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
     pull_policy: always
     profiles: [ndnd-go-root-ca]
     init: true
@@ -164,7 +165,7 @@ services:
       - ${PWD}/dist/ndnd-go-root-ca/cert-store:/cert-store
     environment:
       NDND_ROOT_CA_SECRET: ${VAR_NDND_ROOT_CA_SECRET:?VAR_NDND_ROOT_CA_SECRET must be set}
-      NDND_CA_IMAGE: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+      NDND_CA_IMAGE: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
       NDND_CA_HOST_DIR: ${PWD}/ndnd-root-ca-home/ndnd
     entrypoint: [python3, /app/http-ca-server.py]
     command: [/config/http-ca-server.yml]
@@ -287,7 +288,7 @@ services:
       driver: local
 
   ndnd-repo:
-    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+    image: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
     pull_policy: always
     init: true
     volumes:
@@ -310,7 +311,7 @@ services:
       driver: local
 
   ndnd-network-repo:
-    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+    image: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
     profiles: [ndnd]
     init: true
     volumes:
@@ -343,7 +344,7 @@ services:
       driver: local
 
   ndnd-merkle:
-    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+    image: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
     pull_policy: always
     profiles: [merkle-log] # selected by config.yml through maintenance
     init: true
@@ -371,7 +372,7 @@ services:
       driver: local
 
   ndnd-network-merkle:
-    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+    image: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
     pull_policy: always
     profiles: [ndnd-merkle-log]
     init: true

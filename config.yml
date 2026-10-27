@@ -21,7 +21,8 @@ services:
   ndnd-http-status-server:
     enabled_by: ndnd_enabled
     profile: ndnd
-    pass: on
+    template_path: templates/ndnd-http-status-server
+    render_path: dist/ndnd-http-status-server
 
   ndnd-go-ca:
     enabled_by: ndnd_enabled
@@ -125,7 +126,7 @@ globals:
   ndnd_udp_port: 6364
   ndnd_dv_network: /ndnd
   ndnd_ca_host: UCLA
-  ndnd_ca_image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+  ndnd_ca_image: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
   ndnd_ca_info: "NDNd Testbed Go CA"
   ndnd_ca_max_validity_period: "7776000"
   ndnd_ca_max_suffix_length: "5"

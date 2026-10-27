@@ -11,6 +11,7 @@
 #router_{{ loop.index }}: {{ router }}
 #router_cert_{{ loop.index }}: #router_{{ loop.index }}/"32=DV"/#KEY <= #network_cert
 #advertisement_data_{{ loop.index }}: /"localhop"/#router_{{ loop.index }}/"32=DV"/"32=ADV"/_ <= #router_cert_{{ loop.index }}
+#status_data_{{ loop.index }}: #router_{{ loop.index }}/"32=DV"/"32=STATUS" <= #router_cert_{{ loop.index }}
 #prefix_state_data_{{ loop.index }}: #prefix_state/#router_{{ loop.index }}/_/_ <= #router_cert_{{ loop.index }}
 {% endif %}
 {% endfor %}
