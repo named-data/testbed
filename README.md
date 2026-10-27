@@ -162,6 +162,9 @@ The NFD-connected `ndnd-repo` retains the October 22 image because DV2's local
 prefix advertising uses the DV management API instead of NFD RIB registration.
 Both Merkle logs also retain that image because this DV2 build lacks the Merkle
 command.
+Nodes can preserve an existing NFD-connected repository image with
+`NDND_NFD_REPO_IMAGE` and its pull policy with `NDND_NFD_REPO_PULL_POLICY` in `.env`.
+These settings apply only to `ndnd-repo`.
 
 On hosts with `ndnd_enabled: true`, Caddy exposes:
 

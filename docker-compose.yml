@@ -288,8 +288,8 @@ services:
       driver: local
 
   ndnd-repo:
-    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
-    pull_policy: always
+    image: ${NDND_NFD_REPO_IMAGE:-ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a}
+    pull_policy: ${NDND_NFD_REPO_PULL_POLICY:-always}
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
