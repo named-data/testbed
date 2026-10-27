@@ -151,13 +151,17 @@ sudo unattended-upgrades --debug
 
 ## NDNd status
 
-The NDNd forwarder, DV router, status server, and CA services use the
-digest-pinned DV2 image from
-[workflow run 40476201514](https://github.com/named-data/ndnd/actions/runs/40476201514).
+The NDNd forwarder, DV router, status server, CA services, and `/ndnd` repository
+use the digest-pinned DV2 image from
+[workflow run 40489426886](https://github.com/named-data/ndnd/actions/runs/40489426886).
 Upgrade the forwarder, DV router, and status server together; the DV2 BIFT
-management dataset uses TLV encoding. Repositories and Merkle logs retain the
-October 22 image: this DV2 build does not support repository management trust
-schemas or the Merkle command.
+management dataset uses TLV encoding. Both repository configurations explicitly
+supply their management trust schema.
+
+The NFD-connected `ndnd-repo` retains the October 22 image because DV2's local
+prefix advertising uses the DV management API instead of NFD RIB registration.
+Both Merkle logs also retain that image because this DV2 build lacks the Merkle
+command.
 
 On hosts with `ndnd_enabled: true`, Caddy exposes:
 

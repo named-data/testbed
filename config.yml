@@ -126,7 +126,7 @@ globals:
   ndnd_udp_port: 6364
   ndnd_dv_network: /ndnd
   ndnd_ca_host: UCLA
-  ndnd_ca_image: ghcr.io/named-data/ndnd:20261027@sha256:60032fc87a0c684f7bb7d4579691cb1c9225851e2b9e1445fa84fc4c0d5f5bd3
+  ndnd_ca_image: ghcr.io/named-data/ndnd:20261027@sha256:ef2110d2df302bf5131046d7d2406c74591141d7e9b14beee7378ed452faa384
   ndnd_ca_info: "NDNd Testbed Go CA"
   ndnd_ca_max_validity_period: "7776000"
   ndnd_ca_max_suffix_length: "5"
