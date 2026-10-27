@@ -17,7 +17,7 @@ source .env
 if [[ -z "$DEBUG" ]]; then
     # Initial repo pull
     git config --global --add safe.directory /testbed
-    git pull
+    git pull --ff-only
 
     # Bootstrap and verify the dedicated NDNd CA root before rendering DV trust.
     python3 framework/ndnd_ca_bootstrap.py
