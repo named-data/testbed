@@ -21,7 +21,7 @@ fi
 
 # Remove git lock file if it exists and pull the latest changes
 rm -f .git/index.lock
-git pull --ff-only || exit $?
+git pull
 
 # Bootstrap and verify the dedicated NDNd CA root before rendering DV trust.
 python3 framework/ndnd_ca_bootstrap.py || exit $?

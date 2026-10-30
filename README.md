@@ -151,20 +151,16 @@ sudo unattended-upgrades --debug
 
 ## NDNd status
 
-The NDNd forwarder, DV router, status server, CA services, and `/ndnd` repository
-use the digest-pinned DV2 image from
-[workflow run 40489426886](https://github.com/named-data/ndnd/actions/runs/40489426886).
+The NDNd forwarder, DV router, status server, CA services, and `/ndnd` Merkle log
+use the digest-pinned DV2 staging image configured in Compose. The `/ndnd`
+repository retains its separately pinned DV2 image.
 Upgrade the forwarder, DV router, and status server together; the DV2 BIFT
 management dataset uses TLV encoding. Both repository configurations explicitly
 supply their management trust schema.
 
 The NFD-connected `ndnd-repo` retains the October 22 image because DV2's local
 prefix advertising uses the DV management API instead of NFD RIB registration.
-Both Merkle logs also retain that image because this DV2 build lacks the Merkle
-command.
-Nodes can preserve an existing NFD-connected repository image with
-`NDND_NFD_REPO_IMAGE` and its pull policy with `NDND_NFD_REPO_PULL_POLICY` in `.env`.
-These settings apply only to `ndnd-repo`.
+The NFD-connected Merkle log also retains the October 22 image.
 
 On hosts with `ndnd_enabled: true`, Caddy exposes:
 
@@ -206,6 +202,9 @@ run this initializer after service updates. It binds announcements to permanent
 UDP faces, restores entries after restarts, and reloads NDNd-connected producers
 when their forwarder's startup time changes. The NFD-connected repository and
 Merkle service are outside that restart group.
+
+NDNd uses the NLSR neighbor connections between enabled sites. DV2 currently
+uses a fixed cost of 1 per link; it does not use NLSR's configured link costs.
 
 To reconcile a running node manually from its checkout:
 
