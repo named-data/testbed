@@ -39,7 +39,7 @@ services:
   ndnd-root-http-ca:
     hosts: [UCLA]
     profile: ndnd-go-root-ca
-    template_path: templates/ndnd-go-ca
+    template_path: templates/ndnd-root-http-ca
     render_path: dist/ndnd-go-root-config
 
   caddy:
