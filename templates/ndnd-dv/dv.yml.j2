@@ -7,7 +7,8 @@ dv:
     - {{ ndn_cert_name(read_file(ndnd_root_anchor_path)) | tojson }}
   neighbors:
     {% set peers = namespace(count=0) %}
-    {% for host, values in hostvars.items() %}
+    {% for host in neighbors %}
+    {% set values = hostvars[host] %}
     {% if host != inventory_hostname and values.get('ndnd_enabled', false) %}
     - uri: {{ ("udp4://" + values.host_ip + ":" + str(ndnd_udp_port)) | tojson }}
     {% set peers.count = peers.count + 1 %}
