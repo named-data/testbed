@@ -30,3 +30,4 @@ ethernet_device: eth0
 ndnd_ca_prefix: /ndnd/hk
 ndnd_enabled: true
 ndnd_router_prefix: /ndnd/hk
+ndnd_bier_index: 3

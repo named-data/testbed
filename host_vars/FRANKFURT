@@ -40,3 +40,4 @@ ethernet_device: eth0
 ndnd_ca_prefix: /ndnd/frankfurt
 ndnd_enabled: true
 ndnd_router_prefix: /ndnd/frankfurt
+ndnd_bier_index: 5

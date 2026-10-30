@@ -29,6 +29,9 @@ COMPOSE_PROFILES=$(docker compose exec -T master python3 framework/service-profi
 export COMPOSE_PROFILES
 
 # Ensure services are running
-docker compose up -d --remove-orphans
+docker compose up -d --remove-orphans || exit $?
+
+# Services must be running before their management commands can install routes.
+docker compose exec -T -e PWD="$PWD" master python3 framework/ndnd-network-init.py || exit $?
 
 echo -e "Finished cron-host at $(date)" >&2

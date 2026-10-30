@@ -38,3 +38,4 @@ ethernet_device: eth0
 ndnd_ca_prefix: /ndnd/singapore
 ndnd_enabled: true
 ndnd_router_prefix: /ndnd/singapore
+ndnd_bier_index: 4

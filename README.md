@@ -188,3 +188,31 @@ The status server validates `/<router>/32=DV/32=STATUS` before including the
 routing dataset. It does not fall back to an unrestricted schema. The local
 DV summary remains available if the signed dataset cannot be validated; check
 the status server logs and the report's routing state in that case.
+
+
+## NDNd network bridge
+
+NDNd-enabled sites bridge the two forwarders locally over UDP. NFD sends `/ndnd`
+Interests to NDNd through a capture route, excluding inherited root routes, and
+advertises `/ndnd` through NLSR. NDNd installs a `/ndn` PET
+next hop toward NFD and advertises it through DV. Producers still register on
+the network matching their top-level prefix; the bridge does not redistribute
+producer registrations or change application trust policies.
+
+Each enabled host needs a unique, stable `ndnd_bier_index`. The forwarder loads
+that index at startup, and `framework/ndnd-network-init.py` registers the same
+router-to-index inventory on every node and rebuilds the BIFT. Both cron scripts
+run this initializer after service updates. It binds announcements to permanent
+UDP faces, restores entries after restarts, and reloads NDNd-connected producers
+when their forwarder's startup time changes. The NFD-connected repository and
+Merkle service are outside that restart group.
+
+To reconcile a running node manually from its checkout:
+
+```bash
+docker compose exec -T -e PWD="$PWD" master python3 framework/ndnd-network-init.py
+```
+
+The bridge has static routes. An abrupt peer failure does not automatically
+withdraw its gateway advertisement; alternative gateway advertisements alone do
+not guarantee immediate failover. Gateway health tracking is not implemented here.

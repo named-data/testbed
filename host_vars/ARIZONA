@@ -38,3 +38,4 @@ hr_radius: 16.2305
 ethernet_device: eth0
 ndnd_enabled: true
 ndnd_router_prefix: /ndnd/arizona
+ndnd_bier_index: 2

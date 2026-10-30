@@ -169,3 +169,4 @@ variables:
   is_status_page: "?boolean"
   ndnd_enabled: "?boolean"
   ndnd_router_prefix: "?string"
+  ndnd_bier_index: "?number"
