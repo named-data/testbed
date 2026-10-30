@@ -44,7 +44,7 @@ services:
       driver: local
 
   ndnd:
-    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:cd362167f0d34804ba79cc33ba654e35d666f39c9a729debafe0e93b40348a9c
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
     pull_policy: always
     profiles: [ndnd]
     init: true
@@ -67,7 +67,7 @@ services:
       driver: local
 
   ndnd-dv:
-    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:cd362167f0d34804ba79cc33ba654e35d666f39c9a729debafe0e93b40348a9c
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
     pull_policy: always
     profiles: [ndnd]
     init: true
@@ -90,7 +90,7 @@ services:
       driver: local
 
   ndnd-http-status-server:
-    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:cd362167f0d34804ba79cc33ba654e35d666f39c9a729debafe0e93b40348a9c
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
     pull_policy: always
     profiles: [ndnd]
     init: true
@@ -110,7 +110,7 @@ services:
       driver: local
 
   ndnd-go-ca:
-    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:cd362167f0d34804ba79cc33ba654e35d666f39c9a729debafe0e93b40348a9c
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
     pull_policy: always
     profiles: [ndnd-go-ca]
     init: true
@@ -132,7 +132,7 @@ services:
       driver: local
 
   ndnd-go-root-ca:
-    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:cd362167f0d34804ba79cc33ba654e35d666f39c9a729debafe0e93b40348a9c
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
     pull_policy: always
     profiles: [ndnd-go-root-ca]
     init: true
@@ -165,7 +165,7 @@ services:
       - ${PWD}/dist/ndnd-go-root-ca/cert-store:/cert-store
     environment:
       NDND_ROOT_CA_SECRET: ${VAR_NDND_ROOT_CA_SECRET:?VAR_NDND_ROOT_CA_SECRET must be set}
-      NDND_CA_IMAGE: ghcr.io/named-data/ndnd:dv2-staging@sha256:cd362167f0d34804ba79cc33ba654e35d666f39c9a729debafe0e93b40348a9c
+      NDND_CA_IMAGE: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
       NDND_CA_HOST_DIR: ${PWD}/ndnd-root-ca-home/ndnd
     entrypoint: [python3, /app/http-ca-server.py]
     command: [/config/http-ca-server.yml]
@@ -372,7 +372,7 @@ services:
       driver: local
 
   ndnd-network-merkle:
-    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:cd362167f0d34804ba79cc33ba654e35d666f39c9a729debafe0e93b40348a9c
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
     pull_policy: always
     profiles: [ndnd-merkle-log]
     init: true
