@@ -240,7 +240,7 @@ services:
       driver: local
 
   root-ndncert:
-    image: ghcr.io/ucla-irl/ndncert-ca:20250923
+    image: ghcr.io/ucla-irl/ndncert-ca:20261031
     profiles: [root-ca] # in .env
     init: true
     volumes:
