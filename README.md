@@ -73,6 +73,8 @@ Each node runs the pinned `ndnd-repo` container with identity `<default_prefix>/
 
 Nodes with `ndnd_enabled: true` run the NDNd forwarder and a separate `ndnd dv` router. The router connects to the forwarder's `/run/ndnd/ndnd.sock` and exchanges DV traffic over its UDP listener on port 6364. Router identities are root-signed as `<ndnd_router_prefix>/32=DV`, and peers are selected from the existing NLSR neighbor inventory, limited to NDNd-enabled sites.
 
+Each enabled node also runs `ndnd pingserver --expose <ndnd_router_prefix>` in a separate container, serving `<ndnd_router_prefix>/ping/<SEQNUM>`. The `testbed-ndnd-tools` image builds pinned DV2 source with the ping-prefix registration fix and adds a shell for the rendered entrypoint. The existing Docker workflow publishes this image. The ping server registers only `<ndnd_router_prefix>/ping`, leaving the site CA's registration separate. For example, Arizona serves `/ndnd/arizona/ping/<SEQNUM>`.
+
 ## NDNd Merkle
 
 Only UCLA runs the `ndnd-merkle` container, selected by `services.ndnd-merkle.hosts: [UCLA]` in `config.yml`, with identity `/ndn/edu/ucla/ndnd/merkle`. Master automatically provisions and renews its dedicated site-issued certificate using the same testbed anchors as the repo. Its trust schema permits testbed-certified users to append under their own identities and only the log key to sign responses. History persists in `dist/ndnd-merkle/storage`.
@@ -209,7 +211,7 @@ that index at startup, and `framework/ndnd-network-init.py` registers the same
 router-to-index inventory on every node and rebuilds the BIFT. Both cron scripts
 run this initializer after service updates. It binds announcements to permanent
 UDP faces, restores entries after restarts, and reloads NDNd-connected producers
-when their forwarder's startup time changes. The NFD-connected repository and
+when their forwarder's or DV router's startup time changes. The NFD-connected repository and
 Merkle service are outside that restart group.
 
 NDNd uses the NLSR neighbor connections between enabled sites. DV2 currently

@@ -79,6 +79,10 @@ services:
     environment:
       NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
     command: [dv, run, /config/dv.yml]
+    healthcheck:
+      test: [CMD, /ndnd, dv, status]
+      interval: 10s
+      start_period: 30s
     network_mode: none
     read_only: true
     cap_drop: [ALL]
@@ -86,6 +90,27 @@ services:
     restart: unless-stopped
     depends_on:
       ndnd: { condition: service_healthy }
+    logging:
+      driver: local
+
+  ndnd-pingserver:
+    image: ghcr.io/markverick/testbed-ndnd-tools:ndnd-staging@sha256:3c325f9a688d95c2d6b111bef4e73d13d80fb79e476d2420c2c1ef271e5f6e34
+    pull_policy: always
+    profiles: [ndnd]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd:ro
+      - ${PWD}/dist/ndnd-pingserver:/config:ro
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+    entrypoint: [/bin/sh, /config/entrypoint.sh]
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    depends_on:
+      ndnd-dv: { condition: service_healthy }
     logging:
       driver: local
 

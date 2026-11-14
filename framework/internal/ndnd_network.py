@@ -70,6 +70,8 @@ def configure(containers, routers, network, port, previous):
     if changed or not containers['ndnd-dv']['State']['Running']:
         run(['docker', 'restart', containers['ndnd-dv']['Id']])
     wait_ready(ndnd_cmd + ['dv', 'status'])
+    dv_started = run(['docker', 'inspect', '--format', '{{.State.StartedAt}}',
+                      containers['ndnd-dv']['Id']]).stdout.strip()
 
     # Remove our previous bridge entries if Docker assigned a new peer address.
     if previous.get('to_nfd') not in (None, to_nfd) and not changed:
@@ -101,15 +103,16 @@ def configure(containers, routers, network, port, previous):
     run(ndnd_cmd + ['dv', 'prefix-announce', 'prefix=/ndn', 'face=' + bridge_face])
     run(ndnd_cmd + ['fw', 'bift-rebuild'])
 
-    if changed:
-        # These services keep registrations on the forwarder's Unix socket.
-        dependents = ['ndnd-http-status-server', 'ndnd-site-ca', 'ndnd-root-ca',
+    if changed or previous.get('dv_started') != dv_started:
+        # DV loses advertisements on restart even if producer sockets stay open.
+        dependents = ['ndnd-http-status-server', 'ndnd-pingserver', 'ndnd-site-ca', 'ndnd-root-ca',
                       'ndnd-network-repo', 'ndnd-network-merkle']
         restart = [containers[s]['Id'] for s in dependents
                    if s in containers and containers[s]['State']['Running']]
         if restart:
             run(['docker', 'restart', *restart], timeout=120)
-    return {'forwarder_started': fw['State']['StartedAt'], 'to_nfd': to_nfd, 'to_ndnd': to_ndnd}
+    return {'forwarder_started': fw['State']['StartedAt'], 'dv_started': dv_started,
+            'to_nfd': to_nfd, 'to_ndnd': to_ndnd}
 
 
 def reconcile(node):

@@ -1,5 +1,9 @@
 name: Docker
 on:
+  push:
+    paths:
+      - Dockerfile
+      - .github/workflows/docker.yml
   schedule:
     # monthly on day 5
     - cron: '20 15 5 * *'
@@ -13,12 +17,20 @@ permissions:
 
 jobs:
   testbed-master:
+    if: github.event_name != 'push'
     uses: named-data/actions/.github/workflows/docker-image.yml@v1
     with:
       name: testbed-master
       target: testbed-master
   testbed-caddy:
+    if: github.event_name != 'push'
     uses: named-data/actions/.github/workflows/docker-image.yml@v1
     with:
       name: testbed-caddy
       target: testbed-caddy
+  testbed-ndnd-tools:
+    uses: named-data/actions/.github/workflows/docker-image.yml@v1
+    with:
+      name: testbed-ndnd-tools
+      target: testbed-ndnd-tools
+      tag-with-sha: true

@@ -24,6 +24,12 @@ services:
     template_path: templates/ndnd-http-status-server
     render_path: dist/ndnd-http-status-server
 
+  ndnd-pingserver:
+    enabled_by: ndnd_enabled
+    profile: ndnd
+    template_path: templates/ndnd-pingserver
+    render_path: dist/ndnd-pingserver
+
   ndnd-site-ca:
     enabled_by: ndnd_enabled
     profile: ndnd-site-ca

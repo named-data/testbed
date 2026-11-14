@@ -15,7 +15,8 @@ class NetworkInitTest(unittest.TestCase):
         self.containers = {}
         for service, ip in [('nfd', '172.20.0.2'), ('ndnd', '172.20.0.3'),
                             ('ndnd-dv', ''), ('ndnd-network-repo', ''),
-                            ('ndnd-site-ca', ''), ('ndnd-repo', ''), ('nlsr', '')]:
+                            ('ndnd-site-ca', ''), ('ndnd-pingserver', ''),
+                            ('ndnd-repo', ''), ('nlsr', '')]:
             self.containers[service] = {
                 'Id': service, 'Image': 'nfd-image',
                 'Mounts': [{'Source': '/run/ndnd', 'Destination': '/run/ndnd'},
@@ -23,7 +24,7 @@ class NetworkInitTest(unittest.TestCase):
                 'State': {'Running': True, 'StartedAt': 'start-1'},
                 'NetworkSettings': {'Networks': {'default': {'IPAddress': ip}}},
             }
-        self.previous = {'forwarder_started': 'start-1',
+        self.previous = {'forwarder_started': 'start-1', 'dv_started': 'start-1',
                          'to_nfd': 'udp4://172.20.0.2:6363',
                          'to_ndnd': 'udp4://172.20.0.3:6364'}
 
@@ -34,6 +35,10 @@ class NetworkInitTest(unittest.TestCase):
             output = 'faceid=42 remote=udp4://172.20.0.2:6363\nfaceid=43 remote=udp4://172.20.0.9:6363\n'
         elif args[-2:] == ['face', 'list']:
             output = 'faceid=70 remote=udp4://172.20.0.8:6364\n'
+        elif args[:2] == ['docker', 'inspect']:
+            output = self.containers['ndnd-dv']['State']['StartedAt'] + '\n'
+        elif args == ['docker', 'restart', 'ndnd-dv']:
+            self.containers['ndnd-dv']['State']['StartedAt'] = 'start-2'
         return subprocess.CompletedProcess(args, 0, output, '')
 
     def configure(self, previous=None):
@@ -61,7 +66,7 @@ class NetworkInitTest(unittest.TestCase):
     def test_forwarder_restart_restores_only_its_dependents(self):
         self.configure({})
         restarted = [command[2:] for command in self.commands if command[1] == 'restart']
-        self.assertEqual(restarted, [['ndnd-dv'], ['ndnd-site-ca', 'ndnd-network-repo']])
+        self.assertEqual(restarted, [['ndnd-dv'], ['ndnd-pingserver', 'ndnd-site-ca', 'ndnd-network-repo']])
         self.assertEqual(sum('bift-register' in command for command in self.commands), 2)
 
     def test_peer_address_change_removes_old_bridge_routes(self):
@@ -73,10 +78,21 @@ class NetworkInitTest(unittest.TestCase):
         self.assertIn(['docker', 'exec', 'nfd', 'nfdc', 'route', 'remove',
                        '/ndnd', previous['to_ndnd']], self.commands)
 
-    def test_stopped_dv_restarts_without_restarting_producers(self):
+    def test_stopped_dv_restarts_and_restores_producers(self):
         self.containers['ndnd-dv']['State']['Running'] = False
-        self.configure()
-        self.assertEqual([c[2:] for c in self.commands if c[1] == 'restart'], [['ndnd-dv']])
+        state = self.configure()
+        self.assertEqual([c[2:] for c in self.commands if c[1] == 'restart'],
+                         [['ndnd-dv'], ['ndnd-pingserver', 'ndnd-site-ca', 'ndnd-network-repo']])
+        self.assertEqual(state['dv_started'], 'start-2')
+
+    def test_independent_dv_restart_restores_producers_once(self):
+        self.containers['ndnd-dv']['State']['StartedAt'] = 'start-2'
+        state = self.configure()
+        self.assertEqual([c[2:] for c in self.commands if c[1] == 'restart'],
+                         [['ndnd-pingserver', 'ndnd-site-ca', 'ndnd-network-repo']])
+        self.commands.clear()
+        self.configure(state)
+        self.assertFalse(any(c[1] == 'restart' for c in self.commands))
 
     def test_duplicate_indices_rejected(self):
         hosts = {'A': {'ndnd_enabled': True, 'ndnd_bier_index': 0, 'ndnd_router_prefix': '/ndnd/a'},
