@@ -73,19 +73,19 @@ def configure(containers, routers, network, port, previous):
     dv_started = run(['docker', 'inspect', '--format', '{{.State.StartedAt}}',
                       containers['ndnd-dv']['Id']]).stdout.strip()
 
-    # Remove our previous bridge entries if Docker assigned a new peer address.
+    # Remove stale bridge entries after a Docker address change.
     if previous.get('to_nfd') not in (None, to_nfd) and not changed:
         old_face = face_id(run(ndnd_cmd + ['fw', 'face-list']).stdout, previous['to_nfd'])
         if old_face:
             run(ndnd_cmd + ['dv', 'prefix-withdraw', 'prefix=/ndn', 'face=' + old_face])
             run(ndnd_cmd + ['fw', 'pet-remove-nexthop', 'prefix=/ndn', 'face=' + old_face])
     if previous.get('to_ndnd') not in (None, to_ndnd):
-        # A missing old face means NFD already removed its routes.
+        # NFD may have already removed the old face and its routes.
         if face_id(run(nfd_cmd + ['face', 'list']).stdout, previous['to_ndnd']):
             run(nfd_cmd + ['route', 'remove', network, previous['to_ndnd']])
 
-    # nfdc updates existing on-demand faces too; NDNd's create-only CLI returns 409.
-    # Mount only the socket directory; nfdc needs its own writable client keychain.
+    # NDNd's create-only CLI rejects an existing face; nfdc updates it in place.
+    # Mount only the socket directory so nfdc uses its own client keychain.
     socket_dir = next(m['Source'] for m in fw['Mounts'] if m['Destination'] == '/run/ndnd')
     run(['docker', 'run', '--rm', '--network', 'none',
          '--mount', 'type=bind,src=' + socket_dir + ',dst=/run/ndnd,readonly',
@@ -93,18 +93,18 @@ def configure(containers, routers, network, port, previous):
          '--entrypoint', '/usr/bin/nfdc', nfd['Image'],
          'face', 'create', to_nfd, 'persistency', 'permanent'])
     run(nfd_cmd + ['face', 'create', to_ndnd, 'persistency', 'permanent'])
-    # Exclude inherited application/default routes from the foreign namespace.
+    # Prevent inherited routes from crossing into the other namespace.
     run(nfd_cmd + ['route', 'add', network, to_ndnd, 'capture'])
     bridge_face = face_id(run(ndnd_cmd + ['fw', 'face-list']).stdout, to_nfd)
     if bridge_face is None:
         raise RuntimeError('NDNd bridge face was not created')
     run(ndnd_cmd + ['fw', 'pet-add-nexthop', 'prefix=/ndn', 'face=' + bridge_face])
-    # Bind the announcement to the UDP face, not this short-lived CLI connection.
+    # Bind the announcement to the UDP face instead of the CLI connection.
     run(ndnd_cmd + ['dv', 'prefix-announce', 'prefix=/ndn', 'face=' + bridge_face])
     run(ndnd_cmd + ['fw', 'bift-rebuild'])
 
     if changed or previous.get('dv_started') != dv_started:
-        # DV loses advertisements on restart even if producer sockets stay open.
+        # Producers must advertise again after a DV restart.
         dependents = ['ndnd-http-status-server', 'ndnd-pingserver', 'ndnd-site-ca', 'ndnd-root-ca',
                       'ndnd-network-repo', 'ndnd-network-merkle']
         restart = [containers[s]['Id'] for s in dependents

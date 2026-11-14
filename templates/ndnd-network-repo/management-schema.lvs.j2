@@ -5,7 +5,7 @@
 #flat_command: #flat_user/"32=repo" <= #flat_user_key
 #flat_security: #flat_user/"32=repo-security" <= #flat_user_key
 {% for depth in range(2, 7) %}
-// Root-issued NDNCERT identities may have multiple components (e.g. com/gmail/user).
+// Root-issued NDNCERT identities may contain two to six components.
 #root_user_{{ depth }}: {{ ndn_lvs_name(ndnd_dv_network) }}{% for n in range(depth) %}/rootuser{{ n }}{% endfor %}
 
 #root_user_key_{{ depth }}: #root_user_{{ depth }}/#key <= #root

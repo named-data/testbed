@@ -188,7 +188,7 @@ services:
       - ${PWD}/dist/ndnd-root-http-ca:/config:ro
       - ${PWD}/dist/ndnd-root-http-ca/cert-store:/cert-store
     environment:
-      # Enforced by the signer at runtime; inactive profiles must still parse.
+      # Allow inactive profiles to render; the signer rejects an empty secret.
       NDND_ROOT_CA_SECRET: ${VAR_NDND_ROOT_CA_SECRET:-}
       NDND_CA_IMAGE: ghcr.io/named-data/ndnd:dv2-staging@sha256:ba13140ce270c8186bb61f4ae69ee0e86cc977c0144db931efbea2ce76515a89
       NDND_CA_HOST_DIR: ${PWD}/ndnd-root-ca-home/ndnd

@@ -73,10 +73,10 @@ renew_merkle() {
     fi
 }
 
-# Finish existing NFD renewals and reloads before processing the separate network.
+# Renew the NFD-connected Merkle service before NDNd services.
 renew_merkle ndnd-merkle "${FORCE}" || exit $?
 
-# A site-certificate change on NFD must not force unrelated NDNd credentials.
+# Propagate --force to NDNd services only when explicitly requested.
 NDND_FORCE=${HAS_FORCE:+--force}
 DV_ENABLED=$(python3 framework/service-profiles.py --service ndnd-dv) || exit $?
 if [[ "${DV_ENABLED}" == 1 ]]; then

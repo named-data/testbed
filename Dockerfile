@@ -34,12 +34,11 @@ VOLUME /testbed
 WORKDIR /testbed
 
 
-# NDNd is scratch-based; add a shell for rendered tool entrypoints.
+# Supply a shell for rendered NDNd tool entrypoints.
 FROM busybox:1.37.0-musl@sha256:f6a95d611e0a8780fabdb2aec43e31275b2720dfefa3e41b16835bfc42454478 AS ndnd-tools-shell
 
 FROM golang:1.24 AS ndnd-tools-build
 
-# The ping-prefix fix is isolated from the deployed router/repository images.
 ADD --keep-git-dir=true https://github.com/markverick/ndnd.git#f9c34574aa0dc7d295fa28bacd8b3060c650df15 /src
 WORKDIR /src
 RUN make
