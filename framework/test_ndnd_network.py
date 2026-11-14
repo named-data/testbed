@@ -1,3 +1,4 @@
+import json
 import subprocess
 import unittest
 from unittest.mock import patch
@@ -7,6 +8,7 @@ import yaml
 
 from internal import ndnd_network
 from internal import conf
+from internal.render import JINJA_FUNCTIONS
 
 
 class NetworkInitTest(unittest.TestCase):
@@ -113,15 +115,24 @@ class NetworkInitTest(unittest.TestCase):
         indices = ndnd_network.router_indices(hosts)
         self.assertEqual(len(indices), 6)
         env = jinja2.Environment(loader=jinja2.FileSystemLoader('.'), undefined=jinja2.StrictUndefined)
-        for host in hosts.values():
-            context = dict(host, **config.globals)
+        for host_name, host in hosts.items():
+            context = dict(host, **config.globals, inventory_hostname=host_name)
             context['hostvars'] = {n: dict(h, **config.globals) for n, h in hosts.items()}
             rendered = env.get_template('templates/nlsr/nlsr.conf.j2').render(**context)
             advertising = rendered.split('advertising\n{', 1)[1].split('}', 1)[0]
             self.assertEqual('/ndnd 0' in advertising, bool(host.get('ndnd_enabled')))
             if host.get('ndnd_enabled'):
+                self.assertEqual(host['ndnd_ca_prefix'], '/ndnd' + host['site'])
+                self.assertEqual(host['ndnd_router_prefix'],
+                                 host['ndnd_ca_prefix'] + '/%C1.Router/' + host['router_name'])
                 fw = yaml.safe_load(env.get_template('templates/ndnd/yanfd.yml.j2').render(**context))
                 self.assertEqual(indices[fw['fw']['bier_index']], host['ndnd_router_prefix'])
+                dv = yaml.safe_load(env.get_template('templates/ndnd-dv/dv.yml.j2').render(
+                    **context, **JINJA_FUNCTIONS))
+                self.assertEqual(dv['dv']['network'], '/ndnd')
+                self.assertEqual(dv['dv']['router'], host['ndnd_router_prefix'])
+                ping = env.get_template('templates/ndnd-pingserver/entrypoint.sh.j2').render(**context)
+                self.assertIn(' --expose ' + json.dumps(host['ndnd_ca_prefix']), ping)
 
 
 if __name__ == '__main__':

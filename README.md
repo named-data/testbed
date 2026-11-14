@@ -71,9 +71,9 @@ Each node runs the pinned `ndnd-repo` container with identity `<default_prefix>/
 
 ## NDNd Distance Vector
 
-Nodes with `ndnd_enabled: true` run the NDNd forwarder and a separate `ndnd dv` router. The router connects to the forwarder's `/run/ndnd/ndnd.sock` and exchanges DV traffic over its UDP listener on port 6364. Router identities are root-signed as `<ndnd_router_prefix>/32=DV`, and peers are selected from the existing NLSR neighbor inventory, limited to NDNd-enabled sites.
+Nodes with `ndnd_enabled: true` run the NDNd forwarder and a separate `ndnd dv` router. The router connects to the forwarder's `/run/ndnd/ndnd.sock` and exchanges DV traffic over its UDP listener on port 6364. All routers belong to the `/ndnd` DV network. Site and router names mirror the NFD convention as `/ndnd<site>` and `/ndnd<site>/%C1.Router/<router_name>`. Router identities are root-signed as `<ndnd_router_prefix>/32=DV`, and peers are selected from the existing NLSR neighbor inventory, limited to NDNd-enabled sites.
 
-Each enabled node also runs `ndnd pingserver --expose <ndnd_router_prefix>` in a separate container, serving `<ndnd_router_prefix>/ping/<SEQNUM>`. The `testbed-ndnd-tools` image builds pinned DV2 source with the ping-prefix registration fix and adds a shell for the rendered entrypoint. The existing Docker workflow publishes this image. The ping server registers only `<ndnd_router_prefix>/ping`, leaving the site CA's registration separate. For example, Arizona serves `/ndnd/arizona/ping/<SEQNUM>`.
+Each enabled node also runs `ndnd pingserver --expose <ndnd_ca_prefix>` in a separate container, serving `<ndnd_ca_prefix>/ping/<SEQNUM>`. The `testbed-ndnd-tools` image builds pinned DV2 source with the ping-prefix registration fix and adds a shell for the rendered entrypoint. The existing Docker workflow publishes this image. The ping server registers only `<ndnd_ca_prefix>/ping`, leaving the site CA's registration separate. For example, Arizona serves `/ndnd/edu/arizona/ping/<SEQNUM>`.
 
 ## NDNd Merkle
 

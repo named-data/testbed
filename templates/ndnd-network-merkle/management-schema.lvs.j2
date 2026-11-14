@@ -5,7 +5,7 @@
 #root_user_{{ depth }}: {{ ndn_lvs_name(ndnd_dv_network) }}{% for n in range(depth) %}/rootuser{{ n }}{% endfor %}
 
 #root_user_key_{{ depth }}: #root_user_{{ depth }}/#key <= #root
-#root_append_{{ depth }}: {{ ndn_lvs_name(ndnd_router_prefix + '/merkle') }}/"32=append"/#root_user_{{ depth }}/_ <= #root_user_key_{{ depth }}
+#root_append_{{ depth }}: {{ ndn_lvs_name(ndnd_ca_prefix + '/merkle') }}/"32=append"/#root_user_{{ depth }}/_ <= #root_user_key_{{ depth }}
 {% endfor %}
 {% for host, values in hostvars.items() %}
 {% if values.get('ndnd_enabled', false) %}
@@ -16,13 +16,13 @@
 #user_{{ id }}: {{ ndn_lvs_name(values.ndnd_ca_prefix) }}{% for n in range(depth) %}/user{{ n }}{% endfor %}
 
 #user_key_{{ id }}: #user_{{ id }}/#key <= #site_{{ site_id }}
-#append_{{ id }}: {{ ndn_lvs_name(ndnd_router_prefix + '/merkle') }}/"32=append"/#user_{{ id }}/_ <= #user_key_{{ id }}
+#append_{{ id }}: {{ ndn_lvs_name(ndnd_ca_prefix + '/merkle') }}/"32=append"/#user_{{ id }}/_ <= #user_key_{{ id }}
 {% endfor %}
 {% if host == inventory_hostname %}
-#log_key: {{ ndn_lvs_name(ndnd_router_prefix + '/merkle') }}/#key <= #site_{{ site_id }}
+#log_key: {{ ndn_lvs_name(ndnd_ca_prefix + '/merkle') }}/#key <= #site_{{ site_id }}
 {% endif %}
 {% endif %}
 {% endfor %}
 // Object validation removes terminal version and segment components.
-#append_response: {{ ndn_lvs_name(ndnd_router_prefix + '/merkle') }}/"32=append"/_ <= #log_key
-#check_response: {{ ndn_lvs_name(ndnd_router_prefix + '/merkle') }}/"32=check"/_ <= #log_key
+#append_response: {{ ndn_lvs_name(ndnd_ca_prefix + '/merkle') }}/"32=append"/_ <= #log_key
+#check_response: {{ ndn_lvs_name(ndnd_ca_prefix + '/merkle') }}/"32=check"/_ <= #log_key

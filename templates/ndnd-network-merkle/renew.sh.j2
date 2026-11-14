@@ -10,5 +10,5 @@ python3 "${TESTBED_DIR}/scripts/ndnd-infra-security.py" \
     --directory "${SERVICE_DIR}" \
     --site-home "${TESTBED_DIR}/dist/ndnd-site-ca" \
     --site-prefix {{ ndnd_ca_prefix | tojson }} \
-    --identity {{ (ndnd_router_prefix + '/merkle') | tojson }} \
+    --identity {{ (ndnd_ca_prefix + '/merkle') | tojson }} \
     --anchors "${TESTBED_DIR}/anchors" "$@"

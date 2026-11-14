@@ -26,8 +26,8 @@
 #security_{{ id }}: #user_{{ id }}/"32=repo-security" <= #user_key_{{ id }}
 {% endfor %}
 {% if host == inventory_hostname %}
-#repo_key: {{ ndn_lvs_name(ndnd_router_prefix + '/repo') }}/#key <= #site_{{ site_id }}
+#repo_key: {{ ndn_lvs_name(ndnd_ca_prefix + '/repo') }}/#key <= #site_{{ site_id }}
 {% endif %}
 {% endif %}
 {% endfor %}
-#response: {{ ndn_lvs_name(ndnd_router_prefix + '/repo') }}/"32=cmd"/_ <= #repo_key
+#response: {{ ndn_lvs_name(ndnd_ca_prefix + '/repo') }}/"32=cmd"/_ <= #repo_key
