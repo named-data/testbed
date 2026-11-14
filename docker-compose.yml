@@ -291,7 +291,7 @@ services:
       driver: local
 
   ndn-python-repo:
-    image: ghcr.io/ucla-irl/ndn-python-repo:20240508
+    image: ghcr.io/ucla-irl/ndn-python-repo:20261023@sha256:781c3db4aad30a91a0672da787b316599ee08957b63961219f09d7c4408cf763
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
@@ -309,7 +309,8 @@ services:
       driver: local
 
   ndnd-repo:
-    image: ghcr.io/named-data/ndnd:20261012
+    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
+    pull_policy: always
     init: true
     volumes:
       - /run/nfd:/run/nfd:ro
@@ -364,7 +365,7 @@ services:
       driver: local
 
   ndnd-merkle:
-    image: ghcr.io/named-data/ndnd:20261012
+    image: ghcr.io/named-data/ndnd:20261022@sha256:1816103c4fec8ea04253ed3d5f9e5c53c6657067a2cbc4d3c1fbb6be7ed28c3a
     pull_policy: always
     profiles: [merkle-log] # selected by config.yml through maintenance
     init: true

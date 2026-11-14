@@ -160,7 +160,7 @@ Upgrade the forwarder, DV router, and status server together; the DV2 BIFT
 management dataset uses TLV encoding. Both repository configurations explicitly
 supply their management trust schema.
 
-The existing NFD-connected services retain upstream's image settings. They use
+The existing NFD-connected services retain their deployed image settings. They use
 NFD RIB registration; the separate NDNd services use DV prefix advertising.
 
 On hosts with `ndnd_enabled: true`, Caddy exposes:
