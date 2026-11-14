@@ -69,6 +69,12 @@ docker compose exec -e HOME=/testbed/root-ca-home master ndnsec list -c
 
 Each node runs the pinned `ndnd-repo` container with identity `<default_prefix>/ndnd/repo` (e.g. `/ndn/edu/ucla/ndnd/repo`). Master generates a dedicated key, obtains a certificate from the local site CA, and installs the public chain selected by `globals.ndnd_repo_anchors`. The repo can write only its keychain and storage; it has no access to CA private keys or master renewal scripts.
 
+## NDNd Distance Vector
+
+Nodes with `ndnd_enabled: true` run the NDNd forwarder and a separate `ndnd dv` router. The router connects to the forwarder's `/run/ndnd/ndnd.sock` and exchanges DV traffic over its UDP listener on port 6364. All routers belong to the `/ndnd` DV network. Each site prefix prepends `/ndnd` to the configured `site` value; its router prefix appends `/%C1.Router/<router_name>`. Router identities are root-signed as `<ndnd_router_prefix>/32=DV`, and peers are selected from the configured NLSR neighbors that also enable NDNd.
+
+Each enabled node also runs `ndnd pingserver --expose <ndnd_ca_prefix>` in a separate container, serving `<ndnd_ca_prefix>/ping/<SEQNUM>`. The `testbed-ndnd-tools` image builds pinned DV2 source with the ping-prefix registration fix and adds a shell for the rendered entrypoint. The Docker workflow publishes this image. The ping server registers only `<ndnd_ca_prefix>/ping`, leaving the site CA's registration separate. For example, Arizona serves `/ndnd/edu/arizona/ping/<SEQNUM>`.
+
 ## NDNd Merkle
 
 Only UCLA runs the `ndnd-merkle` container, selected by `services.ndnd-merkle.hosts: [UCLA]` in `config.yml`, with identity `/ndn/edu/ucla/ndnd/merkle`. Master automatically provisions and renews its dedicated site-issued certificate using the same testbed anchors as the repo. Its trust schema permits testbed-certified users to append under their own identities and only the log key to sign responses. History persists in `dist/ndnd-merkle/storage`.
@@ -144,3 +150,78 @@ sudo systemctl enable unattended-upgrades
 sudo systemctl start unattended-upgrades
 sudo unattended-upgrades --debug
 ```
+
+## NDNd Status
+
+The NDNd forwarder, DV router, status server, CA services, and `/ndnd` Merkle log
+use the digest-pinned DV2 staging image configured in Compose. The `/ndnd`
+repository uses a repository-capable DV2 image.
+Upgrade the forwarder, DV router, and status server together; the DV2 BIFT
+management dataset uses TLV encoding. Both repository configurations explicitly
+supply their management trust schema.
+
+NFD-connected services use their service-specific images and NFD RIB registration.
+NDNd-connected services use DV prefix advertising.
+
+On hosts with `ndnd_enabled: true`, Caddy exposes:
+
+- `/ndnd-status/`: HTML status page.
+- `/ndnd-status/status.xml`: XML status report.
+- `/ndnd-status/status.json`: JSON status report.
+
+For example: `https://suns.cs.ucla.edu/ndnd-status/status.json`.
+
+The renderer compiles `templates/ndnd-dv/dv-schema.lvs.j2` for both DV and the
+status server. It permits only inventoried NDNd router certificates, issued
+directly by the `/ndnd` root, to sign their routing and status datasets. DV
+explicitly loads this schema; the status server receives the same schema and
+the public root certificate in PEM format through a separate read-only mount.
+It has no access to router private keys. Changes to either status trust file
+cause the renderer to restart the status server.
+The same compiled schema is published at `/file-server/ndnd/dv-schema.tlv`
+for clients.
+
+The status server validates `/<router>/32=DV/32=STATUS` before including the
+routing dataset. It does not fall back to an unrestricted schema. The local
+DV summary remains available if the signed dataset cannot be validated; check
+the status server logs and the report's routing state in that case.
+
+The CA host requires the root `ca.key.pem` and `ca.cert.pem` in
+`ndnd-root-ca-home/ndnd/`, owned by the service UID (root in the pinned images),
+with the private key mode set to `0600`. The certificate must match the committed trust anchor;
+the root services load these credentials directly. Master renders service
+configuration and renews service certificates before marking itself ready,
+using the same lifecycle as other testbed services. Cron performs subsequent
+renewals and reloads. Root creation and replacement remain operator tasks.
+NDNd-enabled sites set `VAR_NDND_ROOT_CA_SECRET` in `.env` for root enrollment;
+NFD-only sites do not need that setting.
+
+## NDNd Network Bridge
+
+NDNd-enabled sites bridge the two forwarders locally over UDP. NFD sends `/ndnd`
+Interests to NDNd through a capture route, excluding inherited root routes, and
+advertises `/ndnd` through NLSR. NDNd installs a `/ndn` PET
+next hop toward NFD and advertises it through DV. Producers still register on
+the network matching their top-level prefix; the bridge does not redistribute
+producer registrations or change application trust policies.
+
+Each enabled host needs a unique, stable `ndnd_bier_index`. The forwarder loads
+that index at startup, and `framework/ndnd-network-init.py` registers the same
+router-to-index inventory on every node and rebuilds the BIFT. Both cron scripts
+run this initializer after service updates. It binds announcements to permanent
+UDP faces, restores entries after restarts, and reloads NDNd-connected producers
+when their forwarder's or DV router's startup time changes. The NFD-connected repository and
+Merkle service are outside that restart group.
+
+NDNd uses the NLSR neighbor connections between enabled sites. DV2 assigns a
+fixed cost of 1 per link; it does not use NLSR's configured link costs.
+
+To reconcile a running node manually from its checkout:
+
+```bash
+docker compose exec -T -e PWD="$PWD" master python3 framework/ndnd-network-init.py
+```
+
+The bridge has static routes. An abrupt peer failure does not automatically
+withdraw its gateway advertisement; alternative gateway advertisements alone do
+not guarantee immediate failover. Gateway health tracking is not implemented here.

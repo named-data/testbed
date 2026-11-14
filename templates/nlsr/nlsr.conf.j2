@@ -53,6 +53,9 @@ fib
 
 advertising
 {
+  {% if ndnd_enabled | default(false) and ndnd_dv_network not in advertised_prefixes %}
+    {{ ndnd_dv_network }} 0
+  {% endif %}
   {% for prefix in advertised_prefixes %}
     {{ prefix }} 0
   {% endfor %}

@@ -1,0 +1,40 @@
+{
+  "ca-prefix": {{ ndnd_dv_network | tojson }},
+  "ca-info": {{ ndnd_ca_info | tojson }},
+  "max-validity-period": {{ ndnd_ca_max_validity_period | tojson }},
+  "max-suffix-length": {{ ndnd_ca_max_suffix_length | tojson }},
+  "probe-parameters": [{ "probe-parameter-key": "email" }],
+  "name-assignment": { "email": "/nonexist" },
+  "redirect-to": [
+    {% set redirects = namespace(comma=false) %}
+    {% for host, values in hostvars.items() %}
+    {% if values.get('ndnd_enabled', false) %}
+    {% set cert_path = "./dist/ndnd-root-http-ca/cert-store/site-ca." + host + ".ndncert" %}
+    {% if path_exists(cert_path) %}
+    {% set cert_oneline = oneline(read_file(cert_path)) %}
+    {% for email_domain in values.site_email_domain %}
+    {% if redirects.comma %},{% endif %}
+    {
+      "ca-prefix": {{ values.ndnd_ca_prefix | tojson }},
+      "certificate": {{ cert_oneline | tojson }},
+      "policy-type": "email",
+      "policy-param": {{ email_domain | tojson }}
+    }
+    {% set redirects.comma = true %}
+    {% endfor %}
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+  ],
+  "supported-challenges": [
+    {% for challenge in ndnd_ca_supported_challenges %}{ "challenge": {{ challenge | tojson }} }{% if not loop.last %},{% endif %}{% endfor %}
+  ],
+  "email": {
+    "smtp-server": {{ SMTP_SERVER | tojson }},
+    "smtp-port": 587,
+    "smtp-username": {{ SMTP_USER | tojson }},
+    "smtp-password-env": "NDND_SMTP_PASSWORD",
+    "from": "NDN Certificate Robot <noreply@ndncert.named-data.net>",
+    "subject": "Your NDNCERT verification code"
+  }
+}

@@ -34,6 +34,21 @@ VOLUME /testbed
 WORKDIR /testbed
 
 
+# Supply a shell for rendered NDNd tool entrypoints.
+FROM busybox:1.37.0-musl@sha256:f6a95d611e0a8780fabdb2aec43e31275b2720dfefa3e41b16835bfc42454478 AS ndnd-tools-shell
+
+FROM golang:1.24 AS ndnd-tools-build
+
+ADD --keep-git-dir=true https://github.com/markverick/ndnd.git#f9c34574aa0dc7d295fa28bacd8b3060c650df15 /src
+WORKDIR /src
+RUN make
+
+FROM ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b AS testbed-ndnd-tools
+
+COPY --from=ndnd-tools-build /src/ndnd /ndnd
+COPY --from=ndnd-tools-shell /bin/busybox /bin/sh
+
+
 FROM caddy:2-alpine AS testbed-caddy
 
 ADD --unpack https://nfd-status-page.ndn.today/NDNts-NFD-status-page.txz /srv/n

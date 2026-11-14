@@ -29,4 +29,7 @@ PWD="${ROOT_DIR}" python3 framework/main.py || exit $?
 # Renew certificates if needed
 bash $(pwd)/scripts/cert-renew.sh || exit $?
 
+# Restore runtime forwarding entries after rendered services or credentials changed.
+PWD="${ROOT_DIR:-$PWD}" python3 framework/ndnd-network-init.py || exit $?
+
 echo -e "Finished cron-master at $(date)" >&2

@@ -1,0 +1,24 @@
+fw:
+  bier_index: {{ ndnd_bier_index }}
+  router_name: {{ ndnd_router_prefix | tojson }}
+
+mgmt:
+  allow_localhop: true
+
+faces:
+  udp:
+    enabled_unicast: true
+    enabled_multicast: false
+    port_unicast: {{ ndnd_udp_port }}
+  tcp:
+    enabled: false
+  unix:
+    enabled: true
+    socket_path: /run/ndnd/ndnd.sock
+  websocket:
+    enabled: true
+    bind: ""
+    port: 9696
+    tls_enabled: false
+  http3:
+    enabled: false
