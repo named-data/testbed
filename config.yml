@@ -6,6 +6,44 @@ host_vars_path: host_vars
 
 # This must match exactly with the docker-compose.yml file
 services:
+  ndnd:
+    enabled_by: ndnd_enabled
+    profile: ndnd
+    template_path: templates/ndnd
+    render_path: dist/ndnd
+
+  ndnd-dv:
+    enabled_by: ndnd_enabled
+    profile: ndnd
+    template_path: templates/ndnd-dv
+    render_path: dist/ndnd-dv
+
+  ndnd-http-status-server:
+    enabled_by: ndnd_enabled
+    profile: ndnd
+    template_path: templates/ndnd-http-status-server
+    render_path: dist/ndnd-http-status-server
+
+  ndnd-site-ca:
+    enabled_by: ndnd_enabled
+    profile: ndnd-site-ca
+    template_path: templates/ndnd-site-ca
+    render_path: dist/ndnd-site-ca
+
+  ndnd-root-ca:
+    hosts: [UCLA]
+    enabled_by: ndnd_enabled
+    profile: ndnd-root-ca
+    template_path: templates/ndnd-root-ca
+    render_path: dist/ndnd-root-ca
+
+  ndnd-root-http-ca:
+    hosts: [UCLA]
+    enabled_by: ndnd_enabled
+    profile: ndnd-root-ca
+    template_path: templates/ndnd-root-http-ca
+    render_path: dist/ndnd-root-http-ca
+
   caddy:
     template_path: templates/caddy
     render_path: dist/caddy
@@ -39,11 +77,24 @@ services:
     template_path: templates/ndnd-repo
     render_path: dist/ndnd-repo
 
+  ndnd-network-repo:
+    enabled_by: ndnd_enabled
+    profile: ndnd
+    template_path: templates/ndnd-network-repo
+    render_path: dist/ndnd-network-repo
+
   ndnd-merkle:
     hosts: [UCLA]
     profile: merkle-log
     template_path: templates/ndnd-merkle
     render_path: dist/ndnd-merkle
+
+  ndnd-network-merkle:
+    hosts: [UCLA]
+    enabled_by: ndnd_enabled
+    profile: ndnd-merkle-log
+    template_path: templates/ndnd-network-merkle
+    render_path: dist/ndnd-network-merkle
 
   ndncert:
     template_path: templates/ndncert
@@ -74,6 +125,17 @@ globals:
   # Explicitly select the active root; retain additional roots here during rollover.
   ndnd_repo_anchors:
     - anchors/ndn-testbed-root.ndncert.2204.base64
+  ndnd_udp_port: 6364
+  ndnd_dv_network: /ndnd
+  ndnd_ca_host: UCLA
+  ndnd_ca_info: "NDNd Testbed Root CA"
+  ndnd_ca_max_validity_period: "7776000"
+  ndnd_ca_max_suffix_length: "5"
+  ndnd_ca_supported_challenges: [email, dns]
+  ndnd_site_ca_supported_challenges: [email]
+  ndnd_root_http_ca_url: https://suns.cs.ucla.edu/ndnd-ca
+  ndnd_root_anchor_path: anchors/ndnd-root.base64
+  ndnd_root_http_ca_internal_url: http://ndnd-root-http-ca:8777
 
 # Declare variables available for each host
 # You can use lint.py to check variables, their types and
@@ -97,8 +159,12 @@ variables:
   memsize: number
   neighbors: dict
   position: list
+  ndnd_ca_prefix: "?string"
   hr_angle: number
   hr_radius: number
   ethernet_device: string
   is_root_ca: "?boolean"
   is_status_page: "?boolean"
+  ndnd_enabled: "?boolean"
+  ndnd_router_prefix: "?string"
+  ndnd_bier_index: "?number"

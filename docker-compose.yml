@@ -43,6 +43,136 @@ services:
     logging:
       driver: local
 
+  ndnd:
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
+    pull_policy: always
+    profiles: [ndnd]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd
+      - ${PWD}/dist/ndnd:/config:ro
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+    command: [fw, run, /config/yanfd.yml]
+    ports:
+      - 6364:6364/udp
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, /ndnd, fw, status]
+      interval: 1m
+      start_period: 30s
+    depends_on:
+      master: { condition: service_healthy }
+    logging:
+      driver: local
+
+  ndnd-dv:
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
+    pull_policy: always
+    profiles: [ndnd]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd:ro
+      - ${PWD}/dist/ndnd-dv/dv.yml:/config/dv.yml:ro
+      - ${PWD}/dist/ndnd-dv/dv-schema.tlv:/config/dv-schema.tlv:ro
+      - ${PWD}/dist/ndnd-dv/keys:/config/keys
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+    command: [dv, run, /config/dv.yml]
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    depends_on:
+      ndnd: { condition: service_healthy }
+    logging:
+      driver: local
+
+  ndnd-http-status-server:
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
+    pull_policy: always
+    profiles: [ndnd]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd:ro
+      - ${PWD}/dist/ndnd-http-status-server:/config:ro
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+    command: [fw, status-server, --trust-schema, /config/dv-schema.tlv, --trust-anchor, /config/root.cert.pem]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    depends_on:
+      ndnd: { condition: service_healthy }
+    logging:
+      driver: local
+
+  ndnd-site-ca:
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
+    pull_policy: always
+    profiles: [ndnd-site-ca]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd:ro
+      - ${PWD}/dist/ndnd-site-ca:/config:ro
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+      NDND_SMTP_PASSWORD: ${VAR_SMTP_PASSWORD:-}
+    command: [sec, certca, /config/ca.json, /config/ca.cert.pem, /config/ca.key.pem]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    depends_on:
+      ndnd: { condition: service_healthy }
+    logging:
+      driver: local
+
+  ndnd-root-ca:
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
+    pull_policy: always
+    profiles: [ndnd-root-ca]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd:ro
+      - ${PWD}/ndnd-root-ca-home/ndnd:/ca:ro
+      - ${PWD}/dist/ndnd-root-ca:/config:ro
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+      NDND_SMTP_PASSWORD: ${VAR_SMTP_PASSWORD:-}
+    command: [sec, certca, /config/ca.json, /ca/ca.cert.pem, /ca/ca.key.pem]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    depends_on:
+      ndnd: { condition: service_healthy }
+    logging:
+      driver: local
+
+  ndnd-root-http-ca:
+    image: ghcr.io/named-data/testbed-master:20261012
+    profiles: [ndnd-root-ca]
+    init: true
+    tty: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${PWD}/framework/http-ca-server.py:/app/http-ca-server.py:ro
+      - ${PWD}/dist/ndnd-root-http-ca:/config:ro
+      - ${PWD}/dist/ndnd-root-http-ca/cert-store:/cert-store
+    environment:
+      # Enforced by the signer at runtime; inactive profiles must still parse.
+      NDND_ROOT_CA_SECRET: ${VAR_NDND_ROOT_CA_SECRET:-}
+      NDND_CA_IMAGE: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
+      NDND_CA_HOST_DIR: ${PWD}/ndnd-root-ca-home/ndnd
+    entrypoint: [python3, /app/http-ca-server.py]
+    command: [/config/http-ca-server.yml]
+    restart: unless-stopped
+    logging:
+      driver: local
+
   nfd:
     image: ghcr.io/named-data/nfd:20250420
     init: true
@@ -175,6 +305,39 @@ services:
     logging:
       driver: local
 
+  ndnd-network-repo:
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:cd362167f0d34804ba79cc33ba654e35d666f39c9a729debafe0e93b40348a9c
+    profiles: [ndnd]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd:ro
+      - ${PWD}/dist/ndnd-network-repo/keys:/config/keys
+      - ${PWD}/dist/ndnd-network-repo/storage:/config/storage
+      - type: bind
+        source: ${PWD}/dist/ndnd-network-repo/repo.yml
+        target: /config/repo.yml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${PWD}/dist/ndnd-network-repo/management-schema.tlv
+        target: /config/management-schema.tlv
+        read_only: true
+        bind:
+          create_host_path: false
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+    command: [repo, run, /config/repo.yml]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    depends_on:
+      ndnd: { condition: service_healthy }
+      ndnd-dv: { condition: service_started }
+    logging:
+      driver: local
+
   ndnd-merkle:
     image: ghcr.io/named-data/ndnd:20261012
     pull_policy: always
@@ -200,6 +363,44 @@ services:
     depends_on:
       nfd: { condition: service_healthy }
       serve-certs: { condition: service_started }
+    logging:
+      driver: local
+
+  ndnd-network-merkle:
+    image: ghcr.io/named-data/ndnd:dv2-staging@sha256:aba4d409d0f3ed2a7b134bd5d0ade0e0c9c37ad55e69254951c306f961b36d5b
+    pull_policy: always
+    profiles: [ndnd-merkle-log]
+    init: true
+    volumes:
+      - /run/ndnd:/run/ndnd:ro
+      - ${PWD}/dist/ndnd-network-merkle/keys:/config/keys
+      - ${PWD}/dist/ndnd-network-merkle/storage:/config/storage
+      - type: bind
+        source: ${PWD}/dist/ndnd-network-merkle/merkle.yml
+        target: /config/merkle.yml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${PWD}/dist/ndnd-network-merkle/management-schema.tlv
+        target: /config/management-schema.tlv
+        read_only: true
+        bind:
+          create_host_path: false
+    environment:
+      NDN_CLIENT_TRANSPORT: unix:///run/ndnd/ndnd.sock
+    command: [merkle, run, /config/merkle.yml]
+    network_mode: none
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 2g
+    cpus: 1
+    pids_limit: 128
+    restart: unless-stopped
+    depends_on:
+      ndnd: { condition: service_healthy }
+      ndnd-dv: { condition: service_started }
     logging:
       driver: local
 

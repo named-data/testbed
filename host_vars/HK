@@ -24,6 +24,10 @@ neighbors:
 position:
 - 22.3193
 - 114.1694
+ndnd_ca_prefix: /ndnd/hk
 hr_angle: 0
 hr_radius: 0
 ethernet_device: eth0
+ndnd_enabled: true
+ndnd_router_prefix: /ndnd/hk
+ndnd_bier_index: 3

@@ -1,9 +1,27 @@
 {{ ansible_host }} {
+  {% if ndnd_enabled | default(false) %}
+  redir /ndnd-status /ndnd-status/ 308
+  handle_path /ndnd-status/* {
+    reverse_proxy http://ndnd-http-status-server:6380
+  }
+
+  @ndndws path /ndnd /ndnd/*
+  reverse_proxy @ndndws http://ndnd:9696
+  {% endif %}
+
   @nfdstatus path / /nfd-status.xsl /xslt-polyfill.min.js /*.css
   reverse_proxy @nfdstatus http://nfd-http-status-server:6380
 
   @ws path /ws /ws/*
   reverse_proxy @ws http://nfd:9696
+
+  {% if ndnd_enabled | default(false) and inventory_hostname == ndnd_ca_host %}
+  handle_path /ndnd-ca/* {
+    reverse_proxy http://ndnd-root-http-ca:8777 {
+      header_up X-Forwarded-For {remote_host}
+    }
+  }
+  {% endif %}
 
   root * /srv
   file_server

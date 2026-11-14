@@ -32,6 +32,10 @@ neighbors:
 position:
 - 1.2868
 - 103.8503
+ndnd_ca_prefix: /ndnd/singapore
 hr_angle: 0
 hr_radius: 0
 ethernet_device: eth0
+ndnd_enabled: true
+ndnd_router_prefix: /ndnd/singapore
+ndnd_bier_index: 4

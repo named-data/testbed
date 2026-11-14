@@ -1,0 +1,19 @@
+{
+  "ca-prefix": {{ ndnd_ca_prefix | tojson }},
+  "ca-info": {{ ("NDN Testbed NDNCERT Site CA for " + inventory_hostname) | tojson }},
+  "max-validity-period": {{ ndnd_ca_max_validity_period | tojson }},
+  "max-suffix-length": {{ ndnd_ca_max_suffix_length | tojson }},
+  "probe-parameters": [{ "probe-parameter-key": "email" }],
+  "name-assignment": { "email": {{ site | tojson }} },
+  "supported-challenges": [
+    {% for challenge in ndnd_site_ca_supported_challenges %}{ "challenge": {{ challenge | tojson }} }{% if not loop.last %},{% endif %}{% endfor %}
+  ],
+  "email": {
+    "smtp-server": {{ SMTP_SERVER | tojson }},
+    "smtp-port": 587,
+    "smtp-username": {{ SMTP_USER | tojson }},
+    "smtp-password-env": "NDND_SMTP_PASSWORD",
+    "from": "NDN Certificate Robot <noreply@ndncert.named-data.net>",
+    "subject": "Your NDNCERT verification code"
+  }
+}

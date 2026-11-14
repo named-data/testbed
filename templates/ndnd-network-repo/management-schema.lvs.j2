@@ -1,0 +1,33 @@
+#key: "KEY"/_/_/_
+#root: {{ ndn_lvs_name(ndnd_dv_network) }}/#key
+#flat_user: {{ ndn_lvs_name(ndnd_dv_network) }}/user
+#flat_user_key: #flat_user/#key <= #root
+#flat_command: #flat_user/"32=repo" <= #flat_user_key
+#flat_security: #flat_user/"32=repo-security" <= #flat_user_key
+{% for depth in range(2, 7) %}
+// Root-issued NDNCERT identities may have multiple components (e.g. com/gmail/user).
+#root_user_{{ depth }}: {{ ndn_lvs_name(ndnd_dv_network) }}{% for n in range(depth) %}/rootuser{{ n }}{% endfor %}
+
+#root_user_key_{{ depth }}: #root_user_{{ depth }}/#key <= #root
+#root_command_{{ depth }}: #root_user_{{ depth }}/"32=repo" <= #root_user_key_{{ depth }}
+#root_security_{{ depth }}: #root_user_{{ depth }}/"32=repo-security" <= #root_user_key_{{ depth }}
+{% endfor %}
+{% for host, values in hostvars.items() %}
+{% if values.get('ndnd_enabled', false) %}
+{% set site_id = loop.index %}
+#site_{{ site_id }}: {{ ndn_lvs_name(values.ndnd_ca_prefix) }}/#key <= #root
+#flat_user_key: #flat_user/#key <= #site_{{ site_id }}
+{% for depth in range(1, 6) %}
+{% set id = site_id ~ '_' ~ depth %}
+#user_{{ id }}: {{ ndn_lvs_name(values.ndnd_ca_prefix) }}{% for n in range(depth) %}/user{{ n }}{% endfor %}
+
+#user_key_{{ id }}: #user_{{ id }}/#key <= #site_{{ site_id }}
+#command_{{ id }}: #user_{{ id }}/"32=repo" <= #user_key_{{ id }}
+#security_{{ id }}: #user_{{ id }}/"32=repo-security" <= #user_key_{{ id }}
+{% endfor %}
+{% if host == inventory_hostname %}
+#repo_key: {{ ndn_lvs_name(ndnd_router_prefix + '/repo') }}/#key <= #site_{{ site_id }}
+{% endif %}
+{% endif %}
+{% endfor %}
+#response: {{ ndn_lvs_name(ndnd_router_prefix + '/repo') }}/"32=cmd"/_ <= #repo_key

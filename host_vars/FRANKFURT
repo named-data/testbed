@@ -34,6 +34,10 @@ neighbors:
 position:
 - 50.1187
 - 8.6842
+ndnd_ca_prefix: /ndnd/frankfurt
 hr_angle: 0
 hr_radius: 0
 ethernet_device: eth0
+ndnd_enabled: true
+ndnd_router_prefix: /ndnd/frankfurt
+ndnd_bier_index: 5
